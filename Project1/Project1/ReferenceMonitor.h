@@ -18,11 +18,18 @@ using namespace std;
 class ReferenceMonitor
 {
   public:
-
   ReferenceMonitor() {}
   ~ReferenceMonitor() {}
 
+  void printState(Assests&);
+  void scanInstruction(Instruction&, Assests&);
+  void logInstruction(string, string);
+  void addSubject(ReferenceMonitor*,string&, Assests&);
+  void addObject(ReferenceMonitor*,string&, Assests&);
+  void executeRead(ReferenceMonitor*,string&, Assests&);
+  void executeWrite(ReferenceMonitor*,string&, Assests&);
 
+  
   map<string,function<void(const ReferenceMonitor, 
                            ReferenceMonitor*, 
                            string&, 
@@ -40,13 +47,5 @@ class ReferenceMonitor
   map<string,int> subjectSecurityLevel{};
   map<string,int> objectSecurityLevel{};
 
-  void printState(Assests&);
-
-  void scanInstruction(Instruction&, Assests&);
-  void logInstruction(string, string);
-  void addSubject(ReferenceMonitor*,string&, Assests&);
-  void addObject(ReferenceMonitor*,string&, Assests&);
-  void executeRead(ReferenceMonitor*,string&, Assests&);
-  void executeWrite(ReferenceMonitor*,string&, Assests&);
 };
 

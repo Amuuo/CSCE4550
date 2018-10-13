@@ -25,8 +25,9 @@ int main(int argc, char** argv)
   Assests           assests{};          // class holds all subjects and objects 
   string            inputLine;          // string holds each line of instruction file  
   
-  //istringstream in{tmp};
 
+  
+  // iterate through input file and handle instructions
   try {
 
     in.open(argv[1]);
