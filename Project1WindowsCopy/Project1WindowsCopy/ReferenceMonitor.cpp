@@ -159,7 +159,7 @@ void ReferenceMonitor::executeRead(ReferenceMonitor* ref,string& instruction) {
 
   while (!iss.eof()) {
     
-    iss >> method >> subject >> object >> value;
+    iss >> method >> subject >> object;
     
     if (ref->subjects.find(subject) == ref->subjects.end()) {
       throw runtime_error(instruction);
@@ -173,7 +173,7 @@ void ReferenceMonitor::executeRead(ReferenceMonitor* ref,string& instruction) {
   }
   
   if (ref->subjects[subject]._securityLevel >= ref->objects[object]._securityLevel) {        
-    ref->objects[object].value = value;    
+    ref->subjects[subject].value = ref->objects[object].value;    
     
     ref->logInstruction("Access granted",instruction);
 
@@ -198,7 +198,7 @@ void ReferenceMonitor::executeWrite (ReferenceMonitor* ref, string& instruction)
 
   while (!iss.eof()) {
     
-    iss >> method >> subject >> object;
+    iss >> method >> subject >> object >> value;
     
     if (ref->subjects.find(subject) == ref->subjects.end()) {
       throw runtime_error(instruction);
@@ -209,12 +209,15 @@ void ReferenceMonitor::executeWrite (ReferenceMonitor* ref, string& instruction)
     if (!iss.eof()) {
       throw runtime_error(instruction);
     }
+    if (value =="") {
+      throw runtime_error(instruction);
+    }
   }
 
   ostringstream out{};
   
   if (ref->subjects[subject]._securityLevel >= ref->objects[object]._securityLevel) {
-    ref->subjects[subject].value = ref->objects[object].value;    
+    ref->objects[object].value = value;    
     ref->logInstruction("Access granted",instruction);
   }
   else {
