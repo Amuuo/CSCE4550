@@ -10,12 +10,6 @@ ReferenceMonitor::ReferenceMonitor()
 
 
 
-ReferenceMonitor::ReferenceMonitor(string filename) {
-  
-  inputFile(filename);
-}
-
-
 
 
 
@@ -25,16 +19,16 @@ ReferenceMonitor::~ReferenceMonitor(){}
 
 
 
-void ReferenceMonitor::printState(){
+void ReferenceMonitor::printState(Assests& assests){
   cout << "\n\n ====== current state =====";
   cout << "\n|== subject ==|== value ===|";
   
-  for (auto subject : subjectMap) {
+  for (auto subject : assests.subjects) {
     cout << "\n" << "|   " << subject.first << "   |" 
          << right << setw(10) << subject.second.value << "  |";
   }
   cout << "\n|== object ===|== value ===|";
-  for (auto object : objectMap) {
+  for (auto object : assests.objects) {
     cout << "\n" << "|   " << object.first << "   |" 
          << right << setw(10) << object.second.value << "  |";
   }
@@ -45,41 +39,19 @@ void ReferenceMonitor::printState(){
 
 
 
-void ReferenceMonitor::inputFile(string & filename) {
-  Instruction instructionStruct;
-  ifstream    inputStream{filename};
-  string      inputLine;
-  string      function;
+void ReferenceMonitor::scanInstruction(Instruction& instruction, Assests& assests) {
 
-
-  while (!inputStream.eof()) {
-
-
-
-    try {
-      getline(inputStream,inputLine);
-
-      transform(inputLine.begin(),inputLine.end(),inputLine.begin(),::tolower);
-      istringstream instructionStream{inputLine};
-
-      instructionStream >> function;
-
-      if (methods.find(function) == methods.end()) {
-        throw runtime_error("method doesn't exist: " + function);
-      }
-      else {
-        methods[function](*this,this,inputLine);
-      }
+  try {
+    if (methods.find(instruction.function) == methods.end()) {
+      throw runtime_error("method doesn't exist: " + instruction.function);
     }
-    catch (exception& e) {
-      logInstruction("Bad instruction",e.what());
+    else {
+      methods[instruction.function](*this,this,instruction.instruction, assests);
     }
-    if (instructionHistory.size() % 10 == 0) {
-      printState();
-    }
-    cout << endl << instructionHistory.back();
   }
-  printState();
+  catch (exception& e) {
+    logInstruction("Bad instruction",e.what());
+  }
 }
 
 
@@ -97,7 +69,7 @@ void ReferenceMonitor::logInstruction(string header,string instruction) {
 
 
 
-void ReferenceMonitor::addSubject(ReferenceMonitor* ref, string& instruction) {
+void ReferenceMonitor::addSubject(ReferenceMonitor* ref, string& instruction, Assests& assests) {
 
   string method,subject,security;
 
@@ -113,8 +85,9 @@ void ReferenceMonitor::addSubject(ReferenceMonitor* ref, string& instruction) {
     }
   }
 
-  if (ref->subjectMap.find(subject) == ref->subjectMap.end()) {
-    ref->subjectMap[subject] = {subject,securityMap[security]};
+  if (ref->subjectSecurityLevel.find(subject) == ref->subjectSecurityLevel.end()) {
+    ref->subjectSecurityLevel[subject] = ref->securityMap[security];
+    assests.subjects[subject];
   }
   else {
     throw runtime_error(instruction);
@@ -127,7 +100,7 @@ void ReferenceMonitor::addSubject(ReferenceMonitor* ref, string& instruction) {
 
 
 
-void ReferenceMonitor::addObject(ReferenceMonitor* ref,string& instruction) {
+void ReferenceMonitor::addObject(ReferenceMonitor* ref,string& instruction, Assests& assests) {
 
   string method,object,security;
 
@@ -141,8 +114,9 @@ void ReferenceMonitor::addObject(ReferenceMonitor* ref,string& instruction) {
     }
   }
 
-  if (ref->objectMap.find(object) == ref->objectMap.end()) {
-    ref->objectMap[object] = {object, securityMap[security]};    
+  if (ref->objectSecurityLevel.find(object) == ref->objectSecurityLevel.end()) {
+    ref->objectSecurityLevel[object] = ref->securityMap[security]; 
+    assests.objects[object];
   }
   else {
     throw runtime_error(instruction);
@@ -154,7 +128,7 @@ void ReferenceMonitor::addObject(ReferenceMonitor* ref,string& instruction) {
 
 
 
-void ReferenceMonitor::executeRead(ReferenceMonitor* ref,string& instruction) {
+void ReferenceMonitor::executeRead(ReferenceMonitor* ref,string& instruction, Assests& assests) {
 
   istringstream iss{instruction};
   string method,subject,object;  
@@ -164,10 +138,10 @@ void ReferenceMonitor::executeRead(ReferenceMonitor* ref,string& instruction) {
     
     iss >> method >> subject >> object;
     
-    if (ref->subjectMap.find(subject) == ref->subjectMap.end()) {
+    if (ref->subjectSecurityLevel.find(subject) == ref->subjectSecurityLevel.end()) {
       throw runtime_error(instruction);
     }
-    if (ref->objectMap.find(object) == ref->objectMap.end()) {
+    if (ref->objectSecurityLevel.find(object) == ref->objectSecurityLevel.end()) {
       throw runtime_error(instruction);
     }
     if (iss.get() == iss.eof()) {
@@ -175,25 +149,20 @@ void ReferenceMonitor::executeRead(ReferenceMonitor* ref,string& instruction) {
     }
   }
   
-  if (ref->subjectMap[subject].securityLevel >= ref->objectMap[object].securityLevel) {        
-    ref->subjectMap[subject].value = ref->objectMap[object].value;    
-    
+  if (ref->subjectSecurityLevel[subject] >= ref->objectSecurityLevel[object]) {        
+    assests.subjects[subject].value = assests.objects[object].value;
     ref->logInstruction("Access granted",instruction);
-
   }
   else {
     ref->logInstruction("Access denied",instruction);    
   }
-
-  
-
 }
 
 
 
 
 
-void ReferenceMonitor::executeWrite (ReferenceMonitor* ref, string& instruction) {
+void ReferenceMonitor::executeWrite (ReferenceMonitor* ref, string& instruction, Assests& assests) {
   
   istringstream iss{instruction};
   string method,subject,object, value;  
@@ -203,10 +172,10 @@ void ReferenceMonitor::executeWrite (ReferenceMonitor* ref, string& instruction)
     
     iss >> method >> subject >> object >> value;
     
-    if (ref->subjectMap.find(subject) == ref->subjectMap.end()) {
+    if (ref->subjectSecurityLevel.find(subject) == ref->subjectSecurityLevel.end()) {
       throw runtime_error(instruction);
     }
-    if (ref->objectMap.find(object) == ref->objectMap.end()) {
+    if (ref->objectSecurityLevel.find(object) == ref->objectSecurityLevel.end()) {
       throw runtime_error(instruction);
     }
     if (!iss.eof()) {
@@ -224,25 +193,11 @@ void ReferenceMonitor::executeWrite (ReferenceMonitor* ref, string& instruction)
 
   ostringstream out{};
   
-  if (ref->subjectMap[subject].securityLevel <= ref->objectMap[object].securityLevel) {
-    ref->objectMap[object].value = value;    
+  if (ref->subjectSecurityLevel[subject] <= ref->objectSecurityLevel[object]) {
+    assests.objects[object].value = stoi(value);
     ref->logInstruction("Access granted", subject+" writes value "+value+" to "+object);
   }
   else {
     ref->logInstruction("Access denied",instruction);    
   }
 }
-
-
-
-ReferenceMonitor::Object::Object() {
-}
-
-ReferenceMonitor::Object::Object(string id, int securityLevel) :
-  id{id}, securityLevel{securityLevel} {}
-
-ReferenceMonitor::Subject::Subject() {
-}
-
-ReferenceMonitor::Subject::Subject(string id, int securityLevel) :
-  id{id}, securityLevel{securityLevel} {}

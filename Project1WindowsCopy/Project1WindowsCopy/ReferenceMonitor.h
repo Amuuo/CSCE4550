@@ -1,4 +1,6 @@
 #pragma once
+#include"Assests.h"
+#include"Instruction.h"
 #include<map>
 #include<functional>
 #include<utility>
@@ -18,38 +20,11 @@ using namespace std;
 class ReferenceMonitor
 {
   public:
+
   ReferenceMonitor();
-  ReferenceMonitor(string);
   ~ReferenceMonitor();
 
-
-  struct Instruction
-  {
-    string function;
-    string sub;
-    string obj;
-    string value;
-  };
-  
-  struct Subject
-  {
-    Subject();
-    Subject(string, int);
-    string id;
-    int securityLevel;
-    string value{"0"};
-  };
-  
-  struct Object
-  {
-    Object();
-    Object(string, int);
-    string id;
-    int securityLevel;
-    string value{"0"};
-  };
-
-  map<string,function<void(const ReferenceMonitor, ReferenceMonitor*, string&)>> methods {
+  map<string,function<void(const ReferenceMonitor, ReferenceMonitor*, string&, Assests&)>> methods {
     {"addobj", &ReferenceMonitor::addObject}, 
     {"addsub", &ReferenceMonitor::addSubject}, 
     {"read",   &ReferenceMonitor::executeRead}, 
@@ -59,16 +34,16 @@ class ReferenceMonitor
   vector<string> instructionHistory{};
   
   map<string,int> securityMap { {"low",0}, {"medium",1}, {"high",2} };
-  map<string,Subject> subjectMap{};
-  map<string,Object> objectMap{};
+  map<string,int> subjectSecurityLevel{};
+  map<string,int> objectSecurityLevel{};
 
-  void printState();
+  void printState(Assests&);
 
-  void inputFile(string&);
+  void scanInstruction(Instruction&, Assests&);
   void logInstruction(string, string);
-  void addSubject(ReferenceMonitor*,string&);
-  void addObject(ReferenceMonitor*,string&);
-  void executeRead(ReferenceMonitor*,string&);
-  void executeWrite(ReferenceMonitor*,string&);
+  void addSubject(ReferenceMonitor*,string&, Assests&);
+  void addObject(ReferenceMonitor*,string&, Assests&);
+  void executeRead(ReferenceMonitor*,string&, Assests&);
+  void executeWrite(ReferenceMonitor*,string&, Assests&);
 };
 

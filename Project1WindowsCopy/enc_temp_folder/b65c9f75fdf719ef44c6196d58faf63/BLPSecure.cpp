@@ -31,6 +31,11 @@ int main(int argc, char** argv)
   
   
   referenceMonitor.printState(assests);  
+
+
+
+  string t;
+  cin >> t;
 }
 
 

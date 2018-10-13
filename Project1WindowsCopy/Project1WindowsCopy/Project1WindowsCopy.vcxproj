@@ -115,10 +115,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Assests.cpp" />
     <ClCompile Include="BLPSecure.cpp" />
     <ClCompile Include="ReferenceMonitor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Assests.h" />
+    <ClInclude Include="BLPSecure.h" />
+    <ClInclude Include="Instruction.h" />
     <ClInclude Include="ReferenceMonitor.h" />
   </ItemGroup>
   <ItemGroup>
