@@ -9,6 +9,7 @@
 #include<fstream>
 #include<string>
 #include<iostream>
+#include<iomanip>
 
 using namespace std;
 
@@ -36,6 +37,7 @@ class ReferenceMonitor
     Subject(string, int);
     string id;
     int _securityLevel;
+    string value{"0"};
   };
   
   struct Object
@@ -44,6 +46,7 @@ class ReferenceMonitor
     Object(string, int);
     string id;
     int _securityLevel;
+    string value{"0"};
   };
 
   map<string,function<void(const ReferenceMonitor, ReferenceMonitor*, string&)>> methods {
@@ -62,6 +65,7 @@ class ReferenceMonitor
   void printState();
 
   void inputFile(string&);
+  void logInstruction(string, string);
   void addSubject(ReferenceMonitor*,string&);
   void addObject(ReferenceMonitor*,string&);
   void executeRead(ReferenceMonitor*,string&);

@@ -25,7 +25,21 @@ ReferenceMonitor::~ReferenceMonitor(){}
 
 
 
-void ReferenceMonitor::printState(){}
+void ReferenceMonitor::printState(){
+  cout << "\n\n ====== current state =====";
+  cout << "\n|== subject ==|== value ===|";
+  
+  for (auto subject : subjects) {
+    cout << "\n" << "|   " << subject.first << "   |" 
+         << right << setw(10) << subject.second.value << "  |";
+  }
+  cout << "\n|== object ===|== value ===|";
+  for (auto object : objects) {
+    cout << "\n" << "|   " << object.first << "   |" 
+         << right << setw(10) << object.second.value << "  |";
+  }
+  cout << "\n ==========================\n";
+}
 
 
 
@@ -49,17 +63,31 @@ void ReferenceMonitor::inputFile(string & filename) {
       instructionStream >> function;
 
       if (methods.find(function) == methods.end()) {
-        throw runtime_error("method doesn't exist: " + instructionStruct.function);
+        throw runtime_error("method doesn't exist: " + function);
       }
       else {
         methods[function](*this,this,inputLine);
       }
     }
-    catch (exception& e) {
-      cout << "\n\nERROR: " << e.what() << endl;
-      instructionHistory.push_back(e.what());
+    catch (exception& e) { 
+      logInstruction("Bad instruction",e.what());      
+    }
+    cout << endl << instructionHistory.back();
+    if (instructionHistory.size() % 10 == 0) {
+      printState();
     }
   }
+}
+
+
+
+
+
+void ReferenceMonitor::logInstruction(string header,string instruction) {
+  
+  ostringstream out{};
+  out << left << setw(16) << header << ": " << instruction;
+  instructionHistory.push_back(out.str());
 }
 
 
@@ -86,10 +114,10 @@ void ReferenceMonitor::addSubject(ReferenceMonitor* ref, string& instruction) {
     ref->subjects[subject] = {subject,securityLevel[security]};
   }
   else {
-    throw runtime_error("Bad instruction : " + instruction);
+    throw runtime_error(instruction);
   }
-
-  ref->instructionHistory.push_back("Subject Added: " + instruction);
+  ref->logInstruction("Subject added",instruction);
+  
 }
 
 
@@ -106,7 +134,7 @@ void ReferenceMonitor::addObject(ReferenceMonitor* ref,string& instruction) {
     iss >> method >> object >> security;
 
     if (!iss.eof()) {
-      throw runtime_error("Bad instruction : " + instruction);
+      throw runtime_error(instruction);
     }
   }
 
@@ -114,19 +142,48 @@ void ReferenceMonitor::addObject(ReferenceMonitor* ref,string& instruction) {
     ref->objects[object] = {object, securityLevel[security]};    
   }
   else {
-    throw runtime_error("Bad instruction: " + instruction);
-  }
-
-  ref->instructionHistory.push_back("Object Added: " + instruction);
+    throw runtime_error(instruction);
+  }  
+  ref->logInstruction("Object added",instruction);
 }
 
 
 
 
 
-void ReferenceMonitor::executeRead (ReferenceMonitor* ref, string& instruction) {
+void ReferenceMonitor::executeRead(ReferenceMonitor* ref,string& instruction) {
+
+  istringstream iss{instruction};
+  string method,subject,object, value;  
+
+
+  while (!iss.eof()) {
+    
+    iss >> method >> subject >> object >> value;
+    
+    if (ref->subjects.find(subject) == ref->subjects.end()) {
+      throw runtime_error(instruction);
+    }
+    if (ref->objects.find(object) == ref->objects.end()) {
+      throw runtime_error(instruction);
+    }
+    if (!iss.eof()) {
+      throw runtime_error(instruction);
+    }
+  }
   
-  ref->instructionHistory.push_back("executeReadTest: " + instruction);
+  if (ref->subjects[subject]._securityLevel >= ref->objects[object]._securityLevel) {        
+    ref->objects[object].value = value;    
+    
+    ref->logInstruction("Access granted",instruction);
+
+  }
+  else {
+    ref->logInstruction("Access denied",instruction);    
+  }
+
+  
+
 }
 
 
@@ -135,7 +192,34 @@ void ReferenceMonitor::executeRead (ReferenceMonitor* ref, string& instruction) 
 
 void ReferenceMonitor::executeWrite (ReferenceMonitor* ref, string& instruction) {
   
-  ref->instructionHistory.push_back("executeWriteTest: " + instruction);
+  istringstream iss{instruction};
+  string method,subject,object, value;  
+
+
+  while (!iss.eof()) {
+    
+    iss >> method >> subject >> object;
+    
+    if (ref->subjects.find(subject) == ref->subjects.end()) {
+      throw runtime_error(instruction);
+    }
+    if (ref->objects.find(object) == ref->objects.end()) {
+      throw runtime_error(instruction);
+    }
+    if (!iss.eof()) {
+      throw runtime_error(instruction);
+    }
+  }
+
+  ostringstream out{};
+  
+  if (ref->subjects[subject]._securityLevel >= ref->objects[object]._securityLevel) {
+    ref->subjects[subject].value = ref->objects[object].value;    
+    ref->logInstruction("Access granted",instruction);
+  }
+  else {
+    ref->logInstruction("Access denied",instruction);    
+  }
 }
 
 
