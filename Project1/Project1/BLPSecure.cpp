@@ -33,6 +33,7 @@ int main(int argc, char** argv)
     // instruction file input stream
     ifstream in{argv[1]};
     
+    // check input stream integrity
     if (in.fail()) 
       throw runtime_error("input file failed to open");
     
