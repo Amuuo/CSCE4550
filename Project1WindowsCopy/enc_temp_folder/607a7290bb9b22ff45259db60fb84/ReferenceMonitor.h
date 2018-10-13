@@ -36,7 +36,7 @@ class ReferenceMonitor
     Subject();
     Subject(string, int);
     string id;
-    int securityLevel;
+    int _securityLevel;
     string value{"0"};
   };
   
@@ -45,7 +45,7 @@ class ReferenceMonitor
     Object();
     Object(string, int);
     string id;
-    int securityLevel;
+    int _securityLevel;
     string value{"0"};
   };
 
@@ -58,9 +58,9 @@ class ReferenceMonitor
   
   vector<string> instructionHistory{};
   
-  map<string,int> securityMap { {"low",0}, {"medium",1}, {"high",2} };
-  map<string,Subject> subjectMap{};
-  map<string,Object> objectMap{};
+  map<string,int> securityLevel { {"low",0}, {"medium",1}, {"high",2} };
+  map<string,Subject> subjects{};
+  map<string,Object> objects{};
 
   void printState();
 

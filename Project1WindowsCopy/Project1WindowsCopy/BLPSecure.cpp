@@ -1,9 +1,9 @@
 #include"ReferenceMonitor.h"
 
 
-int main()
+int main(int argc, char** argv)
 {
-  ReferenceMonitor referenceMonitor{"input.txt"};
+  ReferenceMonitor referenceMonitor{argv[1]};
 
 
   string t;

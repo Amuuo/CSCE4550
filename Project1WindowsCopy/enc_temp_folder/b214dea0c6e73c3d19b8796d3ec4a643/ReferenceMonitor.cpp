@@ -29,12 +29,12 @@ void ReferenceMonitor::printState(){
   cout << "\n\n ====== current state =====";
   cout << "\n|== subject ==|== value ===|";
   
-  for (auto subject : subjectMap) {
+  for (auto subject : subjects) {
     cout << "\n" << "|   " << subject.first << "   |" 
          << right << setw(10) << subject.second.value << "  |";
   }
   cout << "\n|== object ===|== value ===|";
-  for (auto object : objectMap) {
+  for (auto object : objects) {
     cout << "\n" << "|   " << object.first << "   |" 
          << right << setw(10) << object.second.value << "  |";
   }
@@ -113,8 +113,8 @@ void ReferenceMonitor::addSubject(ReferenceMonitor* ref, string& instruction) {
     }
   }
 
-  if (ref->subjectMap.find(subject) == ref->subjectMap.end()) {
-    ref->subjectMap[subject] = {subject,securityMap[security]};
+  if (ref->subjects.find(subject) == ref->subjects.end()) {
+    ref->subjects[subject] = {subject,securityLevel[security]};
   }
   else {
     throw runtime_error(instruction);
@@ -141,8 +141,8 @@ void ReferenceMonitor::addObject(ReferenceMonitor* ref,string& instruction) {
     }
   }
 
-  if (ref->objectMap.find(object) == ref->objectMap.end()) {
-    ref->objectMap[object] = {object, securityMap[security]};    
+  if (ref->objects.find(object) == ref->objects.end()) {
+    ref->objects[object] = {object, securityLevel[security]};    
   }
   else {
     throw runtime_error(instruction);
@@ -164,10 +164,10 @@ void ReferenceMonitor::executeRead(ReferenceMonitor* ref,string& instruction) {
     
     iss >> method >> subject >> object;
     
-    if (ref->subjectMap.find(subject) == ref->subjectMap.end()) {
+    if (ref->subjects.find(subject) == ref->subjects.end()) {
       throw runtime_error(instruction);
     }
-    if (ref->objectMap.find(object) == ref->objectMap.end()) {
+    if (ref->objects.find(object) == ref->objects.end()) {
       throw runtime_error(instruction);
     }
     if (iss.get() == iss.eof()) {
@@ -175,8 +175,8 @@ void ReferenceMonitor::executeRead(ReferenceMonitor* ref,string& instruction) {
     }
   }
   
-  if (ref->subjectMap[subject].securityLevel >= ref->objectMap[object].securityLevel) {        
-    ref->subjectMap[subject].value = ref->objectMap[object].value;    
+  if (ref->subjects[subject]._securityLevel >= ref->objects[object]._securityLevel) {        
+    ref->subjects[subject].value = ref->objects[object].value;    
     
     ref->logInstruction("Access granted",instruction);
 
@@ -203,10 +203,10 @@ void ReferenceMonitor::executeWrite (ReferenceMonitor* ref, string& instruction)
     
     iss >> method >> subject >> object >> value;
     
-    if (ref->subjectMap.find(subject) == ref->subjectMap.end()) {
+    if (ref->subjects.find(subject) == ref->subjects.end()) {
       throw runtime_error(instruction);
     }
-    if (ref->objectMap.find(object) == ref->objectMap.end()) {
+    if (ref->objects.find(object) == ref->objects.end()) {
       throw runtime_error(instruction);
     }
     if (!iss.eof()) {
@@ -224,8 +224,8 @@ void ReferenceMonitor::executeWrite (ReferenceMonitor* ref, string& instruction)
 
   ostringstream out{};
   
-  if (ref->subjectMap[subject].securityLevel <= ref->objectMap[object].securityLevel) {
-    ref->objectMap[object].value = value;    
+  if (ref->subjects[subject]._securityLevel <= ref->objects[object]._securityLevel) {
+    ref->objects[object].value = value;    
     ref->logInstruction("Access granted", subject+" writes value "+value+" to "+object);
   }
   else {
@@ -238,11 +238,11 @@ void ReferenceMonitor::executeWrite (ReferenceMonitor* ref, string& instruction)
 ReferenceMonitor::Object::Object() {
 }
 
-ReferenceMonitor::Object::Object(string id, int securityLevel) :
-  id{id}, securityLevel{securityLevel} {}
+ReferenceMonitor::Object::Object(string id, int _securityLevel) :
+  id{id}, _securityLevel{_securityLevel} {}
 
 ReferenceMonitor::Subject::Subject() {
 }
 
-ReferenceMonitor::Subject::Subject(string id, int securityLevel) :
-  id{id}, securityLevel{securityLevel} {}
+ReferenceMonitor::Subject::Subject(string id, int _securityLevel) :
+  id{id}, _securityLevel{_securityLevel} {}
