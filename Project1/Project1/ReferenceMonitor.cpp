@@ -7,12 +7,12 @@ printState(Assests& assests){
   cout << "\n|== subject ==|=== temp ===|";
   
   for (auto subject : assests.subjects) {
-    cout << "\n" << "|   " << subject.first << "   |" 
+    cout << "\n" << "|   " << subject.second.name << "   |" 
          << right << setw(10) << subject.second.temp << "  |";
   }
   cout << "\n|== object ===|== value ===|";
   for (auto object : assests.objects) {
-    cout << "\n" << "|   " << object.first << "   |" 
+    cout << "\n" << "|   " << object.second.name << "   |" 
          << right << setw(10) << object.second.value << "  |";
   }
   cout << "\n ==========================\n";
@@ -63,7 +63,7 @@ void ReferenceMonitor::addSubject(ReferenceMonitor* ref, string& instruction, As
 
   if (ref->subjectSecurityLevel.find(subject) == ref->subjectSecurityLevel.end()) {
     ref->subjectSecurityLevel[subject] = ref->securityMap[security];
-    assests.subjects[subject];
+    assests.subjects[subject] = {subject};
   }
   else {
     throw runtime_error(instruction);
@@ -90,7 +90,7 @@ addObject(ReferenceMonitor* ref,string& instruction, Assests& assests) {
 
   if (ref->objectSecurityLevel.find(object) == ref->objectSecurityLevel.end()) {
     ref->objectSecurityLevel[object] = ref->securityMap[security]; 
-    assests.objects[object];
+    assests.objects[object] = {object};
   }
   else {
     throw runtime_error(instruction);

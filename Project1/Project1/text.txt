@@ -1,0 +1,45 @@
+addsub kel0004 LOW\n
+addsub jms0381 MEDIUM\n
+addsub sam0039 HIGH\n
+addobj file001 MEDIUM\n
+addobj file002 LOW\n
+write kel0004 file002 20\n
+write jms0381 file001 10\n
+read sam0039 file001\n
+read kel0004 file001\n
+read kel0004 file002\n
+addobj file003 HIGH\n
+write jms0381 file002\n
+read sam0039\n
+write jms0381 file001 40 80\n
+read krt1039 file003 50\n
+write kel0004 file001 10\n
+addsub sra0002 LOW\n
+read sra0002 file003 \n
+addsub krt0084 MEDIUM\n
+addsub liz0028 HIGH\n
+write krt1039 file004 40\n
+write liz0028 file001 20\n
+write liz0028 file003 30\n
+read sra0002 file002\n
+addobj file004 HIGH\n
+addobj file005 LOW\n
+read liz0028 file005\n
+write sra0002 file005 50\n
+addobj file006 MEDIUM\n
+write jms0381 file006 30\n
+write kel0004 file006 20\n
+read liz0028 file003\n
+read krt1039 file004\n
+read jms0381 file004\n
+read krt0084 file001\n
+read krt0084 file005\n
+write sam0039 file006 90\n
+write sam0039 file005 x\n
+write liz0028 file004 60\n
+write liz0028 file005 60\n
+read sra0002 file007\n
+exec adm0831 file004\n
+read sam0039 file006\n
+read jms0381 file005\n
+write sra0002 file004 70

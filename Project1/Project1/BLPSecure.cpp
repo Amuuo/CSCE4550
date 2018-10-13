@@ -12,13 +12,9 @@ Description : Program implements Bell-LaPadula security rules using a
 ============================================================================
 */
 
-#pragma once
-
 #include"Assests.h"
 #include"Instruction.h"
 #include"ReferenceMonitor.h"
-
-
 
 
 int main(int argc, char** argv)
@@ -29,10 +25,10 @@ int main(int argc, char** argv)
   Assests           assests{};          // class holds all subjects and objects 
   string            inputLine;          // string holds each line of instruction file  
   
-
+  //istringstream in{tmp};
 
   try {
-    
+
     in.open(argv[1]);
 
     while (!in.eof()) {
@@ -54,7 +50,6 @@ int main(int argc, char** argv)
 
     referenceMonitor.printState(assests);
   }
-  
   catch (exception& e) {
     cout << "Error: " << e.what();
     exit(1);

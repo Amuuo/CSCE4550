@@ -15,7 +15,7 @@ class Assests {
 
     public:
     Object() {}
-    Object(string name,int value) : name{name}, value{value} {}
+    Object(string name) : name{name} {}
     string name{};
     int value{};
   };
@@ -24,7 +24,7 @@ class Assests {
 
     public:
     Subject() {}
-    Subject(string name,int temp) : name{name},temp{temp} {}
+    Subject(string name) : name{name} {}
     string name{};
     int temp{};
     
