@@ -79,6 +79,8 @@
     <ClCompile Include="ReferenceMonitor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Assests.h" />
+    <ClInclude Include="Instruction.h" />
     <ClInclude Include="ReferenceMonitor.h" />
   </ItemGroup>
   <ItemGroup>
