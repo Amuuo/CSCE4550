@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     
     // check for correct input
     if (argc > 2 || argc < 2)
-      throw runtime_error("\nUsage: ./BLPSecure <instruction file>");    
+      throw runtime_error("Usage: ./BLPSecure <instruction file>");    
     
     // instruction file input stream
     ifstream in{argv[1]};
