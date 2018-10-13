@@ -2,6 +2,7 @@
 #include<string>
 #include<sstream>
 #include<regex>
+#include<algorithm>
 using namespace std;
 
 
