@@ -3,37 +3,6 @@
 
 
 // ========================================================================
-// prints the current state of the objects and subjects in Assests struct
-// ========================================================================
-
-void ReferenceMonitor::
-printState(Assests& assests) {
-
-  cout << "\n\n+====== current state =====+";
-  cout << "\n|                          |";
-  cout << "\n|== subject ==|=== temp ===|";
-  cout << "\n|             |            |";
-  
-  for (auto subject : assests.getSubjectMap()) {
-    cout << "\n" << "|   " << subject.second.getName() << "   |" 
-         << right << setw(7) << subject.second.getTemp() << "     |";
-  }
-  cout << "\n|             |            |";
-  cout << "\n|== object ===|== value ===|";
-  cout << "\n|             |            |";
-  
-  
-  for (auto object : assests.getObjectMap()) {
-    cout << "\n" << "|   " << object.second.getName() << "   |" 
-         << right << setw(7) << object.second.getValue() << "     |";
-  }
-  cout << "\n|             |            |";
-  cout << "\n+==========================+\n";
-}
-
-
-
-// ========================================================================
 // check if instruction method exists and invoke the necessary function
 // ========================================================================
 
@@ -83,19 +52,22 @@ addSubject(ReferenceMonitor* ref, string& instruction, Assests& assests) {
 
 
   while (iss) {
+    
     iss >> method >> subject >> security;
 
     if (!iss.eof())
       throw runtime_error("(Too Many Parameters) "+instruction);
-    if (subject.empty())
-      throw runtime_error("(No Subject) "+instruction);
-    if (security.empty())
-      throw runtime_error("(No Security) "+instruction);
   }
 
+  if (subject.empty())
+    throw runtime_error("(No Subject) "+instruction);
+  
+  if (security.empty())
+    throw runtime_error("(No Security) "+instruction);
+  
   if (ref->securityMap.find(security) == ref->securityMap.end())
     throw runtime_error("(Unknown Security Clearance) "+instruction);
-
+  
   if (ref->subjectSecurityLevel.find(subject) == ref->subjectSecurityLevel.end()) {
     ref->subjectSecurityLevel[subject] = ref->securityMap[security];
     assests.getSubjectMap()[subject] = {subject};
@@ -121,15 +93,21 @@ addObject(ReferenceMonitor* ref,string& instruction, Assests& assests) {
   
 
   while (iss) { 
+    
     iss >> method >> object >> security;
 
     if (!iss.eof())
       throw runtime_error("(Too Many Parameters) "+instruction);
-    if (object.empty())
-      throw runtime_error("(No Object) "+instruction);
-    if (security.empty())
-      throw runtime_error("(No Security) "+instruction);
   }
+
+  if (object.empty())
+    throw runtime_error("(No Object) "+instruction);
+  
+  if (security.empty())
+    throw runtime_error("(No Security) "+instruction);
+  
+  if (ref->securityMap.find(security) == ref->securityMap.end())
+    throw runtime_error("(Unknown Security Clearance) "+instruction);
 
   if (ref->objectSecurityLevel.find(object) == ref->objectSecurityLevel.end()) {
     ref->objectSecurityLevel[object] = ref->securityMap[security]; 
@@ -160,16 +138,20 @@ executeRead(ReferenceMonitor* ref,string& instruction, Assests& assests) {
     iss >> method >> subject >> object;
 
     if (!iss.eof())
-      throw runtime_error("(Too Many Parameters) "+instruction);
-    if (subject.empty())
-      throw runtime_error("(No Subject) "+instruction);    
-    if (ref->subjectSecurityLevel.find(subject) == ref->subjectSecurityLevel.end())
-      throw runtime_error("(Unknown Subject) "+instruction);
-    if (object.empty())
-      throw runtime_error("(No Object) "+instruction);
-    if (ref->objectSecurityLevel.find(object) == ref->objectSecurityLevel.end())
-      throw runtime_error("(Unknown Object) "+instruction); 
+      throw runtime_error("(Too Many Parameters) "+instruction);          
   }
+  
+  if (subject.empty())
+      throw runtime_error("(No Subject) "+instruction);    
+  
+  if (ref->subjectSecurityLevel.find(subject) == ref->subjectSecurityLevel.end())
+    throw runtime_error("(Unknown Subject) "+instruction);
+  
+  if (object.empty())
+    throw runtime_error("(No Object) "+instruction);
+  
+  if (ref->objectSecurityLevel.find(object) == ref->objectSecurityLevel.end())
+    throw runtime_error("(Unknown Object) "+instruction);
 
   if (ref->subjectSecurityLevel[subject] >= ref->objectSecurityLevel[object]) {        
     assests.getSubjectMap()[subject].readObject(assests.getObjectMap()[object]);
@@ -198,22 +180,28 @@ executeWrite(ReferenceMonitor* ref,string& instruction,Assests& assests) {
     iss >> method >> subject >> object >> temp;
     
     if (!iss.eof())
-      throw runtime_error("(Too Many Parameters) "+instruction);
-    if (subject.empty())
-      throw runtime_error("(No Subject) "+instruction);    
-    if (ref->subjectSecurityLevel.find(subject) == ref->subjectSecurityLevel.end())
-      throw runtime_error("(Unknown Subject) "+instruction);
-    if (object.empty())
-      throw runtime_error("(No Object) "+instruction);
-    if (ref->objectSecurityLevel.find(object) == ref->objectSecurityLevel.end())
-      throw runtime_error("(Unknown Object) "+instruction);   
-    if (temp.empty())
-      throw runtime_error("(No Value) "+instruction);    
-    for (auto c : temp)
-      if (c < '0' || c > '9')
-        throw runtime_error("(Value is not Alpha-numeric) "+instruction);  
+      throw runtime_error("(Too Many Parameters) "+instruction);  
   }
-
+  
+  if (subject.empty())
+    throw runtime_error("(No Subject) "+instruction);    
+  
+  if (ref->subjectSecurityLevel.find(subject) == ref->subjectSecurityLevel.end())
+    throw runtime_error("(Unknown Subject) "+instruction);
+  
+  if (object.empty())
+    throw runtime_error("(No Object) "+instruction);
+  
+  if (ref->objectSecurityLevel.find(object) == ref->objectSecurityLevel.end())
+    throw runtime_error("(Unknown Object) "+instruction);   
+  
+  if (temp.empty())
+    throw runtime_error("(No Value) "+instruction);    
+  
+  for (auto c : temp)
+    if (c < '0' || c > '9')
+      throw runtime_error("(Value is not Alpha-numeric) "+instruction); 
+  
   if (ref->subjectSecurityLevel[subject] <= ref->objectSecurityLevel[object]) {
     assests.getSubjectMap()[subject].writeObject(assests.getObjectMap()[object], stoi(temp));
     ref->logInstruction("Access Granted", subject+" writes value "+temp+" to "+object);
@@ -221,3 +209,38 @@ executeWrite(ReferenceMonitor* ref,string& instruction,Assests& assests) {
   else
     ref->logInstruction("Access Denied",instruction);
 }
+
+
+
+
+
+// ========================================================================
+// prints the current state of the objects and subjects in Assests struct
+// ========================================================================
+
+void ReferenceMonitor::
+printState(Assests& assests) {
+
+  cout << "\n\n+====== current state =====+";
+  cout << "\n|                          |";
+  cout << "\n|== subject ==|=== temp ===|";
+  cout << "\n|             |            |";
+  
+  for (auto subject : assests.getSubjectMap()) {
+    cout << "\n" << "|   " << subject.second.getName() << "   |" 
+         << right << setw(7) << subject.second.getTemp() << "     |";
+  }
+  cout << "\n|             |            |";
+  cout << "\n|== object ===|== value ===|";
+  cout << "\n|             |            |";
+  
+  
+  for (auto object : assests.getObjectMap()) {
+    cout << "\n" << "|   " << object.second.getName() << "   |" 
+         << right << setw(7) << object.second.getValue() << "     |";
+  }
+  cout << "\n|             |            |";
+  cout << "\n+==========================+\n";
+}
+
+
