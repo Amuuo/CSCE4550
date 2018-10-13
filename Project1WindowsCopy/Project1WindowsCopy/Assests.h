@@ -11,19 +11,31 @@ class Assests {
   Assests() {}
   ~Assests() {}
 
-  struct Subject {
+  class Object {
+
+    public:
+    Object() {}
+    Object(string name,int value) : name{name}, value{value} {}
+    string name{};
+    int value{};
+  };
+
+  class Subject {
+
+    public:
     Subject() {}
     Subject(string name,int temp) : name{name},temp{temp} {}
     string name{};
     int temp{};
+    
+    void readObject(const Object& obj) {
+      temp = obj.value;
+    }
+    void writeObject(Object& obj, int value) {
+      obj.value = value;
+    }
   };
 
-  struct Object {
-    Object() {}
-    Object(string name,int temp) : name{name},temp{temp} {}
-    string name{};
-    int temp{};
-  };
 
   map<string,Subject> subjects{};
   map<string,Object> objects{};

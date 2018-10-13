@@ -1,7 +1,8 @@
 #include "ReferenceMonitor.h"
 
 
-void ReferenceMonitor::printState(Assests& assests){
+void ReferenceMonitor::
+printState(Assests& assests){
   cout << "\n\n ====== current state =====";
   cout << "\n|== subject ==|=== temp ===|";
   
@@ -12,16 +13,14 @@ void ReferenceMonitor::printState(Assests& assests){
   cout << "\n|== object ===|== value ===|";
   for (auto object : assests.objects) {
     cout << "\n" << "|   " << object.first << "   |" 
-         << right << setw(10) << object.second.temp << "  |";
+         << right << setw(10) << object.second.value << "  |";
   }
   cout << "\n ==========================\n";
 }
 
 
-
-
-
-void ReferenceMonitor::scanInstruction(Instruction& instruction, Assests& assests) {
+void ReferenceMonitor::
+scanInstruction(Instruction& instruction, Assests& assests) {
 
   try {
     if (methods.find(instruction.function) == methods.end()) {
@@ -37,18 +36,13 @@ void ReferenceMonitor::scanInstruction(Instruction& instruction, Assests& assest
 }
 
 
-
-
-
-void ReferenceMonitor::logInstruction(string header,string instruction) {
+void ReferenceMonitor::
+logInstruction(string header,string instruction) {
   
   ostringstream out{};
   out << left << setw(16) << header << ": " << left << instruction;
   instructionHistory.push_back(out.str());
 }
-
-
-
 
 
 void ReferenceMonitor::addSubject(ReferenceMonitor* ref, string& instruction, Assests& assests) {
@@ -62,7 +56,7 @@ void ReferenceMonitor::addSubject(ReferenceMonitor* ref, string& instruction, As
 
     iss >> method >> subject >> security;
 
-    if (!iss.eof()) {
+    if (!iss.eof() || iss.get() == iss.eof()) {
       throw runtime_error("Bad addSub instruction : " + instruction);
     }
   }
@@ -79,10 +73,8 @@ void ReferenceMonitor::addSubject(ReferenceMonitor* ref, string& instruction, As
 }
 
 
-
-
-
-void ReferenceMonitor::addObject(ReferenceMonitor* ref,string& instruction, Assests& assests) {
+void ReferenceMonitor::
+addObject(ReferenceMonitor* ref,string& instruction, Assests& assests) {
 
   string method,object,security;
 
@@ -91,7 +83,7 @@ void ReferenceMonitor::addObject(ReferenceMonitor* ref,string& instruction, Asse
   while (!iss.eof()) {
     iss >> method >> object >> security;
 
-    if (!iss.eof()) {
+    if (!iss.eof() || iss.get() == iss.eof()) {
       throw runtime_error(instruction);
     }
   }
@@ -107,10 +99,8 @@ void ReferenceMonitor::addObject(ReferenceMonitor* ref,string& instruction, Asse
 }
 
 
-
-
-
-void ReferenceMonitor::executeRead(ReferenceMonitor* ref,string& instruction, Assests& assests) {
+void ReferenceMonitor::
+executeRead(ReferenceMonitor* ref,string& instruction, Assests& assests) {
 
   istringstream iss{instruction};
   string method,subject,object;  
@@ -126,13 +116,13 @@ void ReferenceMonitor::executeRead(ReferenceMonitor* ref,string& instruction, As
     if (ref->objectSecurityLevel.find(object) == ref->objectSecurityLevel.end()) {
       throw runtime_error(instruction);
     }
-    if (iss.get() == iss.eof()) {
+    if (!iss.eof() || iss.get() == iss.eof()) {
       throw runtime_error(instruction);
     }
   }
   
   if (ref->subjectSecurityLevel[subject] >= ref->objectSecurityLevel[object]) {        
-    assests.subjects[subject].temp = assests.objects[object].temp;
+    assests.subjects[subject].readObject(assests.objects[object]);
     ref->logInstruction("Access granted",instruction);
   }
   else {
@@ -141,10 +131,8 @@ void ReferenceMonitor::executeRead(ReferenceMonitor* ref,string& instruction, As
 }
 
 
-
-
-
-void ReferenceMonitor::executeWrite (ReferenceMonitor* ref, string& instruction, Assests& assests) {
+void ReferenceMonitor::
+executeWrite (ReferenceMonitor* ref, string& instruction, Assests& assests) {
   
   istringstream iss{instruction};
   string method,subject,object, temp;  
@@ -160,9 +148,6 @@ void ReferenceMonitor::executeWrite (ReferenceMonitor* ref, string& instruction,
     if (ref->objectSecurityLevel.find(object) == ref->objectSecurityLevel.end()) {
       throw runtime_error(instruction);
     }
-    if (!iss.eof()) {
-      throw runtime_error(instruction);
-    }
     if (temp =="") {
       throw runtime_error(instruction);
     }
@@ -171,12 +156,15 @@ void ReferenceMonitor::executeWrite (ReferenceMonitor* ref, string& instruction,
         throw runtime_error(instruction);
       }
     }
+    if (!iss.eof() || iss.get() == iss.eof()) {
+      throw runtime_error(instruction);
+    }
   }
 
   ostringstream out{};
   
   if (ref->subjectSecurityLevel[subject] <= ref->objectSecurityLevel[object]) {
-    assests.objects[object].temp = stoi(temp);
+    assests.subjects[subject].writeObject(assests.objects[object], stoi(temp));
     ref->logInstruction("Access granted", subject+" writes value "+temp+" to "+object);
   }
   else {
