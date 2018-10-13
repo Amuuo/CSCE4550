@@ -12,18 +12,20 @@ class Instruction {
   
   public:
   Instruction() {}
-  
-  Instruction(string& instruction) : instruction{instruction} {
-    istringstream iss{instruction};
-    iss >> function;    
+  Instruction(string& _instruction) {    
+    
+    instruction = _instruction;
+    
+    // convert instruction to all lowercase
+    transform(instruction.begin(),instruction.end(),
+              instruction.begin(),::tolower);
+    
     // remove any leading or trailing spaces
     instruction = regex_replace(instruction,regex{"^ +| +$|( ) +"},"");
-  }
-  
-  Instruction(string function,string instruction) : 
-    function{function},
-    instruction{instruction}{}  
-  
+    
+    istringstream iss{instruction};
+    iss >> function;    
+  }  
   ~Instruction() {}
 
   string function{};

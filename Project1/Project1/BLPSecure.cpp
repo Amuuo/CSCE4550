@@ -18,37 +18,34 @@ Description : Program implements Bell-LaPadula security rules using a
 
 
 int main(int argc, char** argv)
-{
-  
+{  
   ReferenceMonitor  referenceMonitor{}; // reference monitor class  
   Assests           assests{};          // class holds all subjects and objects 
   string            inputLine;          // string holds each line of instruction file  
-  
-
-  
-  // iterate through input file and handle instructions
-  try {
+                   
+  try {            
     
-    ifstream in{argv[1]}; // instruction file input stream
+    // instruction file input stream
+    ifstream in{argv[1]};
     
+    if (in.fail()) 
+      throw runtime_error("input file failed to open");
+    
+    // iterate through input file and handle instructions
     while (!in.eof()) {
 
       getline(in,inputLine);
-
-      transform(inputLine.begin(),inputLine.end(),
-                inputLine.begin(),::tolower);
-
       referenceMonitor.scanInstruction({inputLine},assests);
 
       if (referenceMonitor.instructionHistory.size() % 10 == 0)
         referenceMonitor.printState(assests);      
-    }
-    referenceMonitor.printState(assests);
+    }    
   }
   catch (exception& e) {
-    cout << "Error: " << e.what();
+    cout << "Error: " << e.what() << endl;
     exit(1);
   }
+  referenceMonitor.printState(assests);
 }
 
 
