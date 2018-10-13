@@ -57,7 +57,6 @@ int main(int argc, char** argv)
   
   catch (exception& e) {
     cout << "Error: " << e.what();
-    exit(1);
   }
 }
 
