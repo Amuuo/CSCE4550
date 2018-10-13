@@ -1,5 +1,25 @@
+/*
+============================================================================
+----------------------------------------------------------------------------
+Name        : Project 1
+Author      : Adam Williams
+Version     : 1.0
+Copyright   : 2018
+Description : Program implements Bell-LaPadula security rules using a 
+              reference monitor to grant access to interactions between
+              various subjects and objects              
+----------------------------------------------------------------------------
+============================================================================
+*/
 
-#include"BLPSecure.h"
+#pragma once
+
+#include"Assests.h"
+#include"Instruction.h"
+#include"ReferenceMonitor.h"
+
+Assests assests{};
+
 
 int main(int argc, char** argv)
 {

@@ -2,28 +2,27 @@
 #include<string>
 #include<map>
 
-
 using namespace std;
 
 
 class Assests {
 
   public:
-  Assests();
-  ~Assests();
+  Assests() {}
+  ~Assests() {}
 
   struct Subject {
-    Subject();
-    Subject(string,int);
+    Subject() {}
+    Subject(string name,int temp) : name{name},temp{temp} {}
     string name{};
-    int value{};
+    int temp{};
   };
 
   struct Object {
-    Object();
-    Object(string,int);
+    Object() {}
+    Object(string name,int temp) : name{name},temp{temp} {}
     string name{};
-    int value{};
+    int temp{};
   };
 
   map<string,Subject> subjects{};

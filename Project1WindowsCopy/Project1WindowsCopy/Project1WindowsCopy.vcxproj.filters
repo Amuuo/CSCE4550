@@ -21,15 +21,9 @@
     <ClCompile Include="ReferenceMonitor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Assests.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ReferenceMonitor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BLPSecure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Assests.h">

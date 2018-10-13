@@ -21,8 +21,8 @@ class ReferenceMonitor
 {
   public:
 
-  ReferenceMonitor();
-  ~ReferenceMonitor();
+  ReferenceMonitor() {}
+  ~ReferenceMonitor() {}
 
   map<string,function<void(const ReferenceMonitor, ReferenceMonitor*, string&, Assests&)>> methods {
     {"addobj", &ReferenceMonitor::addObject}, 
