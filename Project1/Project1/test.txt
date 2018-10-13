@@ -1,0 +1,33 @@
+
+before replace:   write kel0004 file002 20   
+after replace : write kel0004 file002 20
+before replace:   write jms0381 file001 10   
+after replace : write jms0381 file001 10
+before replace:   write jms0381 file002   
+after replace : write jms0381 file002
+before replace:   write jms0381 file001 40 80   
+after replace : write jms0381 file001 40 80
+before replace:   write kel0004 file001 10   
+after replace : write kel0004 file001 10
+before replace:   write krt1039 file004 40   
+after replace : write krt1039 file004 40
+before replace:   write liz0028 file001 20   
+after replace : write liz0028 file001 20
+before replace:   write liz0028 file003 30   
+after replace : write liz0028 file003 30
+before replace:   write sra0002 file005 50   
+after replace : write sra0002 file005 50
+before replace:   write jms0381 file006 30   
+after replace : write jms0381 file006 30
+before replace:   write kel0004 file006 20   
+after replace : write kel0004 file006 20
+before replace:   write sam0039 file006 90   
+after replace : write sam0039 file006 90
+before replace:   write sam0039 file005 x   
+after replace : write sam0039 file005 x
+before replace:   write liz0028 file004 60   
+after replace : write liz0028 file004 60
+before replace:   write liz0028 file005 60   
+after replace : write liz0028 file005 60
+before replace:   write sra0002 file004 70   
+after replace : write sra0002 file004 70

@@ -20,8 +20,7 @@ Description : Program implements Bell-LaPadula security rules using a
 int main(int argc, char** argv)
 {
   
-  ReferenceMonitor  referenceMonitor{}; // reference monitor class
-  ifstream          in;                 // instruction file input stream
+  ReferenceMonitor  referenceMonitor{}; // reference monitor class  
   Assests           assests{};          // class holds all subjects and objects 
   string            inputLine;          // string holds each line of instruction file  
   
@@ -29,26 +28,21 @@ int main(int argc, char** argv)
   
   // iterate through input file and handle instructions
   try {
-
-    in.open(argv[1]);
-
+    
+    ifstream in{argv[1]}; // instruction file input stream
+    
     while (!in.eof()) {
 
       getline(in,inputLine);
-      transform(inputLine.begin(),inputLine.end(),inputLine.begin(),::tolower);
 
-      Instruction instructionStruct{inputLine};
+      transform(inputLine.begin(),inputLine.end(),
+                inputLine.begin(),::tolower);
 
-      referenceMonitor.scanInstruction(instructionStruct,assests);
+      referenceMonitor.scanInstruction({inputLine},assests);
 
-      cout << endl << referenceMonitor.instructionHistory.back();
-
-      if (referenceMonitor.instructionHistory.size() % 10 == 0) {
-        referenceMonitor.printState(assests);
-      }
+      if (referenceMonitor.instructionHistory.size() % 10 == 0)
+        referenceMonitor.printState(assests);      
     }
-
-
     referenceMonitor.printState(assests);
   }
   catch (exception& e) {
