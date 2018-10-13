@@ -6,93 +6,148 @@ ReferenceMonitor::ReferenceMonitor()
 {
 }
 
-ReferenceMonitor::ReferenceMonitor(string fileName)
-{
-  Instruction input;
-  ifstream    inputStream{fileName};
-  string      instruction;
-  
-  
 
-  while(!inputStream.eof()) {
-    
-    try
-    {
-      getline(inputStream, instruction);
-      instructionHistory.push_back(instruction);
-      istringstream instructionStream{instruction};
+
+
+
+ReferenceMonitor::ReferenceMonitor(string filename) {
   
-      while (!instructionStream.eof())
-      {
-          instructionStream >> input.function;       
+  inputFile(filename);
+}
 
-          if (methods.find(input.function)==methods.end()) 
-          {
-            throw runtime_error("method doesn't exist: " + input.function);
-          }
-     
-          instructionStream >> input.sub >> input.obj;
-       
 
-          if (!instructionStream.eof()) 
-          {
-            instructionStream >> input.value;
-            methods[input.function](*this, {input.sub, input.obj, input.value});
-          }
-          else
-          {
-            methods[input.function](*this, {input.sub, input.obj});
-          }
-     
-          if (!instructionStream.eof()) 
-          {
-            throw runtime_error("instruction too long: " + instruction);
-          }
-        }
+
+
+
+ReferenceMonitor::~ReferenceMonitor(){}
+
+
+
+
+
+void ReferenceMonitor::printState(){}
+
+
+
+
+
+void ReferenceMonitor::inputFile(string & filename) {
+  Instruction instructionStruct;
+  ifstream    inputStream{filename};
+  string      inputLine;
+  string      function;
+
+
+  while (!inputStream.eof()) {
+
+    try {
+      getline(inputStream,inputLine);
+
+      transform(inputLine.begin(),inputLine.end(),inputLine.begin(),::tolower);
+      istringstream instructionStream{inputLine};
+
+      instructionStream >> function;
+
+      if (methods.find(function) == methods.end()) {
+        throw runtime_error("method doesn't exist: " + instructionStruct.function);
+      }
+      else {
+        methods[function](*this,this,inputLine);
+      }
     }
-    catch(exception& e)
-    {
-      cout << "\n\nERROR: " << e.what() << endl; 
+    catch (exception& e) {
+      cout << "\n\nERROR: " << e.what() << endl;
+      instructionHistory.push_back(e.what());
     }
   }
 }
 
 
-ReferenceMonitor::~ReferenceMonitor(){}
 
-void ReferenceMonitor::printState()
-{
+
+
+void ReferenceMonitor::addSubject(ReferenceMonitor* ref, string& instruction) {
+
+  string method,subject,security;
+
+
+  istringstream iss{instruction};
+
+  while (!iss.eof()) {
+
+    iss >> method >> subject >> security;
+
+    if (!iss.eof()) {
+      throw runtime_error("Bad addSub instruction : " + instruction);
+    }
+  }
+
+  if (ref->subjects.find(subject) == ref->subjects.end()) {
+    ref->subjects[subject] = {subject,securityLevel[security]};
+  }
+  else {
+    throw runtime_error("Bad instruction : " + instruction);
+  }
+
+  ref->instructionHistory.push_back("Subject Added: " + instruction);
 }
 
-void ReferenceMonitor::addSubject(vector<string> strings)
-{
-  cout << "\naddSubjectTest ";
-  
-  for (auto s:strings)  
-    cout << s << " ";
+
+
+
+
+void ReferenceMonitor::addObject(ReferenceMonitor* ref,string& instruction) {
+
+  string method,object,security;
+
+  istringstream iss{instruction};
+
+  while (!iss.eof()) {
+    iss >> method >> object >> security;
+
+    if (!iss.eof()) {
+      throw runtime_error("Bad instruction : " + instruction);
+    }
+  }
+
+  if (ref->objects.find(object) == ref->objects.end()) {
+    ref->objects[object] = {object, securityLevel[security]};    
+  }
+  else {
+    throw runtime_error("Bad instruction: " + instruction);
+  }
+
+  ref->instructionHistory.push_back("Object Added: " + instruction);
 }
 
-void ReferenceMonitor::addObject(vector<string> strings)
-{
-  cout << "\naddObjectTest ";
+
+
+
+
+void ReferenceMonitor::executeRead (ReferenceMonitor* ref, string& instruction) {
   
-  for (auto s:strings)  
-    cout << s << " ";
+  ref->instructionHistory.push_back("executeReadTest: " + instruction);
 }
 
-void ReferenceMonitor::executeRead(vector<string> strings)
-{
-  cout << "\nexecuteReadTest ";
+
+
+
+
+void ReferenceMonitor::executeWrite (ReferenceMonitor* ref, string& instruction) {
   
-  for (auto s:strings)  
-    cout << s << " ";
+  ref->instructionHistory.push_back("executeWriteTest: " + instruction);
 }
 
-void ReferenceMonitor::executeWrite(vector<string> strings)
-{
-  cout << "\nexecuteWriteTest ";
-  
-  for (auto s:strings)  
-    cout << s << " ";
-  
+
+
+ReferenceMonitor::Object::Object() {
 }
+
+ReferenceMonitor::Object::Object(string id, int _securityLevel) :
+  id{id}, _securityLevel{_securityLevel} {}
+
+ReferenceMonitor::Subject::Subject() {
+}
+
+ReferenceMonitor::Subject::Subject(string id, int _securityLevel) :
+  id{id}, _securityLevel{_securityLevel} {}

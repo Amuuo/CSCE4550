@@ -2,6 +2,7 @@
 #include<map>
 #include<functional>
 #include<utility>
+#include<algorithm>
 #include<sstream>
 #include<vector>
 #include<stdexcept>
@@ -20,7 +21,6 @@ class ReferenceMonitor
   ReferenceMonitor(string);
   ~ReferenceMonitor();
 
-  enum SecurityLevel { LOW, MEDIUM, HIGH };
 
   struct Instruction
   {
@@ -29,8 +29,24 @@ class ReferenceMonitor
     string obj;
     string value;
   };
+  
+  struct Subject
+  {
+    Subject();
+    Subject(string, int);
+    string id;
+    int _securityLevel;
+  };
+  
+  struct Object
+  {
+    Object();
+    Object(string, int);
+    string id;
+    int _securityLevel;
+  };
 
-  map<string,function<void(const ReferenceMonitor,vector<string>)>> methods {
+  map<string,function<void(const ReferenceMonitor, ReferenceMonitor*, string&)>> methods {
     {"addobj", &ReferenceMonitor::addObject}, 
     {"addsub", &ReferenceMonitor::addSubject}, 
     {"read",   &ReferenceMonitor::executeRead}, 
@@ -39,14 +55,16 @@ class ReferenceMonitor
   
   vector<string> instructionHistory{};
   
-  map<string,SecurityLevel> subject{};
-  map<string,SecurityLevel> objects{};
+  map<string,int> securityLevel { {"low",0}, {"medium",1}, {"high",2} };
+  map<string,Subject> subjects{};
+  map<string,Object> objects{};
 
   void printState();
 
-  void addSubject(vector<string>);
-  void addObject(vector<string>);
-  void executeRead(vector<string>);
-  void executeWrite(vector<string>);
+  void inputFile(string&);
+  void addSubject(ReferenceMonitor*,string&);
+  void addObject(ReferenceMonitor*,string&);
+  void executeRead(ReferenceMonitor*,string&);
+  void executeWrite(ReferenceMonitor*,string&);
 };
 
