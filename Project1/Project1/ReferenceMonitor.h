@@ -29,7 +29,7 @@ Description : Program implements Bell-LaPadula security rules using a
 #include<iostream>
 #include<iomanip>
 #include<ctime>
-#define PAGE_WIDTH 90
+#define PAGE_WIDTH 100
 
 using namespace std;
 using namespace placeholders;

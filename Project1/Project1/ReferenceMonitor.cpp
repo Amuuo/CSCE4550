@@ -190,12 +190,12 @@ printInstructionResult(string header,string line) {
   
   ostringstream out{};  // ostringstream to format instruction log
   
-  out << " ";
-  out << setw(21) << setfill(' ') << left << (line != "" ? Time{}.getTimeAndDate() : "");
-  out << (lineIsAlreadyConstructed ? setw(0) : setw(39)) << setfill('-') << left << header;
+  out << "   ";
+  out << setw(23) << setfill(' ') << left << (line != "" ? Time{}.getTimeAndDate() : "");
+  out << (lineIsAlreadyConstructed ? setw(0) : setw(38)) << setfill('-') << left << header;
   
   if(!lineIsAlreadyConstructed)
-    out << "  " << setw(35) << setfill(' ') << left << line;
+    out << " " << setw(35) << setfill(' ') << left << line;
 
   cout << endl << out.str();  // print result to screen
   
