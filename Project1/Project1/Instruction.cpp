@@ -156,7 +156,7 @@ void Instruction::verify_write() {
 
 string Instruction::constructErrorMsg(string error, string line) {
   ostringstream out;
-  out << setw(40) << setfill('=') << left;
+  out << setw(40) << setfill('-') << left;
   out << string{"!!BAD INSTRUCTION (" + error+")"};
   out << " " << setw(35) << setfill(' ') << left << line;
   return out.str();

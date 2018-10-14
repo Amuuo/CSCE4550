@@ -8,11 +8,8 @@ ReferenceMonitor.o : ReferenceMonitor.cpp ReferenceMonitor.h Instruction.h Asses
 Instruction.o : Instruction.h
 		g++ -std=c++17 -Ofast -c Instruction.cpp
 
-BLPSecure.o : BLPSecure.cpp Assests.h Instruction.h
+BLPSecure.o : BLPSecure.cpp Assests.h Instruction.h ReferenceMonitor.h
 		g++ -std=c++17 -Ofast -c BLPSecure.cpp
 
 clean : 
 	rm BLPSecure BLPSecure.o ReferenceMonitor.o Instruction.o
-
-
-

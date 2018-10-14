@@ -28,12 +28,10 @@ int main(int argc, char** argv)
 
   try {            
     
-    
     if (argc > 2 || argc < 2) // check for correct input
       throw runtime_error("Usage: ./BLPSecure <instruction file>");    
     
     ReferenceMonitor::logTitle({"Input File: "+string{argv[1]}}); // log time and input file in log.txt     
-
     ifstream in{argv[1]}; // instruction file input stream
         
     if (in.fail())  // check input stream integrity
@@ -43,10 +41,9 @@ int main(int argc, char** argv)
     while (!in.eof()) { // iterate through input file and handle instructions
       
       try {
-        static int numOfInstructions = 1;
-        
-        getline(in,inputLine);
 
+        static int numOfInstructions = 1;
+        getline(in,inputLine);
         Instruction instruction{inputLine}; // constructor validates instruction
         referenceMonitor.scanInstruction(instruction,assests);
 

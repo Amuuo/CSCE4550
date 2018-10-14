@@ -236,7 +236,7 @@ void ReferenceMonitor::
 printState(Assests& assests) {
 
   ostringstream out{};
-  string lws((PAGE_WIDTH-24)/2,' ');
+  string lws((PAGE_WIDTH-24)/3,' ');
 
   out << "\n\n" << lws << "+====== CURRENT STATE =====+";
   out << "\n" << lws << "|                          |";
