@@ -113,10 +113,10 @@ executeRead(Instruction& instruction, Assests& assests) {
   if (subjectSecurityLevel[subject] >= objectSecurityLevel[object]) {
     assests.getSubjectMap()[subject].readObject(assests.getObjectMap()[object]);
     
-    logResult("ACCESS GRANTED", subject+" reads "+object);
+    logResult("READ ACCESS GRANTED", subject+" reads "+object);
   }
   else
-    logResult("ACCESS DENIED", line);    
+    logResult("READ ACCESS DENIED", line);    
 }
 
 
@@ -152,12 +152,12 @@ executeWrite(Instruction& instruction,Assests& assests) {
     assests.getSubjectMap()[subject].writeObject(
       assests.getObjectMap()[object],temp);
 
-    logResult("ACCESS GRANTED", subject+" writes value "+ 
+    logResult("WRITE ACCESS GRANTED", subject+" writes value "+ 
                                   to_string(temp)+" to "+object);
 
   }
   else
-    logResult("ACCESS DENIED", line);    
+    logResult("WRITE ACCESS DENIED", line);    
 }
 
 
@@ -191,8 +191,8 @@ printInstructionResult(string header,string line) {
   ostringstream out{};  // ostringstream to format instruction log
   
   out << "   ";
-  out << setw(23) << setfill(' ') << left << (line != "" ? Time{}.getTimeAndDate() : "");
-  out << (lineIsAlreadyConstructed ? setw(0) : setw(38)) << setfill('-') << left << header;
+  out << setw(21) << setfill(' ') << left << (line != "" ? Time{}.getTimeAndDate() : "");
+  out << (lineIsAlreadyConstructed ? setw(0) : setw(40)) << setfill('-') << left << header;
   
   if(!lineIsAlreadyConstructed)
     out << " " << setw(35) << setfill(' ') << left << line;
