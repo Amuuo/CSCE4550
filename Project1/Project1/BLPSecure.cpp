@@ -15,23 +15,9 @@ Description : Program implements Bell-LaPadula security rules using a
 #include"Assests.h"
 #include"Instruction.h"
 #include"ReferenceMonitor.h"
-#include<ctime>
 
 
-void logTime(string inputFile) {  
-  time_t timer;
-  time(&timer); 
-  
-  ofstream log{"log.txt", ios::app};
-  
-  log << string{5,'\n'};
-  log << string((size_t)inputFile.size()+11, '=') << endl;
-  log << asctime(localtime(&timer));
-  log << string((size_t)inputFile.size()+11, '=') << endl;
-  log << "Input File: " << inputFile << "\n";  
-  log << string((size_t)inputFile.size()+11, '-') << endl;
-  log.close();
-}
+
 
 int main(int argc, char** argv)
 {  
@@ -40,15 +26,13 @@ int main(int argc, char** argv)
   string            inputLine;          // string holds each line of instruction file  
   
 
-  
-
   try {            
     
     
     if (argc > 2 || argc < 2) // check for correct input
       throw runtime_error("Usage: ./BLPSecure <instruction file>");    
     
-    logTime(argv[1]); // log time and input file in log.txt     
+    ReferenceMonitor::logTitle({"Input File: "+string{argv[1]}}); // log time and input file in log.txt     
 
     ifstream in{argv[1]}; // instruction file input stream
         
@@ -72,14 +56,14 @@ int main(int argc, char** argv)
         ++numOfInstructions;
       }
       catch (exception& e) {
-        ReferenceMonitor::printInstructionResult("Bad Instruction",e.what());
-      }
+        referenceMonitor.logResult(e.what(), " ");
+      }      
     } 
   }
   catch (exception& e) {
     cout << "\nERROR: " << e.what() << "\n\n";
     exit(1);
-  }
+  } 
   referenceMonitor.printState(assests);
 }
 

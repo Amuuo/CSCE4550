@@ -63,7 +63,7 @@ Instruction::~Instruction() {}
 void Instruction::verify_method() {
 
   if (functionMap.find(method) == functionMap.end())
-    throw runtime_error("(Unknown Method) "+instruction);
+    throw runtime_error(constructErrorMsg("Unknown Method"));
   else {
     functionMap[method](this);
   }
@@ -77,13 +77,13 @@ void Instruction::verifty_addsub() {
     iss >> method >> subject  >> security;
 
     if (!iss.eof())
-      throw runtime_error("(Too Many Parameters) "+instruction);
+      throw runtime_error(constructErrorMsg("Too Many Parameters"));
   }
   if (subject.empty())
-    throw runtime_error("(No Subject) "+instruction);
+    throw runtime_error(constructErrorMsg("No Subject"));
   
   if (security.empty())
-    throw runtime_error("(No Security) "+instruction);
+    throw runtime_error(constructErrorMsg("No Security"));
 }
 
 
@@ -97,14 +97,14 @@ void Instruction::verify_addobj() {
     iss >> method >> object >> security;
 
     if (!iss.eof())
-      throw runtime_error("(Too Many Parameters) "+instruction);
+      throw runtime_error(constructErrorMsg("Too Many Parameters"));
   }
 
   if (object.empty())
-    throw runtime_error("(No Object) "+instruction);
+    throw runtime_error(constructErrorMsg("No Object"));
   
   if (security.empty())
-    throw runtime_error("(No Security) "+instruction);
+    throw runtime_error(constructErrorMsg("No Security"));
 
   
 }
@@ -119,12 +119,12 @@ void Instruction::verify_read() {
     iss >> method >> subject >> object;
 
     if (!iss.eof())
-      throw runtime_error("(Too Many Parameters) "+instruction);          
+      throw runtime_error(constructErrorMsg("Too Many Parameters"));          
   } 
   if (subject.empty())
-      throw runtime_error("(No Subject) "+instruction);
+      throw runtime_error(constructErrorMsg("No Subject"));
   if (object.empty())
-    throw runtime_error("(No Object) "+instruction);
+    throw runtime_error(constructErrorMsg("No Object"));
 }
 
 
@@ -138,18 +138,29 @@ void Instruction::verify_write() {
     iss >> method >> subject >> object >> valueStr;
     
     if (!iss.eof())
-      throw runtime_error("(Too Many Parameters) "+instruction);  
+      throw runtime_error(constructErrorMsg("Too Many Parameters"));  
   }
   
   if (subject.empty())
-    throw runtime_error("(No Subject) "+instruction);
+    throw runtime_error(constructErrorMsg("No Subject"));
   if (object.empty())
-    throw runtime_error("(No Object) "+instruction);
+    throw runtime_error(constructErrorMsg("No Object"));
   if (valueStr.empty())
-    throw runtime_error("(No Value) "+instruction);
+    throw runtime_error(constructErrorMsg("No Value"));
   for (auto c : valueStr)
     if (c < '0' || c > '9')
-      throw runtime_error("(Value is not Alpha-numeric) "+instruction);
+      throw runtime_error(constructErrorMsg("Value is not Alpha-numeric"));
 
   value = stoi(valueStr);
+}
+
+string Instruction::constructErrorMsg(string error, string line) {
+  ostringstream out;
+  out << setw(18) << right << "!BAD INSTRUCTION!" <<" >> " 
+      << "(" <<error<<") " << "\""<< line << "\"";
+  return out.str();
+}
+
+string Instruction::constructErrorMsg(string error) {
+  return constructErrorMsg(error,instruction);
 }

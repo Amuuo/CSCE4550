@@ -19,10 +19,11 @@ Description : Program implements Bell-LaPadula security rules using a
 #include<regex>
 #include<algorithm>
 #include<map>
+#include<iomanip>
 #include<functional>
 using namespace std;
 using namespace placeholders;
-
+const string badLead = string(25,' ');
 
 class Instruction {
   
@@ -32,6 +33,7 @@ class Instruction {
   Instruction(const Instruction&);
   Instruction(string&);
   ~Instruction();  
+
 
   map<string,function<void(Instruction*)>> functionMap{
     {"addsub",bind(&Instruction::verifty_addsub,this)},
@@ -44,7 +46,8 @@ class Instruction {
   void verify_addobj ();
   void verify_read   ();
   void verify_write  ();
-
+  string constructErrorMsg(string);
+  static string constructErrorMsg(string, string);
 
   string method{};
   string subject{};

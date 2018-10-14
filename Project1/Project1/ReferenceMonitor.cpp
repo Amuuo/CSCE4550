@@ -47,16 +47,16 @@ addSubject(Instruction& instruction, Assests& assests) {
 
     
   if (securityMap.find(security) == securityMap.end())
-    throw runtime_error("(Unknown Security Clearance) "+line);
+    throw runtime_error(Instruction::constructErrorMsg("Unknown Security Clearance",line));
   
   if (subjectSecurityLevel.find(subject) == subjectSecurityLevel.end()) {
     subjectSecurityLevel[subject] = securityMap[security];
     assests.getSubjectMap()[subject] = {subject};
   }
   else
-    throw runtime_error("(Subject Alreadys Exists) "+line);
+    throw runtime_error(Instruction::constructErrorMsg("Subject Alreadys Exists",line));
 
-  printInstructionResult("Subject Added",line); 
+  logResult("SUBJECT ADDED", line);
 }
 
 
@@ -76,16 +76,16 @@ addObject(Instruction& instruction, Assests& assests) {
 
 
   if (securityMap.find(security) == securityMap.end())
-    throw runtime_error("(Unknown Security Clearance) "+line);
+    throw runtime_error(Instruction::constructErrorMsg("Unknown Security Clearance",line));
 
   if (objectSecurityLevel.find(object) == objectSecurityLevel.end()) {
     objectSecurityLevel[object] = securityMap[security]; 
     assests.getObjectMap()[object] = {object};
   }
   else
-    throw runtime_error("(Object Alreadys Exists) "+line);
+    throw runtime_error(Instruction::constructErrorMsg("Object Alreadys Exists",line));
 
-  printInstructionResult("Object Added",line);
+  logResult("OBJECT ADDED", line);
 }
 
 
@@ -105,17 +105,18 @@ executeRead(Instruction& instruction, Assests& assests) {
 
   
   if (subjectSecurityLevel.find(subject) == subjectSecurityLevel.end())
-    throw runtime_error("(Unknown Subject) "+line);
+    throw runtime_error(Instruction::constructErrorMsg("Unknown Subject",line));
 
   if (objectSecurityLevel.find(object) == objectSecurityLevel.end())
-    throw runtime_error("(Unknown Object) "+line);
+    throw runtime_error(Instruction::constructErrorMsg("Unknown Object",line));
 
-  if (subjectSecurityLevel[subject] >= objectSecurityLevel[object]) {        
+  if (subjectSecurityLevel[subject] >= objectSecurityLevel[object]) {
     assests.getSubjectMap()[subject].readObject(assests.getObjectMap()[object]);
-    printInstructionResult("Access Granted", subject + " reads " + object);
+    
+    logResult("ACCESS GRANTED", subject+" reads "+object);
   }
-  else 
-    printInstructionResult("Access Denied",line);    
+  else
+    logResult("ACCESS DENIED", line);    
 }
 
 
@@ -137,26 +138,41 @@ executeWrite(Instruction& instruction,Assests& assests) {
   
   if (subjectSecurityLevel.find(subject) == 
       subjectSecurityLevel.end())
-    throw runtime_error("(Unknown Subject) "+line);
+    throw runtime_error(Instruction::constructErrorMsg("Unknown Subject",line));
 
   
   if (objectSecurityLevel.find(object) == 
       objectSecurityLevel.end())
-    throw runtime_error("(Unknown Object) "+line);   
+    throw runtime_error(Instruction::constructErrorMsg("Unknown Object", line));   
  
   
-  if (subjectSecurityLevel[subject] <= 
+  if (subjectSecurityLevel[subject] <=
       objectSecurityLevel[object]) {
-    
+
     assests.getSubjectMap()[subject].writeObject(
-      assests.getObjectMap()[object], temp);
-    
-    printInstructionResult("Access Granted", subject+
-                        " writes value "+to_string(temp)+
-                        " to "+object);
+      assests.getObjectMap()[object],temp);
+
+    logResult("ACCESS GRANTED", subject+" writes value "+ 
+                                  to_string(temp)+" to "+object);
+
   }
   else
-    printInstructionResult("Access Denied",line);
+    logResult("ACCESS DENIED", line);    
+}
+
+
+
+
+
+// ========================================================================
+// logs results in a multimap
+// ========================================================================
+void ReferenceMonitor::
+logResult(string header, string instruction) {
+  
+  //instructionHistory.insert(header,instruction);
+  printInstructionResult(header,instruction);
+
 }
 
 
@@ -167,18 +183,46 @@ executeWrite(Instruction& instruction,Assests& assests) {
 // prints the results of each instruction request
 // ========================================================================
 
-
-
-void ReferenceMonitor::printInstructionResult(string header,string instruction) {
-
-  ofstream log{"log.txt", ios::app};
+inline string ReferenceMonitor::
+printInstructionResult(string header,string line) {
+  
+  
+  
   ostringstream out{};  // ostringstream to format instruction log
-  out  << left << setw(16) << header << ": " << left << instruction;
+  
+                                                  
+  out << (line != "" ? Time{}.getTime() : "");
+  out << right << setw(18) << header;
+  out << (line != "" && line != " " ? " >> " : "");
+  out << left << "\""<< line <<"\"";
   cout << endl << out.str();  // print result to screen
-  log  << endl << out.str();  // print result to log
-  log.close();
+  
+  ofstream{"log.txt", ios::app} << endl << out.str();  // print result to log
+  return out.str();
 }
 
+
+
+
+
+void ReferenceMonitor::logTitle(string inputFile) {
+
+  ostringstream out{};
+
+  int borderLength = inputFile.size()>=PAGE_WIDTH ? (inputFile.size()+2) : PAGE_WIDTH+2;  
+  int timeLeadingSpace = (borderLength-24)/2;  
+  int inputFileLeadingSpace = borderLength>=PAGE_WIDTH+2 ? 
+      (borderLength-inputFile.size())/2 : (borderLength%(PAGE_WIDTH+2))/2;
+  
+  out << string(5,'\n');
+  out << string(borderLength,'=') << endl;
+  out << string(timeLeadingSpace,' ') << Time{}.getFullTime();
+  out << string(borderLength,'=') << endl;
+  out << string(inputFileLeadingSpace,' ') << inputFile << "\n";  
+  out << string(borderLength,'-') << "\n\n\n";
+
+  printInstructionResult(out.str());
+}
 
 
 
@@ -189,26 +233,32 @@ void ReferenceMonitor::printInstructionResult(string header,string instruction) 
 void ReferenceMonitor::
 printState(Assests& assests) {
 
-  cout << "\n\n+====== current state =====+";
-  cout << "\n|                          |";
-  cout << "\n|== subject ==|=== temp ===|";
-  cout << "\n|             |            |";
+  ostringstream out{};
+  string lws((PAGE_WIDTH-24) / 2,' ');
+
+  out << "\n\n" << lws << "+====== CURRENT STATE =====+";
+  out << "\n" << lws << "|                          |";
+  out << "\n" << lws << "|-- subject --|--- temp ---|";
+  out << "\n" << lws << "|             |            |";
   
   for (auto subject : assests.getSubjectMap()) {
-    cout << "\n" << "|   " << subject.second.getName() << "   |" 
-         << right << setw(7) << subject.second.getTemp() << "     |";
+    out << "\n"  << lws << "|   " << subject.second.getName() << "   |" 
+        << right << setw(7) << subject.second.getTemp() << "     |";
   }
-  cout << "\n|             |            |";
-  cout << "\n|== object ===|== value ===|";
-  cout << "\n|             |            |";
-  
+  out << "\n" << lws <<"|             |            |";
+  out << "\n" << lws <<"|-- object ---|-- value ---|";
+  out << "\n" << lws <<"|             |            |";
   
   for (auto object : assests.getObjectMap()) {
-    cout << "\n" << "|   " << object.second.getName() << "   |" 
-         << right << setw(7) << object.second.getValue() << "     |";
+    out << "\n"  << lws << "|   " << object.second.getName() << "   |" 
+        << right << setw(7) << object.second.getValue() << "     |";
   }
-  cout << "\n|             |            |";
-  cout << "\n+==========================+\n";
+  out << "\n" << lws << "|             |            |";
+  out << "\n" << lws << "+==========================+\n";
+
+  cout << out.str();
+
+  ofstream{"log.txt", ios::app} << out.str();
 }
 
 

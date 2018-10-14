@@ -15,7 +15,9 @@ Description : Program implements Bell-LaPadula security rules using a
 #pragma once
 #include"Assests.h"
 #include"Instruction.h"
+#include"Time.h"
 #include<map>
+#include<unordered_map>
 #include<functional>
 #include<utility>
 #include<algorithm>
@@ -26,6 +28,8 @@ Description : Program implements Bell-LaPadula security rules using a
 #include<string>
 #include<iostream>
 #include<iomanip>
+#include<ctime>
+#define PAGE_WIDTH 80
 
 using namespace std;
 using namespace placeholders;
@@ -40,17 +44,20 @@ class ReferenceMonitor {
   ReferenceMonitor();
   ~ReferenceMonitor();
 
-  static void printInstructionResult(string, string);
-
+  static string printInstructionResult(string,string="");
+  static void logTitle(string);
+  
   void printState      (Assests&);
   void scanInstruction (Instruction&, Assests&);
   void addSubject      (Instruction&, Assests&);
   void addObject       (Instruction&, Assests&);
   void executeRead     (Instruction&, Assests&);
   void executeWrite    (Instruction&, Assests&);
-
+  void logResult(string, string="");
   
-  vector<string>  instructionHistory{};   //vector logs all instruction results
+ 
+  //map<string,int> instructionHistory;
+  //vector<string>  instructionHistory{};   //vector logs all instruction results
   map<string,int> subjectSecurityLevel{}; //map stores subjects security clearance
   map<string,int> objectSecurityLevel{};  //map stores objects security level  
   
@@ -63,4 +70,5 @@ class ReferenceMonitor {
                       {"read"  ,bind(&ReferenceMonitor::executeRead,this,_2,_3)},
                       {"write" ,bind(&ReferenceMonitor::executeWrite,this,_2,_3)}};
 };
+
 

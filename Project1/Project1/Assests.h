@@ -14,6 +14,7 @@ Description : Program implements Bell-LaPadula security rules using a
 
 #pragma once
 #include<string>
+#include<iostream>
 #include<map>
 
 using namespace std;
