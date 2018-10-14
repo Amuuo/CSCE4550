@@ -2,7 +2,7 @@ BLPSecure : BLPSecure.o ReferenceMonitor.o Instruction.o
 	g++ -std=c++17 -Ofast -o BLPSecure BLPSecure.o ReferenceMonitor.o Instruction.o
 	rm BLPSecure.o ReferenceMonitor.o Instruction.o
 
-ReferenceMonitor.o : ReferenceMonitor.cpp ReferenceMonitor.h Instruction.h Assests.h
+ReferenceMonitor.o : ReferenceMonitor.cpp ReferenceMonitor.h Instruction.h Assests.h Time.h
 		g++ -std=c++17 -Ofast -c ReferenceMonitor.cpp
 
 Instruction.o : Instruction.h
