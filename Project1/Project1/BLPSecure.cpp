@@ -15,7 +15,23 @@ Description : Program implements Bell-LaPadula security rules using a
 #include"Assests.h"
 #include"Instruction.h"
 #include"ReferenceMonitor.h"
+#include<ctime>
 
+
+void logTime(string inputFile) {  
+  time_t timer;
+  time(&timer); 
+  
+  ofstream log{"log.txt", ios::app};
+  
+  log << string{5,'\n'};
+  log << string((size_t)inputFile.size()+11, '=') << endl;
+  log << asctime(localtime(&timer));
+  log << string((size_t)inputFile.size()+11, '=') << endl;
+  log << "Input File: " << inputFile << "\n";  
+  log << string((size_t)inputFile.size()+11, '-') << endl;
+  log.close();
+}
 
 int main(int argc, char** argv)
 {  
@@ -24,31 +40,44 @@ int main(int argc, char** argv)
   string            inputLine;          // string holds each line of instruction file  
   
 
+  
+
   try {            
     
-    // check for correct input
-    if (argc > 2 || argc < 2)
+    
+    if (argc > 2 || argc < 2) // check for correct input
       throw runtime_error("Usage: ./BLPSecure <instruction file>");    
     
-    // instruction file input stream
-    ifstream in{argv[1]};
-    
-    // check input stream integrity
-    if (in.fail()) 
+    logTime(argv[1]); // log time and input file in log.txt     
+
+    ifstream in{argv[1]}; // instruction file input stream
+        
+    if (in.fail())  // check input stream integrity
       throw runtime_error("input file failed to open");
     
-    // iterate through input file and handle instructions
-    while (!in.eof()) {
+    
+    while (!in.eof()) { // iterate through input file and handle instructions
+      
+      try {
+        static int numOfInstructions = 1;
+        
+        getline(in,inputLine);
 
-      getline(in,inputLine);
-      referenceMonitor.scanInstruction({inputLine},assests);
+        Instruction instruction{inputLine}; // constructor validates instruction
+        referenceMonitor.scanInstruction(instruction,assests);
 
-      if (referenceMonitor.instructionHistory.size() % 10 == 0)
-        referenceMonitor.printState(assests);      
-    }    
+        if (numOfInstructions % 10 == 0)
+          referenceMonitor.printState(assests);     
+        
+        ++numOfInstructions;
+      }
+      catch (exception& e) {
+        ReferenceMonitor::printInstructionResult("Bad Instruction",e.what());
+      }
+    } 
   }
   catch (exception& e) {
-    cout << "\nError: " << e.what() << endl;
+    cout << "\nERROR: " << e.what() << "\n\n";
     exit(1);
   }
   referenceMonitor.printState(assests);

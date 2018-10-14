@@ -1,33 +1,57 @@
+/*
+============================================================================
+----------------------------------------------------------------------------
+Name        : Project 1
+Author      : Adam Williams
+Version     : 1.0
+Copyright   : 2018
+Description : Program implements Bell-LaPadula security rules using a 
+              reference monitor to grant access to interactions between
+              various subjects and objects              
+----------------------------------------------------------------------------
+============================================================================
+*/
+
 #pragma once
 #include<string>
 #include<sstream>
+#include<iostream>
 #include<regex>
 #include<algorithm>
+#include<map>
+#include<functional>
 using namespace std;
-
+using namespace placeholders;
 
 
 class Instruction {
   
   public:
-  Instruction() {}
-  Instruction(string& _instruction) {    
-    
-    instruction = _instruction;
-    
-    // convert instruction to all lowercase
-    transform(instruction.begin(),instruction.end(),
-              instruction.begin(),::tolower);
-    
-    // remove any leading or trailing spaces
-    instruction = regex_replace(instruction,regex{"^ +| +$|( ) +"},"");
-    
-    istringstream iss{instruction};
-    iss >> function;    
-  }  
-  ~Instruction() {}
+  Instruction();
+  Instruction(Instruction&&);
+  Instruction(const Instruction&);
+  Instruction(string&);
+  ~Instruction();  
 
-  string function{};
+  map<string,function<void(Instruction*)>> functionMap{
+    {"addsub",bind(&Instruction::verifty_addsub,this)},
+    {"addobj",bind(&Instruction::verify_addobj ,this)},
+    {"read"  ,bind(&Instruction::verify_read   ,this)},
+    {"write" ,bind(&Instruction::verify_write  ,this)}};
+  
+  void verify_method ();
+  void verifty_addsub();
+  void verify_addobj ();
+  void verify_read   ();
+  void verify_write  ();
+
+
+  string method{};
+  string subject{};
+  string object{};
+  string security{};
+  int    value{};
+  
   string instruction{};
 };
 

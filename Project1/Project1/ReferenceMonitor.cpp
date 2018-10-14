@@ -1,41 +1,35 @@
+/*
+============================================================================
+----------------------------------------------------------------------------
+Name        : Project 1
+Author      : Adam Williams
+Version     : 1.0
+Copyright   : 2018
+Description : Program implements Bell-LaPadula security rules using a 
+              reference monitor to grant access to interactions between
+              various subjects and objects              
+----------------------------------------------------------------------------
+============================================================================
+*/
+
 #include "ReferenceMonitor.h"
 
+ReferenceMonitor::ReferenceMonitor() {
+}
 
+ReferenceMonitor::~ReferenceMonitor() {
+}
 
 // ========================================================================
 // check if instruction method exists and invoke the necessary function
 // ========================================================================
 
 void ReferenceMonitor::
-scanInstruction(Instruction instruction, Assests& assests) {
+scanInstruction(Instruction& instruction, Assests& assests) {
 
-  try {
-    if (methods.find(instruction.function) == methods.end())
-      throw runtime_error("(Unknown Method) "+instruction.instruction);
-    
-    else
-      methods[instruction.function](*this,this,instruction.instruction,assests);   
-  }
-  catch (exception& e) {
-    logInstruction("Bad instruction",e.what());
-  }
+  methods[instruction.method](this,instruction,assests);   
 }
 
-
-
-// ========================================================================
-// logs the results of each instruction request
-// ========================================================================
-
-void ReferenceMonitor::
-logInstruction(string header,string instruction) {
-
-  ostringstream out{};  // ostringstream to format instruction log
-
-  out  << left << setw(16) << header << ": " << left << instruction;
-  cout << endl << out.str();
-  instructionHistory.push_back(out.str());
-}
 
 
 
@@ -45,38 +39,26 @@ logInstruction(string header,string instruction) {
 // ========================================================================
 
 void ReferenceMonitor::
-addSubject(ReferenceMonitor* ref, string& instruction, Assests& assests) {
+addSubject(Instruction& instruction, Assests& assests) {
 
-  string method,subject,security;  // strings to hold instruction parameters
-  istringstream iss{instruction};  // stringstream to input instructions
+  string subject {move(instruction.subject)}, 
+         security{move(instruction.security)},    // string to hold instruction parameters
+         line    {move(instruction.instruction)};
 
-
-  while (iss) {
     
-    iss >> method >> subject >> security;
-
-    if (!iss.eof())
-      throw runtime_error("(Too Many Parameters) "+instruction);
-  }
-
-  if (subject.empty())
-    throw runtime_error("(No Subject) "+instruction);
+  if (securityMap.find(security) == securityMap.end())
+    throw runtime_error("(Unknown Security Clearance) "+line);
   
-  if (security.empty())
-    throw runtime_error("(No Security) "+instruction);
-  
-  if (ref->securityMap.find(security) == ref->securityMap.end())
-    throw runtime_error("(Unknown Security Clearance) "+instruction);
-  
-  if (ref->subjectSecurityLevel.find(subject) == ref->subjectSecurityLevel.end()) {
-    ref->subjectSecurityLevel[subject] = ref->securityMap[security];
+  if (subjectSecurityLevel.find(subject) == subjectSecurityLevel.end()) {
+    subjectSecurityLevel[subject] = securityMap[security];
     assests.getSubjectMap()[subject] = {subject};
   }
   else
-    throw runtime_error("(Subject Alreadys Exists) "+instruction);
+    throw runtime_error("(Subject Alreadys Exists) "+line);
 
-  ref->logInstruction("Subject Added",instruction); 
+  printInstructionResult("Subject Added",line); 
 }
+
 
 
 
@@ -86,38 +68,26 @@ addSubject(ReferenceMonitor* ref, string& instruction, Assests& assests) {
 // ========================================================================
 
 void ReferenceMonitor::
-addObject(ReferenceMonitor* ref,string& instruction, Assests& assests) {
+addObject(Instruction& instruction, Assests& assests) {
+ 
+  string object  {move(instruction.object)}, 
+         security{move(instruction.security)},    // string to hold instruction parameters
+         line    {move(instruction.instruction)};
 
-  string method,object,security;   // string to hold instruction parameters
-  istringstream iss{instruction};  // stringstream to input instructions
-  
 
-  while (iss) { 
-    
-    iss >> method >> object >> security;
+  if (securityMap.find(security) == securityMap.end())
+    throw runtime_error("(Unknown Security Clearance) "+line);
 
-    if (!iss.eof())
-      throw runtime_error("(Too Many Parameters) "+instruction);
-  }
-
-  if (object.empty())
-    throw runtime_error("(No Object) "+instruction);
-  
-  if (security.empty())
-    throw runtime_error("(No Security) "+instruction);
-  
-  if (ref->securityMap.find(security) == ref->securityMap.end())
-    throw runtime_error("(Unknown Security Clearance) "+instruction);
-
-  if (ref->objectSecurityLevel.find(object) == ref->objectSecurityLevel.end()) {
-    ref->objectSecurityLevel[object] = ref->securityMap[security]; 
+  if (objectSecurityLevel.find(object) == objectSecurityLevel.end()) {
+    objectSecurityLevel[object] = securityMap[security]; 
     assests.getObjectMap()[object] = {object};
   }
   else
-    throw runtime_error("(Object Alreadys Exists) "+instruction);
+    throw runtime_error("(Object Alreadys Exists) "+line);
 
-  ref->logInstruction("Object Added",instruction);
+  printInstructionResult("Object Added",line);
 }
+
 
 
 
@@ -127,39 +97,27 @@ addObject(ReferenceMonitor* ref,string& instruction, Assests& assests) {
 // ========================================================================
 
 void ReferenceMonitor::
-executeRead(ReferenceMonitor* ref,string& instruction, Assests& assests) {
+executeRead(Instruction& instruction, Assests& assests) {
 
-  string method,subject,object;    // string to hold instruction parameters
-  istringstream iss{instruction};  // stringstream to input instructions
+  string object  {move(instruction.object)}, 
+         subject {move(instruction.subject)},    // string to hold instruction parameters
+         line    {move(instruction.instruction)};
 
-
-  while (iss) {
-    
-    iss >> method >> subject >> object;
-
-    if (!iss.eof())
-      throw runtime_error("(Too Many Parameters) "+instruction);          
-  }
   
-  if (subject.empty())
-      throw runtime_error("(No Subject) "+instruction);    
-  
-  if (ref->subjectSecurityLevel.find(subject) == ref->subjectSecurityLevel.end())
-    throw runtime_error("(Unknown Subject) "+instruction);
-  
-  if (object.empty())
-    throw runtime_error("(No Object) "+instruction);
-  
-  if (ref->objectSecurityLevel.find(object) == ref->objectSecurityLevel.end())
-    throw runtime_error("(Unknown Object) "+instruction);
+  if (subjectSecurityLevel.find(subject) == subjectSecurityLevel.end())
+    throw runtime_error("(Unknown Subject) "+line);
 
-  if (ref->subjectSecurityLevel[subject] >= ref->objectSecurityLevel[object]) {        
+  if (objectSecurityLevel.find(object) == objectSecurityLevel.end())
+    throw runtime_error("(Unknown Object) "+line);
+
+  if (subjectSecurityLevel[subject] >= objectSecurityLevel[object]) {        
     assests.getSubjectMap()[subject].readObject(assests.getObjectMap()[object]);
-    ref->logInstruction("Access Granted", subject + " reads " + object);
+    printInstructionResult("Access Granted", subject + " reads " + object);
   }
   else 
-    ref->logInstruction("Access Denied",instruction);    
+    printInstructionResult("Access Denied",line);    
 }
+
 
 
 
@@ -169,47 +127,57 @@ executeRead(ReferenceMonitor* ref,string& instruction, Assests& assests) {
 // ========================================================================
 
 void ReferenceMonitor::
-executeWrite(ReferenceMonitor* ref,string& instruction,Assests& assests) {
+executeWrite(Instruction& instruction,Assests& assests) {
+  
+  string object  {move(instruction.object)},
+         subject {move(instruction.subject)},    // string to hold instruction parameters
+         line    {move(instruction.instruction)};
+  int    temp    {move(instruction.value)};
 
-  string method,subject,object,temp;  // string to hold instruction parameters
-  istringstream iss{instruction};      // stringstream to input instructions 
+  
+  if (subjectSecurityLevel.find(subject) == 
+      subjectSecurityLevel.end())
+    throw runtime_error("(Unknown Subject) "+line);
 
-
-  while (iss) { 
+  
+  if (objectSecurityLevel.find(object) == 
+      objectSecurityLevel.end())
+    throw runtime_error("(Unknown Object) "+line);   
+ 
+  
+  if (subjectSecurityLevel[subject] <= 
+      objectSecurityLevel[object]) {
     
-    iss >> method >> subject >> object >> temp;
+    assests.getSubjectMap()[subject].writeObject(
+      assests.getObjectMap()[object], temp);
     
-    if (!iss.eof())
-      throw runtime_error("(Too Many Parameters) "+instruction);  
-  }
-  
-  if (subject.empty())
-    throw runtime_error("(No Subject) "+instruction);    
-  
-  if (ref->subjectSecurityLevel.find(subject) == ref->subjectSecurityLevel.end())
-    throw runtime_error("(Unknown Subject) "+instruction);
-  
-  if (object.empty())
-    throw runtime_error("(No Object) "+instruction);
-  
-  if (ref->objectSecurityLevel.find(object) == ref->objectSecurityLevel.end())
-    throw runtime_error("(Unknown Object) "+instruction);   
-  
-  if (temp.empty())
-    throw runtime_error("(No Value) "+instruction);    
-  
-  for (auto c : temp)
-    if (c < '0' || c > '9')
-      throw runtime_error("(Value is not Alpha-numeric) "+instruction); 
-  
-  if (ref->subjectSecurityLevel[subject] <= ref->objectSecurityLevel[object]) {
-    assests.getSubjectMap()[subject].writeObject(assests.getObjectMap()[object], stoi(temp));
-    ref->logInstruction("Access Granted", subject+" writes value "+temp+" to "+object);
+    printInstructionResult("Access Granted", subject+
+                        " writes value "+to_string(temp)+
+                        " to "+object);
   }
   else
-    ref->logInstruction("Access Denied",instruction);
+    printInstructionResult("Access Denied",line);
 }
 
+
+
+
+
+// ========================================================================
+// prints the results of each instruction request
+// ========================================================================
+
+
+
+void ReferenceMonitor::printInstructionResult(string header,string instruction) {
+
+  ofstream log{"log.txt", ios::app};
+  ostringstream out{};  // ostringstream to format instruction log
+  out  << left << setw(16) << header << ": " << left << instruction;
+  cout << endl << out.str();  // print result to screen
+  log  << endl << out.str();  // print result to log
+  log.close();
+}
 
 
 
