@@ -35,9 +35,8 @@ using namespace std;
 using namespace placeholders;
 
 const vector<string> STATE_BOX_COLUMN_HEADERS = {"subject","temp","object","value"};
-const string         TITLE = "C U R R E N T   S T A T E";
 const int PAGE_WIDTH{75};
-const float STATE_BOX_WIDTH{54};
+const float STATE_BOX_WIDTH{56};
 
 
 enum SecurityLevels {LOW,MEDIUM,HIGH};
@@ -53,7 +52,6 @@ class ReferenceMonitor {
   ~ReferenceMonitor();
 
   static void printInstructionResult(string);
-  static void formatAndOutputLogTitle(string);
 
   void printState();  
   void processRequest(Instruction&);

@@ -1,3 +1,17 @@
+/*
+============================================================================
+----------------------------------------------------------------------------
+Name        : Project 1
+Author      : Adam Williams
+Version     : 1.0
+Copyright   : 2018
+Description : Program implements Bell-LaPadula security rules using a
+              reference monitor to grant access to interactions between
+              various subjects and objects              
+----------------------------------------------------------------------------
+============================================================================
+*/
+
 #pragma once
 #include<string>
 #include<ctime>

@@ -168,37 +168,11 @@ printInstructionResult(string message) {
   out << "      "/*<< Time{}.getTimeAndDate() */<< message;
     
   //print instruction to screen
-  cout << endl << out.str();
-  
-  //print instruction to output log.txt
-  ofstream{"log.txt",ios::app} << endl << out.str();
-  
+  cout << endl << out.str();  
 }
 
 
 
-
-void ReferenceMonitor::formatAndOutputLogTitle(string inputFile) {
-
-  ostringstream out{};
-
-  int borderLength = inputFile.size()>=PAGE_WIDTH ? (inputFile.size()+2) : PAGE_WIDTH+2;  
-  int timeLeadingSpace = (borderLength-24)/2;  
-  int inputFileLeadingSpace = borderLength>=PAGE_WIDTH+2 ? 
-      (borderLength-inputFile.size())/2 : (borderLength%(PAGE_WIDTH+2))/2;
-  
-  out << "\n\n\n\n\n";
-  out << setw(borderLength) << setfill('=') << " " << "\n";
-  out << string(timeLeadingSpace,' ') + Time{}.getFullTime();
-  out << setw(borderLength) << setfill('=') << " " << "\n";
-  out << setw(borderLength) << setfill(' ') << left; 
-  out << string(inputFileLeadingSpace,' ') + inputFile << "\n";
-  out << setw(borderLength) << setfill('-') << right << " ";
-  out << "\n\n\n";
-
-  cout << endl << out.str();
-  ofstream{"log.txt",ios::app} << endl << out.str();  
-}
 
 
 
@@ -222,7 +196,7 @@ printState() {
   const float leadingSize   = LWS.size()+9;
   const float columnWidth   = (((rowBytes-5)-(leadingSize)) / 4);
   const float fieldWidth    = columnWidth/2;  
-  const float titlePosition = (((rowBytes-LWS.size()) / 2) - (TITLE.size() / 2));
+  //const float titlePosition = (((rowBytes-LWS.size()) / 2) - (TITLE.size() / 2));
   
   auto headerPos = [&](int columnNum,string header, int rowNum=0) {
     return ((columnNum*(columnWidth)) + ((columnWidth) / 2) - 
@@ -238,7 +212,7 @@ printState() {
   cout << "\n\n\n";
 
   //out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m" << endl;
-  out << LWS << "[37;41m" << ' ' << string(STATE_BOX_WIDTH+(4*16),' ') << ' ' << "[0m";
+  out << LWS << "[;1;46m" << ' ' << string(STATE_BOX_WIDTH+(4*16),' ') << ' ' << "[0m";
   //out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m";
 
   //out.seekp(titlePosition+LWS.size()+2);
@@ -246,7 +220,7 @@ printState() {
   
   for (int i = 0, row = 0; i < STATE_BOX_COLUMN_HEADERS.size(); ++i) {
     out.seekp((i*16)+headerPos(i,STATE_BOX_COLUMN_HEADERS[i],row));
-    out << "[37;41m" << STATE_BOX_COLUMN_HEADERS[i] << "[37;41m";     
+    out << "[;1;46m" << STATE_BOX_COLUMN_HEADERS[i] << "[;1;46m";     
   }
     
   cout << "[0m";
