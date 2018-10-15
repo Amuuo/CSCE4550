@@ -164,7 +164,7 @@ printInstructionResult(string message) {
   
   ostringstream out{};  // ostringstream to format instruction log
   
-  out << "   " << setw(21) << setfill(' ') << left;
+  out << " " << setw(19) << setfill(' ') << left;
   out << Time{}.getTimeAndDate() << message;
     
   //print instruction to screen
@@ -210,38 +210,42 @@ void ReferenceMonitor::formatAndOutputLogTitle(string inputFile) {
 void ReferenceMonitor::
 printState() {
   
-  const string LWS((PAGE_WIDTH - 24) / 3,' ');
+  string LWS((PAGE_WIDTH) / 5,' ');  
+  LWS += "  ";
+  //const string LWS = "    ";
 
   ostringstream out{ios::ate};  
-  out << LWS << "[47;30m" << '+' << string(STATE_BOX_WIDTH,'=') << '+' << "[0m" << endl;
+  out << LWS << "[;1;46m" << ' ' << string(STATE_BOX_WIDTH,' ') << ' ' << "[0m" << endl;
 
-  const auto rowBytes      = out.str().size();
-  const auto leadingSize   = LWS.size()+9;
-  const auto columnWidth   = ((rowBytes-5)-(leadingSize+1)) / 4;
-  const auto fieldWidth    = columnWidth/2;  
-  const auto titlePosition = (((rowBytes-LWS.size()) / 2) - (TITLE.size() / 2));
+  const float rowBytes      = out.str().size();
+  const float leadingSize   = LWS.size()+9;
+  const float columnWidth   = (((rowBytes-5)-(leadingSize)) / 4);
+  const float fieldWidth    = columnWidth/2;  
+  const float titlePosition = (((rowBytes-LWS.size()) / 2) - (TITLE.size() / 2));
   
   auto headerPos = [&](int columnNum,string header, int rowNum=0) {
-    return ((columnNum*columnWidth) + (columnWidth / 2) - 
-              ((header.size()%2==0?header.size():(header.size()-1)) / 2)) + leadingSize + (rowNum*rowBytes);
+    return ((columnNum*(columnWidth)) + ((columnWidth) / 2) - 
+              (header.size()/2)) + leadingSize + (rowNum*rowBytes);
+
   };
   auto dividerPos = [&](int columnNum, int rowNum=0) {
     return ((columnNum+1)*(columnWidth)) + (rowNum*rowBytes) + leadingSize;
   };
   
-  cout << endl << endl << endl;
 
-  out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m" << endl;
-  out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH+(4*16),' ') << '|' << "[0m" << endl;
-  out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m";
+  out.seekp(0);
+  cout << "\n\n\n";
 
-  out.seekp(titlePosition+LWS.size()+2);
-  out << TITLE;
+  //out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m" << endl;
+  out << LWS << "[37;45m" << ' ' << string(STATE_BOX_WIDTH+(4*16),' ') << ' ' << "[0m";
+  //out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m" << endl;
+
+  //out.seekp(titlePosition+LWS.size()+2);
+  //out << TITLE;
   
-  
-  for (int i = 0, row = 2; i < STATE_BOX_COLUMN_HEADERS.size(); ++i) {
+  for (int i = 0, row = 0; i < STATE_BOX_COLUMN_HEADERS.size(); ++i) {
     out.seekp((i*16)+headerPos(i,STATE_BOX_COLUMN_HEADERS[i],row));
-    out << "[44;37m" << STATE_BOX_COLUMN_HEADERS[i] << "[47;30m";     
+    out << "[37;45m" << STATE_BOX_COLUMN_HEADERS[i] << "[37;45m";     
   }
     
   cout << "[0m";
@@ -250,28 +254,25 @@ printState() {
 
   for (auto k=(size_t)0,i = (subjectMap.size() >= objectMap.size() ?
                  subjectMap.size() : objectMap.size()); i > 0; --i, ++k) {    
-    out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m" << endl;
+    out << LWS << "[30;47m" << ' ' << string(STATE_BOX_WIDTH,' ') << ' ' << "[0m" << endl;
     int pos = out.tellp();
     for (int j = 0; j < 3; ++j) {
       out.seekp(dividerPos(j,k));
-      out << '|';      
+      out << '|';
     }
     out.seekp(pos);
   } 
-  out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m" << endl;  
-  out << LWS << "[47;30m" << '+' << string(STATE_BOX_WIDTH,'=') << '+' << "[0m" << endl;
+  //out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m" << endl;  
+  //out << LWS << "[47;30m" << ' ' << string(STATE_BOX_WIDTH,' ') << ' ' << "[0m" << endl;
   
   int i = 0,row = 0;
   for(auto sub = subjectMap.begin(); sub!=subjectMap.end(); ++sub,++i,++row){      
     
     out.seekp(headerPos(0,sub->second.getName(),row));
     out << sub->second.getName();
-    //out.seekp(dividerPos(0,row));
-    //out << '|';
     out.seekp(headerPos(1,to_string(sub->second.getTemp()),row));
     out << sub->second.getTemp();        
-    //out.seekp(dividerPos(1,row));
-    //out << '|';
+
   }
   i,row = 0;
 
@@ -279,12 +280,10 @@ printState() {
     
     out.seekp(headerPos(2,obj->second.getName(),row));
     out << obj->second.getName();
-    //out.seekp(dividerPos(2,row));
-    //out << '|';
     out.seekp(headerPos(3,to_string(obj->second.getValue()),row));
     out << obj->second.getValue();
   }        
-  cout << out.str() << endl;    
+  cout << out.str() << "\n";    
 }
 
 

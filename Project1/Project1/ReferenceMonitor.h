@@ -34,10 +34,10 @@ Description : Program implements Bell-LaPadula security rules using a
 using namespace std;
 using namespace placeholders;
 
-const vector<string> STATE_BOX_COLUMN_HEADERS = {"subject","temp","object","value"};
-const string         TITLE = "CURRENT STATE";
-const int PAGE_WIDTH{100};
-const int STATE_BOX_WIDTH{56};
+const vector<string> STATE_BOX_COLUMN_HEADERS = {"SUBJECT","TEMP","OBJECT","VALUE"};
+const string         TITLE = "C U R R E N T   S T A T E";
+const int PAGE_WIDTH{90};
+const float STATE_BOX_WIDTH{58};
 
 
 enum SecurityLevels {LOW,MEDIUM,HIGH};
