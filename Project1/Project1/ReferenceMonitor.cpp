@@ -54,9 +54,9 @@ addSubject(Instruction& instruction, Assests& assests) {
     assests.getSubjectMap()[subject] = {subject};
   }
   else
-    throw runtime_error(Instruction::constructErrorMsg("SUBJECT ALREADY EXISTS",line));
+    throw runtime_error(Instruction::constructErrorMsg("[31;1mSUBJECT ALREADY EXISTS",line));
 
-  logResult("SUBJECT ADDED", line);
+  logResult("[32;1mSUBJECT ADDED", line);
 }
 
 
@@ -83,9 +83,9 @@ addObject(Instruction& instruction, Assests& assests) {
     assests.getObjectMap()[object] = {object};
   }
   else
-    throw runtime_error(Instruction::constructErrorMsg("OBJECT ALREADY EXISTS",line));
+    throw runtime_error(Instruction::constructErrorMsg("[31;1mOBJECT ALREADY EXISTS",line));
 
-  logResult("OBJECT ADDED", line);
+  logResult("[32;1mOBJECT ADDED", line);
 }
 
 
@@ -113,10 +113,10 @@ executeRead(Instruction& instruction, Assests& assests) {
   if (subjectSecurityLevel[subject] >= objectSecurityLevel[object]) {
     assests.getSubjectMap()[subject].readObject(assests.getObjectMap()[object]);
     
-    logResult("READ ACCESS GRANTED", subject+" reads "+object);
+    logResult("[32;1mREAD ACCESS GRANTED", subject+" reads "+object);
   }
   else
-    logResult("READ ACCESS DENIED", line);    
+    logResult("[31;1mREAD ACCESS DENIED", line);    
 }
 
 
@@ -152,12 +152,12 @@ executeWrite(Instruction& instruction,Assests& assests) {
     assests.getSubjectMap()[subject].writeObject(
       assests.getObjectMap()[object],temp);
 
-    logResult("WRITE ACCESS GRANTED", subject+" writes value "+ 
+    logResult("[32;1mWRITE ACCESS GRANTED", subject+" writes value "+ 
                                   to_string(temp)+" to "+object);
 
   }
   else
-    logResult("WRITE ACCESS DENIED", line);    
+    logResult("[31;1mWRITE ACCESS DENIED", line);    
 }
 
 
@@ -191,18 +191,17 @@ printInstructionResult(string header,string line) {
   ostringstream out{};  // ostringstream to format instruction log
   
   out << "   ";
-  out << setw(21) << setfill(' ') << left << (line != "" ? Time{}.getTimeAndDate() : "");
-  out << (lineIsAlreadyConstructed ? setw(0) : setw(40)) << setfill('-') << left << header;
+  out << "[37m" << setw(21) << setfill(' ') << left << (line != "" ? Time{}.getTimeAndDate() : "");
+  out << "[0m" << (lineIsAlreadyConstructed ? setw(0) : setw(47)) << setfill('-') << left << header;
   
   if(!lineIsAlreadyConstructed)
-    out << " " << setw(35) << setfill(' ') << left << line;
+    out << "> " << setw(35) << setfill(' ') << left << string{line+"[0m"};
 
   cout << endl << out.str();  // print result to screen
   
   ofstream{"log.txt", ios::app} << endl << out.str();  // print result to log
   return out.str();
 }
-
 
 
 
@@ -236,27 +235,27 @@ void ReferenceMonitor::
 printState(Assests& assests) {
 
   ostringstream out{};
-  string lws((PAGE_WIDTH-24)/3,' ');
+  string lws((PAGE_WIDTH-24)/2,' ');
 
-  out << "\n\n" << lws << "+====== CURRENT STATE =====+";
-  out << "\n" << lws << "|                          |";
-  out << "\n" << lws << "|-- subject --|--- temp ---|";
-  out << "\n" << lws << "|             |            |";
+  out << "\n\n" << lws << "[47;30m +====== CURRENT STATE =====+ [0m";
+  out << "\n" << lws << "[47;30m |                          | [0m";
+  out << "\n" << lws << "[47;30m |-- subject --|--- temp ---| [0m";
+  out << "\n" << lws << "[47;30m |             |            | [0m";
   
   for (auto subject : assests.getSubjectMap()) {
-    out << "\n"  << lws << "|   " << subject.second.getName() << "   |" 
-        << right << setw(7) << subject.second.getTemp() << "     |";
+    out << "\n"  << lws << "[47;30m |   " << subject.second.getName() << "   |" 
+        << right << setw(7) << subject.second.getTemp() << "     | [0m";
   }
-  out << "\n" << lws <<"|             |            |";
-  out << "\n" << lws <<"|-- object ---|-- value ---|";
-  out << "\n" << lws <<"|             |            |";
+  out << "\n" << lws <<"[47;30m |             |            | [0m";
+  out << "\n" << lws <<"[47;30m |-- object ---|-- value ---| [0m";
+  out << "\n" << lws <<"[47;30m |             |            | [0m";
   
   for (auto object : assests.getObjectMap()) {
-    out << "\n"  << lws << "|   " << object.second.getName() << "   |" 
-        << right << setw(7) << object.second.getValue() << "     |";
+    out << "\n"  << lws << "[47;30m |   " << object.second.getName() << "   |" 
+        << right << setw(7) << object.second.getValue() << "     | [0m";
   }
-  out << "\n" << lws << "|             |            |";
-  out << "\n" << lws << "+==========================+\n";
+  out << "\n" << lws << "[47;30m |             |            | [0m";
+  out << "\n" << lws << "[47;30m +==========================+ [0m\n";
 
   cout << out.str();
 

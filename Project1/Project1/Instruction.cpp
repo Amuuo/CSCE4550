@@ -5,7 +5,7 @@ Name        : Project 1
 Author      : Adam Williams
 Version     : 1.0
 Copyright   : 2018
-Description : Program implements Bell-LaPadula security rules using a 
+Description : Program implements Bell-LaPadula security rules using a
               reference monitor to grant access to interactions between
               various subjects and objects              
 ----------------------------------------------------------------------------
@@ -156,9 +156,9 @@ void Instruction::verify_write() {
 
 string Instruction::constructErrorMsg(string error, string line) {
   ostringstream out;
-  out << setw(40) << setfill('-') << left;
-  out << string{"!!BAD INSTRUCTION (" + error+")"};
-  out << " " << setw(35) << setfill(' ') << left << line;
+  out << "[41;1m" << setw(40) << setfill('-') << left;
+  out << string{"!!BAD INSTRUCTION-->" + error};
+  out << "> " << setw(35) << setfill(' ') << left << string{line+"[0m"};
   return out.str();
 }
 
