@@ -29,7 +29,7 @@ int main(int argc, char** argv)
     // check for correct command line input
     if (argc > 2 || argc < 2) 
       throw runtime_error("Usage: ./BLPSecure <instruction file>");    
-    
+        
     // log time and input file in log.txt     
     ReferenceMonitor::formatAndOutputLogTitle({"Input File: "+string{argv[1]}}); 
     

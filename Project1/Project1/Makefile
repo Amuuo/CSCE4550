@@ -1,5 +1,5 @@
-BLPSecure : BLPSecure.o ReferenceMonitor.o Instruction.o
-	g++ -std=c++17 -Ofast -o BLPSecure BLPSecure.o ReferenceMonitor.o Instruction.o
+blpecure : BLPSecure.o ReferenceMonitor.o Instruction.o
+	g++ -std=c++17 -Ofast -o blpsecure BLPSecure.o ReferenceMonitor.o Instruction.o
 	rm BLPSecure.o ReferenceMonitor.o Instruction.o
 
 ReferenceMonitor.o : ReferenceMonitor.cpp ReferenceMonitor.h Instruction.h Subject.h Object.h Time.h
@@ -12,4 +12,4 @@ BLPSecure.o : BLPSecure.cpp Instruction.h ReferenceMonitor.h
 		g++ -std=c++17 -Ofast -c BLPSecure.cpp
 
 clean : 
-	rm BLPSecure BLPSecure.o ReferenceMonitor.o Instruction.o
+	rm blpsecure BLPSecure.o ReferenceMonitor.o Instruction.o

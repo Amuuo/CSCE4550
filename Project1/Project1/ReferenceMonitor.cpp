@@ -203,86 +203,88 @@ void ReferenceMonitor::formatAndOutputLogTitle(string inputFile) {
 
 
 // ========================================================================
-// prints the current state of the objects and subjects in Assests struct
+// really excessive function that prints the current state dynamically 
+// based on column width
 // ========================================================================
 
 void ReferenceMonitor::
 printState() {
+  
+  const string LWS((PAGE_WIDTH - 24) / 3,' ');
 
-  string lws((PAGE_WIDTH-24)/3,' ');
-  vector<string> columns = {"subject","temp","object","value"};
+  ostringstream out{ios::ate};  
+  out << LWS << "[47;30m" << '+' << string(STATE_BOX_WIDTH,'=') << '+' << "[0m" << endl;
 
-  const string title = "CURRENT STATE";
-  int pageWidth   = 65;
-    
-  cout << endl << endl << endl;
-  ostringstream out{ios::ate};
-  out << lws << '+' << string(pageWidth,'=') << '+' << endl; int pos = out.tellp();
-
-  int rowBytes = out.str().size();
-  int columnWidth = (rowBytes-lws.size()) / 4;
-  int fieldWidth  = columnWidth/2;  
-  int titlePosition = (((rowBytes-lws.size()) / 2) - (title.size() / 2));
-
-  auto headerPos = [&](int columnNum,string header) {
+  const auto rowBytes      = out.str().size();
+  const auto leadingSize   = LWS.size()+9;
+  const auto columnWidth   = ((rowBytes-5)-(leadingSize+1)) / 4;
+  const auto fieldWidth    = columnWidth/2;  
+  const auto titlePosition = (((rowBytes-LWS.size()) / 2) - (TITLE.size() / 2));
+  
+  auto headerPos = [&](int columnNum,string header, int rowNum=0) {
     return ((columnNum*columnWidth) + (columnWidth / 2) - 
-              (header.size() / 2)) + lws.size();
+              ((header.size()%2==0?header.size():(header.size()-1)) / 2)) + leadingSize + (rowNum*rowBytes);
+  };
+  auto dividerPos = [&](int columnNum, int rowNum=0) {
+    return ((columnNum+1)*(columnWidth)) + (rowNum*rowBytes) + leadingSize;
   };
   
-  out << lws << '|' << string(pageWidth,' ') << '|' << endl; pos = out.tellp();
-  out << lws << '|' << string(pageWidth,' ') << '|' << endl; pos = out.tellp();
-  out << lws << '|' << string(pageWidth,' ') << '|'; pos = out.tellp();
+  cout << endl << endl << endl;
 
+  out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m" << endl;
+  out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH+(4*16),' ') << '|' << "[0m" << endl;
+  out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m";
+
+  out.seekp(titlePosition+LWS.size()+2);
+  out << TITLE;
   
-  out.seekp(titlePosition+lws.size());
-  out << title;
   
-  int row = 2;
-  for (int i = 0; i < columns.size(); ++i) {
-    out.seekp((row*rowBytes)+headerPos(i,columns[i]));
-    out << columns[i]; 
+  for (int i = 0, row = 2; i < STATE_BOX_COLUMN_HEADERS.size(); ++i) {
+    out.seekp((i*16)+headerPos(i,STATE_BOX_COLUMN_HEADERS[i],row));
+    out << "[44;37m" << STATE_BOX_COLUMN_HEADERS[i] << "[47;30m";     
   }
- 
-  cout << out.str();
+    
+  cout << "[0m";
+  cout << out.str() << endl;
   out.seekp(0);
-  
 
-  out << endl;
+  for (auto k=(size_t)0,i = (subjectMap.size() >= objectMap.size() ?
+                 subjectMap.size() : objectMap.size()); i > 0; --i, ++k) {    
+    out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m" << endl;
+    int pos = out.tellp();
+    for (int j = 0; j < 3; ++j) {
+      out.seekp(dividerPos(j,k));
+      out << '|';      
+    }
+    out.seekp(pos);
+  } 
+  out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m" << endl;  
+  out << LWS << "[47;30m" << '+' << string(STATE_BOX_WIDTH,'=') << '+' << "[0m" << endl;
+  
+  int i = 0,row = 0;
+  for(auto sub = subjectMap.begin(); sub!=subjectMap.end(); ++sub,++i,++row){      
+    
+    out.seekp(headerPos(0,sub->second.getName(),row));
+    out << sub->second.getName();
+    //out.seekp(dividerPos(0,row));
+    //out << '|';
+    out.seekp(headerPos(1,to_string(sub->second.getTemp()),row));
+    out << sub->second.getTemp();        
+    //out.seekp(dividerPos(1,row));
+    //out << '|';
+  }
+  i,row = 0;
 
-  for (auto i = (subjectMap.size() >= objectMap.size() ?
-                 subjectMap.size() : objectMap.size()); i > 0; --i) {
+  for(auto obj = objectMap.begin(); obj!=objectMap.end(); ++obj,++i,++row){      
     
-    out << lws << '|' << string(pageWidth,' ') << '|' << endl;    
-  }
-  out << lws << '|' << string(pageWidth,' ') << '|' << endl;  
-  out << lws << '+' << string(pageWidth,'=') << '+' << endl;
-  out << endl;
-  
-  int i = 0;
-  row = 0;
-  for(auto sub : subjectMap){    
-    
-    out.seekp(1+(row*rowBytes)+headerPos(0, sub.second.getName()));
-    out << sub.second.getName();
-    out.seekp(1+(row*rowBytes)+headerPos(1, to_string(sub.second.getTemp())));
-    out << sub.second.getTemp();
-    ++i;
-    ++row;
-  }
-  i = 0;
-  row = 0;
-  for (auto obj : objectMap) {
-    
-    out.seekp(1+(row*rowBytes)+headerPos(2, obj.second.getName()));
-    out << obj.second.getName();
-    out.seekp(1+(row*rowBytes)+headerPos(3, to_string(obj.second.getValue())));
-    out << obj.second.getValue();
-    ++i;
-    ++row;
-  }  
-      
-  cout << out.str();  
-  
+    out.seekp(headerPos(2,obj->second.getName(),row));
+    out << obj->second.getName();
+    //out.seekp(dividerPos(2,row));
+    //out << '|';
+    out.seekp(headerPos(3,to_string(obj->second.getValue()),row));
+    out << obj->second.getValue();
+  }        
+  cout << out.str() << endl;    
 }
 
 
