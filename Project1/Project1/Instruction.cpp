@@ -63,7 +63,7 @@ Instruction::~Instruction() {}
 void Instruction::verify_method() {
 
   if (functionMap.find(method) == functionMap.end())
-    throw runtime_error(constructErrorMsg("UNKNOWN METHOD"));
+    throw runtime_error(constructMsg("UNKNOWN METHOD"));
   else {
     functionMap[method](this);
   }
@@ -77,13 +77,13 @@ void Instruction::verifty_addsub() {
     iss >> method >> subject  >> security;
 
     if (!iss.eof())
-      throw runtime_error(constructErrorMsg("TOO MANY PARAMETERS"));
+      throw runtime_error(constructMsg("TOO MANY PARAMETERS"));
   }
   if (subject.empty())
-    throw runtime_error(constructErrorMsg("NO SUBJECT"));
+    throw runtime_error(constructMsg("NO SUBJECT"));
   
   if (security.empty())
-    throw runtime_error(constructErrorMsg("NO SECURITY"));
+    throw runtime_error(constructMsg("NO SECURITY"));
 }
 
 
@@ -97,14 +97,14 @@ void Instruction::verify_addobj() {
     iss >> method >> object >> security;
 
     if (!iss.eof())
-      throw runtime_error(constructErrorMsg("TOO MANY PARAMETERS"));
+      throw runtime_error(constructMsg("TOO MANY PARAMETERS"));
   }
 
   if (object.empty())
-    throw runtime_error(constructErrorMsg("NO OBJECT"));
+    throw runtime_error(constructMsg("NO OBJECT"));
   
   if (security.empty())
-    throw runtime_error(constructErrorMsg("NO SECURITY"));
+    throw runtime_error(constructMsg("NO SECURITY"));
 
   
 }
@@ -119,12 +119,12 @@ void Instruction::verify_read() {
     iss >> method >> subject >> object;
 
     if (!iss.eof())
-      throw runtime_error(constructErrorMsg("TOO MANY PARAMETERS"));          
+      throw runtime_error(constructMsg("TOO MANY PARAMETERS"));          
   } 
   if (subject.empty())
-      throw runtime_error(constructErrorMsg("NO SUBJECT"));
+      throw runtime_error(constructMsg("NO SUBJECT"));
   if (object.empty())
-    throw runtime_error(constructErrorMsg("NO OBJECT"));
+    throw runtime_error(constructMsg("NO OBJECT"));
 }
 
 
@@ -138,30 +138,34 @@ void Instruction::verify_write() {
     iss >> method >> subject >> object >> valueStr;
     
     if (!iss.eof())
-      throw runtime_error(constructErrorMsg("TOO MANY PARAMETERS"));  
+      throw runtime_error(constructMsg("TOO MANY PARAMETERS"));  
   }
   
   if (subject.empty())
-    throw runtime_error(constructErrorMsg("NO SUBJECT"));
+    throw runtime_error(constructMsg("NO SUBJECT"));
   if (object.empty())
-    throw runtime_error(constructErrorMsg("NO OBJECT"));
+    throw runtime_error(constructMsg("NO OBJECT"));
   if (valueStr.empty())
-    throw runtime_error(constructErrorMsg("NO VALUE"));
+    throw runtime_error(constructMsg("NO VALUE"));
   for (auto c : valueStr)
     if (c < '0' || c > '9')
-      throw runtime_error(constructErrorMsg("NON-NUMERIC VALUE"));
+      throw runtime_error(constructMsg("NON-NUMERIC VALUE"));
 
   value = stoi(valueStr);
 }
 
-string Instruction::constructErrorMsg(string error, string line) {
-  ostringstream out;
-  out << "[41;1m" << setw(40) << setfill('-') << left;
-  out << string{"!!BAD INSTRUCTION-->" + error};
+string Instruction::constructMsg(string result, string line, string color) {
+  
+  color = "[" + color + "m";
+  
+  ostringstream out; // osstream to format string
+
+  out << color << setw(40) << setfill('-') << left;
+  out << string{result};
   out << "> " << setw(35) << setfill(' ') << left << string{line+"[0m"};
   return out.str();
 }
 
-string Instruction::constructErrorMsg(string error) {
-  return constructErrorMsg(error,instruction);
+string Instruction::constructMsg(string error) {
+  return constructMsg("!!BAD INSTRUCTION-->"+error,instruction, B_RED+WHITE);
 }

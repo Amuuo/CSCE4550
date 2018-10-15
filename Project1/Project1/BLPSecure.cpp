@@ -12,7 +12,6 @@ Description : Program implements Bell-LaPadula security rules using a
 ============================================================================
 */
 
-#include"Assests.h"
 #include"Instruction.h"
 #include"ReferenceMonitor.h"
 
@@ -22,46 +21,51 @@ Description : Program implements Bell-LaPadula security rules using a
 int main(int argc, char** argv)
 {  
   ReferenceMonitor  referenceMonitor{}; // reference monitor class  
-  Assests           assests{};          // class holds all subjects and objects 
   string            inputLine;          // string holds each line of instruction file  
   
 
   try {            
     
-    if (argc > 2 || argc < 2) // check for correct input
+    // check for correct command line input
+    if (argc > 2 || argc < 2) 
       throw runtime_error("Usage: ./BLPSecure <instruction file>");    
     
-    ReferenceMonitor::logTitle({"Input File: "+string{argv[1]}}); // log time and input file in log.txt     
-    ifstream in{argv[1]}; // instruction file input stream
+    // log time and input file in log.txt     
+    ReferenceMonitor::formatAndOutputLogTitle({"Input File: "+string{argv[1]}}); 
+    
+    // instruction file input stream
+    ifstream in{argv[1]}; 
         
     if (in.fail())  // check input stream integrity
       throw runtime_error("input file failed to open");
     
     
-    while (!in.eof()) { // iterate through input file and handle instructions
+    
+    // iterate through input file and handle instructions
+    for(int numOfInstructions = 1; !in.eof(); ++numOfInstructions){      
       
-      try {
-
-        static int numOfInstructions = 1;
+      try {        
         getline(in,inputLine);
-        Instruction instruction{inputLine}; // constructor validates instruction
-        referenceMonitor.scanInstruction(instruction,assests);
+        
+        // constructor validates instruction
+        Instruction instruction{inputLine}; 
+        referenceMonitor.processRequest(instruction);
 
         if (numOfInstructions % 10 == 0)
-          referenceMonitor.printState(assests);     
-        
-        ++numOfInstructions;
+          referenceMonitor.printState();                     
       }
+
       catch (exception& e) {
-        referenceMonitor.logResult(e.what(), " ");
+        referenceMonitor.printInstructionResult(e.what());
       }      
     } 
   }
+  
   catch (exception& e) {
     cout << "\nERROR: " << e.what() << "\n\n";
     exit(1);
   } 
-  referenceMonitor.printState(assests);
+  referenceMonitor.printState();
 }
 
 

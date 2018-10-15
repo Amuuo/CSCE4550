@@ -11,7 +11,6 @@ Description : Program implements Bell-LaPadula security rules using a
 ----------------------------------------------------------------------------
 ============================================================================
 */
-
 #pragma once
 #include<string>
 #include<sstream>
@@ -21,9 +20,23 @@ Description : Program implements Bell-LaPadula security rules using a
 #include<map>
 #include<iomanip>
 #include<functional>
+
+
 using namespace std;
 using namespace placeholders;
 const string badLead = string(25,' ');
+
+const string BLUE    = ";34";
+const string GREEN   = ";32";
+const string RED     = ";31";
+const string YELLOW  = ";33";
+const string WHITE   = ";37";
+const string B_BLUE  = ";44";
+const string B_RED   = ";41";
+const string B_GREEN = ";42";
+const string B_WHITE = ";47";
+const string BOLD    = ";1";
+
 
 class Instruction {
   
@@ -46,8 +59,8 @@ class Instruction {
   void verify_addobj ();
   void verify_read   ();
   void verify_write  ();
-  string constructErrorMsg(string);
-  static string constructErrorMsg(string, string);
+  string constructMsg(string);
+  static string constructMsg(string, string, string="0");
 
   string method{};
   string subject{};

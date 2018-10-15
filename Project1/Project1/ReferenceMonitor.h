@@ -13,7 +13,8 @@ Description : Program implements Bell-LaPadula security rules using a
 */
 
 #pragma once
-#include"Assests.h"
+#include"Subject.h"
+#include"Object.h"
 #include"Instruction.h"
 #include"Time.h"
 #include<map>
@@ -39,36 +40,39 @@ enum SecurityLevels {LOW,MEDIUM,HIGH};
 
 class ReferenceMonitor {
 
-  using functionMap = map<string,function<void(ReferenceMonitor*,Instruction&,Assests&)>>;      
+  using functionMap = map<string,function<void(ReferenceMonitor*,Instruction&)>>;      
+  
   public:                                           
+  
   ReferenceMonitor();
   ~ReferenceMonitor();
 
-  static string printInstructionResult(string,string="");
-  static void logTitle(string);
+  static void printInstructionResult(string);
+  static void formatAndOutputLogTitle(string);
+
+  void printState();  
+  void processRequest (Instruction&);
+  void addSubject      (Instruction&);
+  void addObject       (Instruction&);
+  void executeRead     (Instruction&);
+  void executeWrite    (Instruction&);
   
-  void printState      (Assests&);
-  void scanInstruction (Instruction&, Assests&);
-  void addSubject      (Instruction&, Assests&);
-  void addObject       (Instruction&, Assests&);
-  void executeRead     (Instruction&, Assests&);
-  void executeWrite    (Instruction&, Assests&);
-  void logResult(string, string="");
   
- 
-  //map<string,int> instructionHistory;
-  //vector<string>  instructionHistory{};   //vector logs all instruction results
-  map<string,int> subjectSecurityLevel{}; //map stores subjects security clearance
-  map<string,int> objectSecurityLevel{};  //map stores objects security level  
+  private:
+
+  map<string,Subject>  subjectMap;             //map stores all objects
+  map<string,Object>   objectMap;              //map stores all subjects
+  map<string,int>      subjectSecurityLevel{}; //map stores subjects security clearance
+  map<string,int>      objectSecurityLevel{};  //map stores objects security level  
   
   //map stores the security level value with a string key
   map<string,int> securityMap{{"low",LOW},{"medium",MEDIUM},{"high",HIGH}};
 
   //map stores functions functions called for by the input
-  functionMap methods{{"addobj",bind(&ReferenceMonitor::addObject,this,_2,_3)},
-                      {"addsub",bind(&ReferenceMonitor::addSubject,this,_2,_3)},
-                      {"read"  ,bind(&ReferenceMonitor::executeRead,this,_2,_3)},
-                      {"write" ,bind(&ReferenceMonitor::executeWrite,this,_2,_3)}};
+  functionMap methods{{"addobj",bind(&ReferenceMonitor::addObject,this,_2)},
+                      {"addsub",bind(&ReferenceMonitor::addSubject,this,_2)},
+                      {"read"  ,bind(&ReferenceMonitor::executeRead,this,_2)},
+                      {"write" ,bind(&ReferenceMonitor::executeWrite,this,_2)}};
 };
 
 
