@@ -5,287 +5,295 @@
 
 
 ===================================================================================================== 
-                                       Mon Oct 15 02:11:15 2018
+                                       Mon Oct 15 08:07:51 2018
 ===================================================================================================== 
                                         Input File: input.txt                                         
 ----------------------------------------------------------------------------------------------------- 
 
 
 
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub kel0004 low[0m             
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub jms0381 medium[0m          
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub sam0039 high[0m            
-   10/15/18 02:11:15    [;32;1mOBJECT ADDED----------------------------> addobj file001 medium[0m          
-   10/15/18 02:11:15    [;32;1mOBJECT ADDED----------------------------> addobj file002 low[0m             
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file002[0m
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 10 to file001[0m
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file001[0m          
-   10/15/18 02:11:15    [;31;1mREAD ACCESS DENIED----------------------> read kel0004 file001[0m           
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> kel0004 reads file002[0m          
-   10/15/18 02:11:15    [;32;1mOBJECT ADDED----------------------------> addobj file003 high[0m            
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->NO VALUE------------> write jms0381 file002[0m          
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->NO OBJECT-----------> read sam0039[0m                   
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> write jms0381 file001 40 80[0m    
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> read krt1039 file003 50[0m        
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 10 to file001[0m
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub sra0002 low[0m             
-   10/15/18 02:11:15    [;31;1mREAD ACCESS DENIED----------------------> read sra0002 file003[0m           
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub krt0084 medium[0m          
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub liz0028 high[0m            
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> write krt1039 file004 40[0m       
-   10/15/18 02:11:15    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file001 20[0m       
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 30 to file003[0m
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> sra0002 reads file002[0m          
-   10/15/18 02:11:15    [;32;1mOBJECT ADDED----------------------------> addobj file004 high[0m            
-   10/15/18 02:11:15    [;32;1mOBJECT ADDED----------------------------> addobj file005 low[0m             
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file005[0m          
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 50 to file005[0m
-   10/15/18 02:11:15    [;32;1mOBJECT ADDED----------------------------> addobj file006 medium[0m          
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 30 to file006[0m
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file006[0m
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file003[0m          
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> read krt1039 file004[0m           
-   10/15/18 02:11:15    [;31;1mREAD ACCESS DENIED----------------------> read jms0381 file004[0m           
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file001[0m          
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file005[0m          
-   10/15/18 02:11:15    [;31;1mWRITE ACCESS DENIED---------------------> write sam0039 file006 90[0m       
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->NON-NUMERIC VALUE---> write sam0039 file005 x[0m        
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 60 to file004[0m
-   10/15/18 02:11:15    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file005 60[0m       
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->UNKNOWN OBJECT------> read sra0002 file007[0m           
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->UNKNOWN METHOD------> exec adm0831 file004[0m           
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file006[0m          
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> jms0381 reads file005[0m          
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 70 to file004[0m
+   10/15/18 08:07:51    [;32;1mSUBJECT ADDED---------------------------> addsub kel0004 low[0m             
+   10/15/18 08:07:51    [;32;1mSUBJECT ADDED---------------------------> addsub jms0381 medium[0m          
+   10/15/18 08:07:51    [;32;1mSUBJECT ADDED---------------------------> addsub sam0039 high[0m            
+   10/15/18 08:07:51    [;32;1mOBJECT ADDED----------------------------> addobj file001 medium[0m          
+   10/15/18 08:07:51    [;32;1mOBJECT ADDED----------------------------> addobj file002 low[0m             
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file002[0m
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 10 to file001[0m
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file001[0m          
+   10/15/18 08:07:51    [;31;1mREAD ACCESS DENIED----------------------> read kel0004 file001[0m           
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> kel0004 reads file002[0m          
+   10/15/18 08:07:51    [;32;1mOBJECT ADDED----------------------------> addobj file003 high[0m            
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->NO VALUE------------> write jms0381 file002[0m          
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->NO OBJECT-----------> read sam0039[0m                   
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> write jms0381 file001 40 80[0m    
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> read krt1039 file003 50[0m        
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 10 to file001[0m
+   10/15/18 08:07:51    [;32;1mSUBJECT ADDED---------------------------> addsub sra0002 low[0m             
+   10/15/18 08:07:51    [;31;1mREAD ACCESS DENIED----------------------> read sra0002 file003[0m           
+   10/15/18 08:07:51    [;32;1mSUBJECT ADDED---------------------------> addsub krt0084 medium[0m          
+   10/15/18 08:07:51    [;32;1mSUBJECT ADDED---------------------------> addsub liz0028 high[0m            
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> write krt1039 file004 40[0m       
+   10/15/18 08:07:51    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file001 20[0m       
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 30 to file003[0m
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> sra0002 reads file002[0m          
+   10/15/18 08:07:51    [;32;1mOBJECT ADDED----------------------------> addobj file004 high[0m            
+   10/15/18 08:07:51    [;32;1mOBJECT ADDED----------------------------> addobj file005 low[0m             
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file005[0m          
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 50 to file005[0m
+   10/15/18 08:07:51    [;32;1mOBJECT ADDED----------------------------> addobj file006 medium[0m          
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 30 to file006[0m
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file006[0m
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file003[0m          
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> read krt1039 file004[0m           
+   10/15/18 08:07:51    [;31;1mREAD ACCESS DENIED----------------------> read jms0381 file004[0m           
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file001[0m          
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file005[0m          
+   10/15/18 08:07:51    [;31;1mWRITE ACCESS DENIED---------------------> write sam0039 file006 90[0m       
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->NON-NUMERIC VALUE---> write sam0039 file005 x[0m        
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 60 to file004[0m
+   10/15/18 08:07:51    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file005 60[0m       
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->UNKNOWN OBJECT------> read sra0002 file007[0m           
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->UNKNOWN METHOD------> exec adm0831 file004[0m           
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file006[0m          
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> jms0381 reads file005[0m          
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 70 to file004[0m
 
 
 
 
 
 ===================================================================================================== 
-                                       Mon Oct 15 02:11:15 2018
+                                       Mon Oct 15 08:07:51 2018
 ===================================================================================================== 
                                         Input File: input2.txt                                        
 ----------------------------------------------------------------------------------------------------- 
 
 
 
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub kel0004 low[0m             
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub jms0381 medium[0m          
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub sam0039 high[0m            
-   10/15/18 02:11:15    [;32;1mOBJECT ADDED----------------------------> addobj file001 medium[0m          
-   10/15/18 02:11:15    [;32;1mOBJECT ADDED----------------------------> addobj file002 low[0m             
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file002[0m
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 10 to file001[0m
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file001[0m          
-   10/15/18 02:11:15    [;31;1mREAD ACCESS DENIED----------------------> read kel0004 file001[0m           
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> kel0004 reads file002[0m          
-   10/15/18 02:11:15    [;32;1mOBJECT ADDED----------------------------> addobj file003 high[0m            
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->NO VALUE------------> write jms0381 file002[0m          
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->NO OBJECT-----------> read sam0039[0m                   
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> write jms0381 file001 40 80[0m    
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> read krt1039 file003 50[0m        
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 10 to file001[0m
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub sra0002 low[0m             
-   10/15/18 02:11:15    [;31;1mREAD ACCESS DENIED----------------------> read sra0002 file003[0m           
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub krt0084 medium[0m          
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub liz0028 high[0m            
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> write krt1039 file004 40[0m       
-   10/15/18 02:11:15    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file001 20[0m       
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 30 to file003[0m
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> sra0002 reads file002[0m          
-   10/15/18 02:11:15    [;32;1mOBJECT ADDED----------------------------> addobj file004 high[0m            
-   10/15/18 02:11:15    [;32;1mOBJECT ADDED----------------------------> addobj file005 low[0m             
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file005[0m          
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 50 to file005[0m
-   10/15/18 02:11:15    [;32;1mOBJECT ADDED----------------------------> addobj file006 medium[0m          
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 30 to file006[0m
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file006[0m
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file003[0m          
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> read krt1039 file004[0m           
-   10/15/18 02:11:15    [;31;1mREAD ACCESS DENIED----------------------> read jms0381 file004[0m           
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file001[0m          
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file005[0m          
-   10/15/18 02:11:15    [;31;1mWRITE ACCESS DENIED---------------------> write sam0039 file006 90[0m       
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->NON-NUMERIC VALUE---> write sam0039 file005 x[0m        
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 60 to file004[0m
-   10/15/18 02:11:15    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file005 60[0m       
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->UNKNOWN OBJECT------> read sra0002 file007[0m           
-   10/15/18 02:11:15    [;41;37m!!BAD INSTRUCTION-->UNKNOWN METHOD------> exec adm0831 file004[0m           
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file006[0m          
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> jms0381 reads file005[0m          
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 70 to file004[0m
+   10/15/18 08:07:51    [;32;1mSUBJECT ADDED---------------------------> addsub kel0004 low[0m             
+   10/15/18 08:07:51    [;32;1mSUBJECT ADDED---------------------------> addsub jms0381 medium[0m          
+   10/15/18 08:07:51    [;32;1mSUBJECT ADDED---------------------------> addsub sam0039 high[0m            
+   10/15/18 08:07:51    [;32;1mOBJECT ADDED----------------------------> addobj file001 medium[0m          
+   10/15/18 08:07:51    [;32;1mOBJECT ADDED----------------------------> addobj file002 low[0m             
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file002[0m
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 10 to file001[0m
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file001[0m          
+   10/15/18 08:07:51    [;31;1mREAD ACCESS DENIED----------------------> read kel0004 file001[0m           
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> kel0004 reads file002[0m          
+   10/15/18 08:07:51    [;32;1mOBJECT ADDED----------------------------> addobj file003 high[0m            
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->NO VALUE------------> write jms0381 file002[0m          
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->NO OBJECT-----------> read sam0039[0m                   
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> write jms0381 file001 40 80[0m    
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> read krt1039 file003 50[0m        
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 10 to file001[0m
+   10/15/18 08:07:51    [;32;1mSUBJECT ADDED---------------------------> addsub sra0002 low[0m             
+   10/15/18 08:07:51    [;31;1mREAD ACCESS DENIED----------------------> read sra0002 file003[0m           
+   10/15/18 08:07:51    [;32;1mSUBJECT ADDED---------------------------> addsub krt0084 medium[0m          
+   10/15/18 08:07:51    [;32;1mSUBJECT ADDED---------------------------> addsub liz0028 high[0m            
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> write krt1039 file004 40[0m       
+   10/15/18 08:07:51    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file001 20[0m       
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 30 to file003[0m
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> sra0002 reads file002[0m          
+   10/15/18 08:07:51    [;32;1mOBJECT ADDED----------------------------> addobj file004 high[0m            
+   10/15/18 08:07:51    [;32;1mOBJECT ADDED----------------------------> addobj file005 low[0m             
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file005[0m          
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 50 to file005[0m
+   10/15/18 08:07:51    [;32;1mOBJECT ADDED----------------------------> addobj file006 medium[0m          
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 30 to file006[0m
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file006[0m
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file003[0m          
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> read krt1039 file004[0m           
+   10/15/18 08:07:51    [;31;1mREAD ACCESS DENIED----------------------> read jms0381 file004[0m           
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file001[0m          
+   10/15/18 08:07:51    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file005[0m          
+   10/15/18 08:07:51    [;31;1mWRITE ACCESS DENIED---------------------> write sam0039 file006 90[0m       
+   10/15/18 08:07:51    [;41;37m!!BAD INSTRUCTION-->NON-NUMERIC VALUE---> write sam0039 file005 x[0m        
+   10/15/18 08:07:51    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 60 to file004[0m
+   10/15/18 08:07:51    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file005 60[0m       
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->UNKNOWN OBJECT------> read sra0002 file007[0m           
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->UNKNOWN METHOD------> exec adm0831 file004[0m           
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file006[0m          
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> jms0381 reads file005[0m          
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 70 to file004[0m
 
 
 
 
 
 ===================================================================================================== 
-                                       Mon Oct 15 02:11:15 2018
+                                       Mon Oct 15 08:07:52 2018
 ===================================================================================================== 
                                       Input File: inputLinux.txt                                      
 ----------------------------------------------------------------------------------------------------- 
 
 
 
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub kel0004 low[0m             
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub jms0381 medium[0m          
-   10/15/18 02:11:15    [;32;1mSUBJECT ADDED---------------------------> addsub sam0039 high[0m            
-   10/15/18 02:11:15    [;32;1mOBJECT ADDED----------------------------> addobj file001 medium[0m          
-   10/15/18 02:11:15    [;32;1mOBJECT ADDED----------------------------> addobj file002 low[0m             
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file002[0m
-   10/15/18 02:11:15    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 10 to file001[0m
-   10/15/18 02:11:15    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file001[0m          
-   10/15/18 02:11:16    [;31;1mREAD ACCESS DENIED----------------------> read kel0004 file001[0m           
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> kel0004 reads file002[0m          
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file003 high[0m            
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->NO VALUE------------> write jms0381 file002[0m          
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->NO OBJECT-----------> read sam0039[0m                   
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> write jms0381 file001 40 80[0m    
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> read krt1039 file003 50[0m        
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 10 to file001[0m
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub sra0002 low[0m             
-   10/15/18 02:11:16    [;31;1mREAD ACCESS DENIED----------------------> read sra0002 file003[0m           
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub krt0084 medium[0m          
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub liz0028 high[0m            
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> write krt1039 file004 40[0m       
-   10/15/18 02:11:16    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file001 20[0m       
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 30 to file003[0m
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> sra0002 reads file002[0m          
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file004 high[0m            
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file005 low[0m             
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file005[0m          
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 50 to file005[0m
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file006 medium[0m          
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 30 to file006[0m
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file006[0m
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file003[0m          
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> read krt1039 file004[0m           
-   10/15/18 02:11:16    [;31;1mREAD ACCESS DENIED----------------------> read jms0381 file004[0m           
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file001[0m          
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file005[0m          
-   10/15/18 02:11:16    [;31;1mWRITE ACCESS DENIED---------------------> write sam0039 file006 90[0m       
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->NON-NUMERIC VALUE---> write sam0039 file005 x[0m        
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 60 to file004[0m
-   10/15/18 02:11:16    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file005 60[0m       
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->UNKNOWN OBJECT------> read sra0002 file007[0m           
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->UNKNOWN METHOD------> exec adm0831 file004[0m           
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file006[0m          
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> jms0381 reads file005[0m          
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 70 to file004[0m
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub kel0004 low[0m             
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub jms0381 medium[0m          
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub sam0039 high[0m            
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file001 medium[0m          
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file002 low[0m             
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file009 low[0m             
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file010 medium[0m          
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub ada2342 low[0m             
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->UNKNOWN METHOD------> add sub add8888 high[0m           
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub avd4322 low[0m             
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file100 low[0m             
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file002[0m
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 10 to file001[0m
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file001[0m          
+   10/15/18 08:07:52    [;31;1mREAD ACCESS DENIED----------------------> read kel0004 file001[0m           
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> kel0004 reads file002[0m          
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file003 high[0m            
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->NO VALUE------------> write jms0381 file002[0m          
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->NO OBJECT-----------> read sam0039[0m                   
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> write jms0381 file001 40 80[0m    
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> read krt1039 file003 50[0m        
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 10 to file001[0m
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> ada2342 writes value 100 to file100[0m
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub sra0002 low[0m             
+   10/15/18 08:07:52    [;31;1mREAD ACCESS DENIED----------------------> read sra0002 file003[0m           
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub krt0084 medium[0m          
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub liz0028 high[0m            
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> write krt1039 file004 40[0m       
+   10/15/18 08:07:52    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file001 20[0m       
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 30 to file003[0m
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> avd4322 writes value 90 to file009[0m
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> sra0002 reads file002[0m          
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file004 high[0m            
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file005 low[0m             
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file005[0m          
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 50 to file005[0m
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file006 medium[0m          
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 30 to file006[0m
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file006[0m
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file003[0m          
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> read krt1039 file004[0m           
+   10/15/18 08:07:52    [;31;1mREAD ACCESS DENIED----------------------> read jms0381 file004[0m           
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file001[0m          
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file005[0m          
+   10/15/18 08:07:52    [;31;1mWRITE ACCESS DENIED---------------------> write sam0039 file006 90[0m       
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->NON-NUMERIC VALUE---> write sam0039 file005 x[0m        
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 60 to file004[0m
+   10/15/18 08:07:52    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file005 60[0m       
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->UNKNOWN OBJECT------> read sra0002 file007[0m           
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->UNKNOWN METHOD------> exec adm0831 file004[0m           
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file006[0m          
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> jms0381 reads file005[0m          
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 70 to file004[0m
 
 
 
 
 
 ===================================================================================================== 
-                                       Mon Oct 15 02:11:16 2018
+                                       Mon Oct 15 08:07:52 2018
 ===================================================================================================== 
                                   Input File: inputLinuxTesting.txt                                   
 ----------------------------------------------------------------------------------------------------- 
 
 
 
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub kel0004 low[0m             
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub jms0381 medium[0m          
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub sam0039 high[0m            
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file001 medium[0m          
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file002 low[0m             
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file002[0m
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 10 to file001[0m
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file001[0m          
-   10/15/18 02:11:16    [;31;1mREAD ACCESS DENIED----------------------> read kel0004 file001[0m           
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> kel0004 reads file002[0m          
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file003 high[0m            
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->NO VALUE------------> write jms0381 file002[0m          
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->NO OBJECT-----------> read sam0039[0m                   
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> write jms0381 file001 40 80[0m    
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> read krt1039 file003 50[0m        
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 10 to file001[0m
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub sra0002 low[0m             
-   10/15/18 02:11:16    [;31;1mREAD ACCESS DENIED----------------------> read sra0002 file003[0m           
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub krt0084 medium[0m          
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub liz0028 high[0m            
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> write krt1039 file004 40[0m       
-   10/15/18 02:11:16    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file001 20[0m       
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 30 to file003[0m
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> sra0002 reads file002[0m          
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file004 high[0m            
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file005 low[0m             
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file005[0m          
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 50 to file005[0m
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file006 medium[0m          
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 30 to file006[0m
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file006[0m
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file003[0m          
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> read krt1039 file004[0m           
-   10/15/18 02:11:16    [;31;1mREAD ACCESS DENIED----------------------> read jms0381 file004[0m           
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file001[0m          
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file005[0m          
-   10/15/18 02:11:16    [;31;1mWRITE ACCESS DENIED---------------------> write sam0039 file006 90[0m       
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->NON-NUMERIC VALUE---> write sam0039 file005 x[0m        
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 60 to file004[0m
-   10/15/18 02:11:16    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file005 60[0m       
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->UNKNOWN OBJECT------> read sra0002 file007[0m           
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->UNKNOWN METHOD------> exec adm0831 file004[0m           
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file006[0m          
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> jms0381 reads file005[0m          
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 70 to file004[0m
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub kel0004 low[0m             
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub jms0381 medium[0m          
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub sam0039 high[0m            
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file001 medium[0m          
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file002 low[0m             
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file002[0m
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 10 to file001[0m
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file001[0m          
+   10/15/18 08:07:52    [;31;1mREAD ACCESS DENIED----------------------> read kel0004 file001[0m           
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> kel0004 reads file002[0m          
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file003 high[0m            
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->NO VALUE------------> write jms0381 file002[0m          
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->NO OBJECT-----------> read sam0039[0m                   
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> write jms0381 file001 40 80[0m    
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> read krt1039 file003 50[0m        
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 10 to file001[0m
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub sra0002 low[0m             
+   10/15/18 08:07:52    [;31;1mREAD ACCESS DENIED----------------------> read sra0002 file003[0m           
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub krt0084 medium[0m          
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub liz0028 high[0m            
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> write krt1039 file004 40[0m       
+   10/15/18 08:07:52    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file001 20[0m       
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 30 to file003[0m
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> sra0002 reads file002[0m          
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file004 high[0m            
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file005 low[0m             
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file005[0m          
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 50 to file005[0m
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file006 medium[0m          
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 30 to file006[0m
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file006[0m
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file003[0m          
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> read krt1039 file004[0m           
+   10/15/18 08:07:52    [;31;1mREAD ACCESS DENIED----------------------> read jms0381 file004[0m           
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file001[0m          
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file005[0m          
+   10/15/18 08:07:52    [;31;1mWRITE ACCESS DENIED---------------------> write sam0039 file006 90[0m       
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->NON-NUMERIC VALUE---> write sam0039 file005 x[0m        
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 60 to file004[0m
+   10/15/18 08:07:52    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file005 60[0m       
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->UNKNOWN OBJECT------> read sra0002 file007[0m           
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->UNKNOWN METHOD------> exec adm0831 file004[0m           
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file006[0m          
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> jms0381 reads file005[0m          
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 70 to file004[0m
 
 
 
 
 
 ===================================================================================================== 
-                                       Mon Oct 15 02:11:16 2018
+                                       Mon Oct 15 08:07:52 2018
 ===================================================================================================== 
                               Input File: inputLinuxTestingLongLong.txt                               
 ----------------------------------------------------------------------------------------------------- 
 
 
 
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub kel0004 low[0m             
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub jms0381 medium[0m          
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub sam0039 high[0m            
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file001 medium[0m          
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file002 low[0m             
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file002[0m
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 10 to file001[0m
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file001[0m          
-   10/15/18 02:11:16    [;31;1mREAD ACCESS DENIED----------------------> read kel0004 file001[0m           
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> kel0004 reads file002[0m          
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file003 high[0m            
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->NO VALUE------------> write jms0381 file002[0m          
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->NO OBJECT-----------> read sam0039[0m                   
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> write jms0381 file001 40 80[0m    
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> read krt1039 file003 50[0m        
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 10 to file001[0m
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub sra0002 low[0m             
-   10/15/18 02:11:16    [;31;1mREAD ACCESS DENIED----------------------> read sra0002 file003[0m           
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub krt0084 medium[0m          
-   10/15/18 02:11:16    [;32;1mSUBJECT ADDED---------------------------> addsub liz0028 high[0m            
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> write krt1039 file004 40[0m       
-   10/15/18 02:11:16    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file001 20[0m       
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 30 to file003[0m
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> sra0002 reads file002[0m          
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file004 high[0m            
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file005 low[0m             
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file005[0m          
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 50 to file005[0m
-   10/15/18 02:11:16    [;32;1mOBJECT ADDED----------------------------> addobj file006 medium[0m          
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 30 to file006[0m
-   10/15/18 02:11:16    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file006[0m
-   10/15/18 02:11:16    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file003[0m          
-   10/15/18 02:11:16    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> read krt1039 file004[0m           
-   10/15/18 02:11:17    [;31;1mREAD ACCESS DENIED----------------------> read jms0381 file004[0m           
-   10/15/18 02:11:17    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file001[0m          
-   10/15/18 02:11:17    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file005[0m          
-   10/15/18 02:11:17    [;31;1mWRITE ACCESS DENIED---------------------> write sam0039 file006 90[0m       
-   10/15/18 02:11:17    [;41;37m!!BAD INSTRUCTION-->NON-NUMERIC VALUE---> write sam0039 file005 x[0m        
-   10/15/18 02:11:17    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 60 to file004[0m
-   10/15/18 02:11:17    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file005 60[0m       
-   10/15/18 02:11:17    [;41;37m!!BAD INSTRUCTION-->UNKNOWN OBJECT------> read sra0002 file007[0m           
-   10/15/18 02:11:17    [;41;37m!!BAD INSTRUCTION-->UNKNOWN METHOD------> exec adm0831 file004[0m           
-   10/15/18 02:11:17    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file006[0m          
-   10/15/18 02:11:17    [;32;1mREAD ACCESS GRANTED---------------------> jms0381 reads file005[0m          
-   10/15/18 02:11:17    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 70 to file004[0m
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub kel0004 low[0m             
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub jms0381 medium[0m          
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub sam0039 high[0m            
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file001 medium[0m          
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file002 low[0m             
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file002[0m
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 10 to file001[0m
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file001[0m          
+   10/15/18 08:07:52    [;31;1mREAD ACCESS DENIED----------------------> read kel0004 file001[0m           
+   10/15/18 08:07:52    [;32;1mREAD ACCESS GRANTED---------------------> kel0004 reads file002[0m          
+   10/15/18 08:07:52    [;32;1mOBJECT ADDED----------------------------> addobj file003 high[0m            
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->NO VALUE------------> write jms0381 file002[0m          
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->NO OBJECT-----------> read sam0039[0m                   
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> write jms0381 file001 40 80[0m    
+   10/15/18 08:07:52    [;41;37m!!BAD INSTRUCTION-->TOO MANY PARAMETERS-> read krt1039 file003 50[0m        
+   10/15/18 08:07:52    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 10 to file001[0m
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub sra0002 low[0m             
+   10/15/18 08:07:52    [;31;1mREAD ACCESS DENIED----------------------> read sra0002 file003[0m           
+   10/15/18 08:07:52    [;32;1mSUBJECT ADDED---------------------------> addsub krt0084 medium[0m          
+   10/15/18 08:07:53    [;32;1mSUBJECT ADDED---------------------------> addsub liz0028 high[0m            
+   10/15/18 08:07:53    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> write krt1039 file004 40[0m       
+   10/15/18 08:07:53    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file001 20[0m       
+   10/15/18 08:07:53    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 30 to file003[0m
+   10/15/18 08:07:53    [;32;1mREAD ACCESS GRANTED---------------------> sra0002 reads file002[0m          
+   10/15/18 08:07:53    [;32;1mOBJECT ADDED----------------------------> addobj file004 high[0m            
+   10/15/18 08:07:53    [;32;1mOBJECT ADDED----------------------------> addobj file005 low[0m             
+   10/15/18 08:07:53    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file005[0m          
+   10/15/18 08:07:53    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 50 to file005[0m
+   10/15/18 08:07:53    [;32;1mOBJECT ADDED----------------------------> addobj file006 medium[0m          
+   10/15/18 08:07:53    [;32;1mWRITE ACCESS GRANTED--------------------> jms0381 writes value 30 to file006[0m
+   10/15/18 08:07:53    [;32;1mWRITE ACCESS GRANTED--------------------> kel0004 writes value 20 to file006[0m
+   10/15/18 08:07:53    [;32;1mREAD ACCESS GRANTED---------------------> liz0028 reads file003[0m          
+   10/15/18 08:07:53    [;41;37m!!BAD INSTRUCTION-->UNKNOWN SUBJECT-----> read krt1039 file004[0m           
+   10/15/18 08:07:53    [;31;1mREAD ACCESS DENIED----------------------> read jms0381 file004[0m           
+   10/15/18 08:07:53    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file001[0m          
+   10/15/18 08:07:53    [;32;1mREAD ACCESS GRANTED---------------------> krt0084 reads file005[0m          
+   10/15/18 08:07:53    [;31;1mWRITE ACCESS DENIED---------------------> write sam0039 file006 90[0m       
+   10/15/18 08:07:53    [;41;37m!!BAD INSTRUCTION-->NON-NUMERIC VALUE---> write sam0039 file005 x[0m        
+   10/15/18 08:07:53    [;32;1mWRITE ACCESS GRANTED--------------------> liz0028 writes value 60 to file004[0m
+   10/15/18 08:07:53    [;31;1mWRITE ACCESS DENIED---------------------> write liz0028 file005 60[0m       
+   10/15/18 08:07:53    [;41;37m!!BAD INSTRUCTION-->UNKNOWN OBJECT------> read sra0002 file007[0m           
+   10/15/18 08:07:53    [;41;37m!!BAD INSTRUCTION-->UNKNOWN METHOD------> exec adm0831 file004[0m           
+   10/15/18 08:07:53    [;32;1mREAD ACCESS GRANTED---------------------> sam0039 reads file006[0m          
+   10/15/18 08:07:53    [;32;1mREAD ACCESS GRANTED---------------------> jms0381 reads file005[0m          
+   10/15/18 08:07:53    [;32;1mWRITE ACCESS GRANTED--------------------> sra0002 writes value 70 to file004[0m

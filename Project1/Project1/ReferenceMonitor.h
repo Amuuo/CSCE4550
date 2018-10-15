@@ -51,11 +51,11 @@ class ReferenceMonitor {
   static void formatAndOutputLogTitle(string);
 
   void printState();  
-  void processRequest (Instruction&);
-  void addSubject      (Instruction&);
-  void addObject       (Instruction&);
-  void executeRead     (Instruction&);
-  void executeWrite    (Instruction&);
+  void processRequest(Instruction&);
+  void addSubject    (Instruction&);
+  void addObject     (Instruction&);
+  void executeRead   (Instruction&);
+  void executeWrite  (Instruction&);
   
   
   private:

@@ -3,6 +3,12 @@ addsub jms0381 MEDIUM
 addsub sam0039 HIGH
 addobj file001 MEDIUM
 addobj file002 LOW
+addobj file009 LOW
+addobj file010 MEDIUM
+addsub ada2342 LOW
+add sub add8888 HIGH
+addsub avd4322 LOW
+addobj file100 LOW
 write kel0004 file002 20
 write jms0381 file001 10
 read sam0039 file001
@@ -14,6 +20,7 @@ read sam0039
 write jms0381 file001 40 80
 read krt1039 file003 50
 write kel0004 file001 10
+write ada2342 file100 100
 addsub sra0002 LOW
 read sra0002 file003 
 addsub krt0084 MEDIUM
@@ -21,6 +28,7 @@ addsub liz0028 HIGH
 write krt1039 file004 40
 write liz0028 file001 20
 write liz0028 file003 30
+write avd4322 file009 90 
 read sra0002 file002
 addobj file004 HIGH
 addobj file005 LOW
