@@ -164,8 +164,8 @@ printInstructionResult(string message) {
   
   ostringstream out{};  // ostringstream to format instruction log
   
-  out << " " << setw(19) << setfill(' ') << left;
-  out << Time{}.getTimeAndDate() << message;
+  //out << " " << setw(19) << setfill(' ') << left;
+  out << "      "/*<< Time{}.getTimeAndDate() */<< message;
     
   //print instruction to screen
   cout << endl << out.str();
@@ -205,14 +205,15 @@ void ReferenceMonitor::formatAndOutputLogTitle(string inputFile) {
 // ========================================================================
 // really excessive function that prints the current state dynamically 
 // based on column width
+// CODE IS SO UGLY
 // ========================================================================
 
 void ReferenceMonitor::
 printState() {
   
-  string LWS((PAGE_WIDTH) / 5,' ');  
-  LWS += "  ";
-  //const string LWS = "    ";
+  //string LWS((PAGE_WIDTH) / 5,' ');  
+  //LWS += "  ";
+  const string LWS = "          ";
 
   ostringstream out{ios::ate};  
   out << LWS << "[;1;46m" << ' ' << string(STATE_BOX_WIDTH,' ') << ' ' << "[0m" << endl;
@@ -237,15 +238,15 @@ printState() {
   cout << "\n\n\n";
 
   //out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m" << endl;
-  out << LWS << "[37;45m" << ' ' << string(STATE_BOX_WIDTH+(4*16),' ') << ' ' << "[0m";
-  //out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m" << endl;
+  out << LWS << "[37;41m" << ' ' << string(STATE_BOX_WIDTH+(4*16),' ') << ' ' << "[0m";
+  //out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m";
 
   //out.seekp(titlePosition+LWS.size()+2);
   //out << TITLE;
   
   for (int i = 0, row = 0; i < STATE_BOX_COLUMN_HEADERS.size(); ++i) {
     out.seekp((i*16)+headerPos(i,STATE_BOX_COLUMN_HEADERS[i],row));
-    out << "[37;45m" << STATE_BOX_COLUMN_HEADERS[i] << "[37;45m";     
+    out << "[37;41m" << STATE_BOX_COLUMN_HEADERS[i] << "[37;41m";     
   }
     
   cout << "[0m";
@@ -256,10 +257,10 @@ printState() {
                  subjectMap.size() : objectMap.size()); i > 0; --i, ++k) {    
     out << LWS << "[30;47m" << ' ' << string(STATE_BOX_WIDTH,' ') << ' ' << "[0m" << endl;
     int pos = out.tellp();
-    for (int j = 0; j < 3; ++j) {
+    /*for (int j = 0; j < 3; ++j) {
       out.seekp(dividerPos(j,k));
       out << '|';
-    }
+    } */
     out.seekp(pos);
   } 
   //out << LWS << "[47;30m" << '|' << string(STATE_BOX_WIDTH,' ') << '|' << "[0m" << endl;  
