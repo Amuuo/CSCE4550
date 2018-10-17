@@ -26,16 +26,23 @@ using namespace std;
 
 
 //strings hold color codes
-const string BLUE    = ";34";
-const string GREEN   = ";32";
-const string RED     = ";31";
-const string YELLOW  = ";33";
-const string WHITE   = ";37";
-const string B_BLUE  = ";44";
-const string B_RED   = ";41";
-const string B_GREEN = ";42";
-const string B_WHITE = ";47";
-const string BOLD    = ";1";
+const string BLUE     = "[34m";
+const string GREEN    = "[32m";
+const string RED      = "[31m";
+const string YELLOW   = "[33m";
+const string WHITE    = "[37m";
+const string CYAN     = "[36m";
+const string MAGENTA  = "[35m";
+const string BLACK    = "[30m"; 
+const string B_CYAN   = "[46m";
+const string B_BLACK  = "[40m";
+const string B_BLUE   = "[44m";
+const string B_RED    = "[41m";
+const string B_GREEN  = "[42m";
+const string B_WHITE  = "[47m";
+const string B_YELLOW = "[43m";
+const string BOLD     = "[1m";
+const string RESET    = "[0m";
 
 
 class Instruction {

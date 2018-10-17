@@ -28,26 +28,26 @@ addsub liz0028 HIGH
 write krt1039 file004 40
 write liz0028 file001 20
 write liz0028 file003 30
-write avd4322 file009 90 
+write avd4322 file009 1000 
 read sra0002 file002
 addobj file004 HIGH
 addobj file005 LOW
 read liz0028 file005
 write sra0002 file005 50
 addobj file006 MEDIUM
-write jms0381 file006 30
+write jms0381 file006 300
 write kel0004 file006 20
 read liz0028 file003
 read krt1039 file004
 read jms0381 file004
 read krt0084 file001
 read krt0084 file005
-write sam0039 file006 90
+write sam0039 file006 1000
 write sam0039 file005 x
-write liz0028 file004 60
+write liz0028 file004 1000
 write liz0028 file005 60
 read sra0002 file007
 exec adm0831 file004
 read sam0039 file006
 read jms0381 file005
-write sra0002 file004 70
+write sra0002 file004 20000

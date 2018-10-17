@@ -174,66 +174,83 @@ printResult(string message) {
 void ReferenceMonitor::
 printState() {
     
-  const string LWS = "     ";
-
-  ostringstream out{ios::ate};  
-  out << LWS << "[;1;46m" << ' ' << string(STATE_BOX_WIDTH,' ') << ' ' << "[0m" << endl;
-
-  const float rowBytes      = out.str().size();
-  const float leadingSize   = LWS.size()+9;
-  const float columnWidth   = (((rowBytes-5)-(leadingSize)) / 4);
-  const float fieldWidth    = columnWidth/2;  
-    
-  auto headerPos = [&](int columnNum,string header, int rowNum=0) {
+  const string   LWS = "       ";
+  ostringstream  out{ios::ate};    
+  vector<string> headerLines;
+  vector<string> bodyLines;
+  const float    columnWidth = STATE_BOX_WIDTH / 4;
+        
+  auto headerPos = [&](int columnNum,string header, int rowNum=0) 
+  {
     return ((columnNum*(columnWidth)) + ((columnWidth) / 2) - 
-              (header.size()/2)) + leadingSize + (rowNum*rowBytes);
-
+              (header.size()/2)) + (rowNum*STATE_BOX_WIDTH);
   };
-  auto dividerPos = [&](int columnNum, int rowNum=0) {
-    return ((columnNum+1)*(columnWidth)) + (rowNum*rowBytes) + leadingSize;
-  };
+	
+  out << string(STATE_BOX_WIDTH,' ');      
+  for (int i = 0, row = 0; i < STATE_BOX_COLUMN_HEADERS.size(); ++i) 
+  {
+    out.seekp(headerPos(i,STATE_BOX_COLUMN_HEADERS[i],row));
+    out << STATE_BOX_COLUMN_HEADERS[i];    
+  }  
+  headerLines.push_back(out.str());
   
   out.seekp(0);
-  cout << "\n";
+  out << string(STATE_BOX_WIDTH,' ');              
+  bodyLines.push_back(out.str());
   
-  out << LWS << "[30;47m" << ' ' << string(STATE_BOX_WIDTH,'-') << ' ' << "[0m" << endl;
-  out << LWS << "[30;47m" << ' ' << string(STATE_BOX_WIDTH+(4*16),' ') << ' ' << "[0m" << endl;
-  out << LWS << "[30;47m" << ' ' << string(STATE_BOX_WIDTH,' ') << ' ' << "[0m";
-  for (int i = 0, row = 1; i < STATE_BOX_COLUMN_HEADERS.size(); ++i) {
-    out.seekp((i*16)+headerPos(i,STATE_BOX_COLUMN_HEADERS[i],row));
-    out << "[30;47m" << STATE_BOX_COLUMN_HEADERS[i] << "[30;47m";
-  }
+  auto obj = objectMap.begin();
+  auto sub = subjectMap.begin();  
+
+  for (int i = objectMap.size()<subjectMap.size() ?
+                subjectMap.size():objectMap.size(); i > 0;--i)
+  { 
+    out.seekp(0);
+    out << string(STATE_BOX_WIDTH,' ');
     
-  cout << "[0m";
-  cout << out.str() << endl;
+    if (sub != subjectMap.end()) 
+    {
+      out.seekp(headerPos(0,sub->second.getName()));
+      out << sub->second.getName();
+      out.seekp(headerPos(1,to_string(sub->second.getTemp())));
+      out << sub->second.getTemp();
+      ++sub;
+    }
+    if (obj != objectMap.end()) 
+    {
+      out.seekp(headerPos(2,obj->second.getName()));
+      out << obj->second.getName();
+      out.seekp(headerPos(3,to_string(obj->second.getValue())));
+      out << obj->second.getValue();
+      ++obj;
+    }
+    bodyLines.push_back(out.str());            
+  }  
   out.seekp(0);
+  out << BOLD << B_BLACK << WHITE << string(STATE_BOX_WIDTH,' ') << RESET;
+  bodyLines.push_back(out.str());
 
-  for (auto i = (subjectMap.size() >= objectMap.size() ?
-                 subjectMap.size() : objectMap.size()); i > 0; --i) {
-    out << LWS << "[30;47m" << ' ' << string(STATE_BOX_WIDTH,' ') << ' ' << "[0m" << endl;
-    int pos = out.tellp();
-    out.seekp(pos);
+
+  cout << "\n\n";
+  
+  for (auto line : headerLines) {
+    cout << LWS << B_WHITE << "  ";
+    cout << BLACK << B_WHITE<< line;
+    cout << B_WHITE << "  " << RESET << endl;
   }
-  out << LWS << "[30;47m" << ' ' << string(STATE_BOX_WIDTH,'-') << ' ' << "[0m" << endl;
-  int i = 0,row = 0;
-  for(auto sub = subjectMap.begin(); sub!=subjectMap.end(); ++sub,++i,++row){
+  
+  for (auto line : bodyLines) {
+    cout << LWS << B_WHITE << "  ";
+    cout << BOLD << WHITE << B_BLACK << line;
+    cout << B_WHITE << "  " << RESET << endl;
+  }
     
-    out.seekp(headerPos(0,sub->second.getName(),row));
-    out << sub->second.getName();
-    out.seekp(headerPos(1,to_string(sub->second.getTemp()),row));
-    out << sub->second.getTemp();
+  
+  out.seekp(0);
+  out << LWS << BOLD << B_WHITE << string(STATE_BOX_WIDTH+4,' ') << RESET;
+  bodyLines.push_back(out.str());
+  cout << out.str();
 
-  }
-  i,row = 0;
-
-  for(auto obj = objectMap.begin(); obj!=objectMap.end(); ++obj,++i,++row){
-    
-    out.seekp(headerPos(2,obj->second.getName(),row));
-    out << obj->second.getName();
-    out.seekp(headerPos(3,to_string(obj->second.getValue()),row));
-    out << obj->second.getValue();
-  }
-  cout << out.str() << "\n";
+  cout << "\n\n\n";
 }
 
 

@@ -3,8 +3,7 @@ addsub jms0381 MEDIUM
 addsub sam0039 HIGH
 addobj file001 MEDIUM
 addobj file002 LOW
-write kel0004 file002 20
-write jms0381 file001 10
+write kel0004 file002 20 write jms0381 file001 10
 read sam0039 file001
 read kel0004 file001
 read kel0004 file002

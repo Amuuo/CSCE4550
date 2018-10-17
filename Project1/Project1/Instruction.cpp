@@ -158,16 +158,14 @@ void Instruction::verifyWrite() {
 // name and security level as well as the subject map with just the name
 // ========================================================================
 string Instruction::constructMsg(string result, string color, string line) {
-  
-  color = "[" + color + "m";
-  //line = line == "" ? instruction : line;
+    
     
   ostringstream out; // osstream to format string
 
   out << color << setw(40) << setfill('-') << left;
   out << string{result};
   out << "> " << setw(35) << setfill(' ') << left;
-  out << (line == "" ? string{instruction+"[0m"} : string{line + "[0m"});
+  out << (line == "" ? instruction:line) << RESET;
   return out.str();
 }
 
