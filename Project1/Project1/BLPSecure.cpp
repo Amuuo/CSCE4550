@@ -16,50 +16,59 @@ Description : Program implements Bell-LaPadula security rules using a
 #include"ReferenceMonitor.h"
 
 
+void printHeader(string filename) {
+  cout << "\n\n\n\n"
+      "     [;1;42m +------------------------------------------------+ [0m\n"
+      "     [;1;42m |        Computer Sceince and Engineering        | [0m\n"
+      "     [;1;42m |          CSCE 4550 - Computer Security         | [0m\n"
+      "     [;1;42m | Adam Williams arw0174 adamwilliams2@my.unt.edu | [0m\n"
+      "     [;1;42m +------------------------------------------------+ [0m\n\n";
+  cout << "      [30;47m Input file : " << filename << " [0m\n\n\n\n";
+}
 
 int main(int argc, char** argv)
 {  
-  ReferenceMonitor  referenceMonitor{}; // reference monitor class  
-  string            inputLine;          // string holds each line of instruction file  
+  ReferenceMonitor  referenceMonitor{}; // reference monitor class
+  string            inputLine;          // string holds each line of instruction file
 
-  try {            
+  try {
     
     // check for correct command line input
     if (argc > 2 || argc < 2) 
-      throw runtime_error("Usage: ./BLPSecure <instruction file>");    
+      throw runtime_error("Usage: ./BLPSecure <instruction file>");
+    
+    printHeader(argv[1]);
     
     // instruction file input stream
-    ifstream in{argv[1]}; 
-        
-    if (in.fail())  // check input stream integrity
+    ifstream in{argv[1]};
+       
+    // check input stream integrity
+    if (in.fail())
       throw runtime_error("input file failed to open");
     
-    
-    
     // iterate through input file and handle instructions
-    for(int numOfInstructions = 1; !in.eof(); ++numOfInstructions){      
+    for(int numOfInstructions = 1; !in.eof(); ++numOfInstructions){
       
-      try {        
+      try {
         getline(in,inputLine);
         
         // constructor validates instruction
-        Instruction instruction{inputLine}; 
+        Instruction instruction{inputLine};
         referenceMonitor.processRequest(instruction);
 
         if (numOfInstructions % 10 == 0)
-          referenceMonitor.printState();                     
+          referenceMonitor.printState();
       }
 
       catch (exception& e) {
-        referenceMonitor.printInstructionResult(e.what());
+        referenceMonitor.printResult(e.what());
       }      
-    } 
+    }
   }
-  
   catch (exception& e) {
     cout << "\nERROR: " << e.what() << "\n\n";
     exit(1);
-  } 
+  }
   referenceMonitor.printState();
 }
 

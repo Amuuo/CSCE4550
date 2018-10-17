@@ -87,7 +87,6 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="ReferenceMonitor.h" />
     <ClInclude Include="Subject.h" />
-    <ClInclude Include="Time.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="input.txt" />

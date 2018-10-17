@@ -24,7 +24,7 @@ class Object {
   Object() {}
   Object(const string name) : name{name} {}
     
-  //GETTERS    
+  //GETTERS
   const string getName()  const {return name;}
   const int    getValue() const {return value;}
   //SETTERS

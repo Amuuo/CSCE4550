@@ -22,11 +22,10 @@ Description : Program implements Bell-LaPadula security rules using a
 #include<iomanip>
 #include<functional>
 
-
 using namespace std;
-using namespace placeholders;
-const string badLead = string(25,' ');
 
+
+//strings hold color codes
 const string BLUE    = ";34";
 const string GREEN   = ";32";
 const string RED     = ";31";
@@ -42,32 +41,31 @@ const string BOLD    = ";1";
 class Instruction {
   
   public:
-  Instruction();
-  Instruction(Instruction&&);
-  Instruction(const Instruction&);
+
+  Instruction(){}
   Instruction(string&);
-  ~Instruction();  
+  ~Instruction(){}
 
 
   map<string,function<void(Instruction*)>> functionMap{
-    {"addsub",bind(&Instruction::verifty_addsub,this)},
-    {"addobj",bind(&Instruction::verify_addobj ,this)},
-    {"read"  ,bind(&Instruction::verify_read   ,this)},
-    {"write" ,bind(&Instruction::verify_write  ,this)}};
+    {"addsub",bind(&Instruction::veriftyAddsub,this)},
+    {"addobj",bind(&Instruction::verifyAddobj ,this)},
+    {"read"  ,bind(&Instruction::verifyRead   ,this)},
+    {"write" ,bind(&Instruction::verifyWrite  ,this)}};
   
-  void verify_method ();
-  void verifty_addsub();
-  void verify_addobj ();
-  void verify_read   ();
-  void verify_write  ();
+  void verifyMethod ();
+  void veriftyAddsub();
+  void verifyAddobj ();
+  void verifyRead   ();
+  void verifyWrite  ();
   string constructMsg(string);
-  static string constructMsg(string, string, string="0");
+  string constructMsg(string, string, string="");
 
-  string method{};
-  string subject{};
-  string object{};
-  string security{};
-  int    value{};
+  string method{};    //stores instruction function
+  string subject{};   //stores instruction subject
+  string object{};    //stores instruction object
+  string security{};  //stores instruction security
+  int    value{};     //stores instruction value
   
   string instruction{};
 };

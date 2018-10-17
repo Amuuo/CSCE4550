@@ -16,51 +16,30 @@ Description : Program implements Bell-LaPadula security rules using a
 
 
 
-Instruction::Instruction() {}
-
-Instruction::Instruction(string& _instruction) {    
+Instruction::Instruction(string& _instruction) {
     
-    instruction = _instruction;
+  instruction = _instruction;
     
-    // convert instruction to all lowercase
-    transform(instruction.begin(),instruction.end(),
-              instruction.begin(),::tolower);
+  // convert instruction to all lowercase
+  transform(instruction.begin(),instruction.end(),
+            instruction.begin(),::tolower);
     
-    // remove any leading or trailing spaces
-    instruction = regex_replace(instruction,regex{"^ +| +$|( ) +"},"");
+  // remove any leading or trailing spaces
+  instruction = regex_replace(instruction,regex{"^ +| +$|( ) +"},"");
     
-    istringstream iss{instruction};
-    iss >> method;
+  istringstream iss{instruction};
+  iss >> method;
 
-    verify_method();
-  } 
-
-
-Instruction::Instruction(Instruction&& instruction) :
-  method      {move(instruction.method)},
-  subject     {move(instruction.subject)},
-  object      {move(instruction.object)},
-  security    {move(instruction.security)},
-  value       {move(instruction.value)},
-  instruction {move(instruction.instruction)}{}
-
-Instruction::Instruction(const Instruction& instruction) : 
-  method      {instruction.method},
-  subject     {instruction.subject},
-  object      {instruction.object},
-  security    {instruction.security},
-  value       {instruction.value},
-  instruction {instruction.instruction}{}
-
-Instruction::~Instruction() {}
+  verifyMethod();
+} 
 
 
 
-
-
-
-
-void Instruction::verify_method() {
+// ========================================================================
+// function adds subject to the reference monitor subjectSecurityMap with 
+// name and security level as well as the subject map with just the name
+// ========================================================================
+void Instruction::verifyMethod() {
 
   if (functionMap.find(method) == functionMap.end())
     throw runtime_error(constructMsg("UNKNOWN METHOD"));
@@ -69,7 +48,13 @@ void Instruction::verify_method() {
   }
 }
 
-void Instruction::verifty_addsub() {
+
+
+// ========================================================================
+// function adds subject to the reference monitor subjectSecurityMap with 
+// name and security level as well as the subject map with just the name
+// ========================================================================
+void Instruction::veriftyAddsub() {
 
   istringstream iss{instruction};  // stringstream to input instructions
 
@@ -88,7 +73,11 @@ void Instruction::verifty_addsub() {
 
 
 
-void Instruction::verify_addobj() {
+// ========================================================================
+// function adds subject to the reference monitor subjectSecurityMap with 
+// name and security level as well as the subject map with just the name
+// ========================================================================
+void Instruction::verifyAddobj() {
 
   istringstream iss{instruction};  // stringstream to input instructions
   
@@ -111,7 +100,11 @@ void Instruction::verify_addobj() {
 
 
 
-void Instruction::verify_read() {
+// ========================================================================
+// function adds subject to the reference monitor subjectSecurityMap with 
+// name and security level as well as the subject map with just the name
+// ========================================================================
+void Instruction::verifyRead() {
   
   istringstream iss{instruction};  // stringstream to input instructions
 
@@ -119,7 +112,7 @@ void Instruction::verify_read() {
     iss >> method >> subject >> object;
 
     if (!iss.eof())
-      throw runtime_error(constructMsg("TOO MANY PARAMETERS"));          
+      throw runtime_error(constructMsg("TOO MANY PARAMETERS"));
   } 
   if (subject.empty())
       throw runtime_error(constructMsg("NO SUBJECT"));
@@ -129,16 +122,20 @@ void Instruction::verify_read() {
 
 
 
-void Instruction::verify_write() {
+// ========================================================================
+// function adds subject to the reference monitor subjectSecurityMap with 
+// name and security level as well as the subject map with just the name
+// ========================================================================
+void Instruction::verifyWrite() {
   
-  istringstream iss{instruction};  // stringstream to input instructions 
+  istringstream iss{instruction};  // stringstream to input instructions
   string valueStr;
 
   while (iss) { 
     iss >> method >> subject >> object >> valueStr;
     
     if (!iss.eof())
-      throw runtime_error(constructMsg("TOO MANY PARAMETERS"));  
+      throw runtime_error(constructMsg("TOO MANY PARAMETERS"));
   }
   
   if (subject.empty())
@@ -154,18 +151,33 @@ void Instruction::verify_write() {
   value = stoi(valueStr);
 }
 
-string Instruction::constructMsg(string result, string line, string color) {
+
+
+// ========================================================================
+// function adds subject to the reference monitor subjectSecurityMap with 
+// name and security level as well as the subject map with just the name
+// ========================================================================
+string Instruction::constructMsg(string result, string color, string line) {
   
   color = "[" + color + "m";
-  
+  //line = line == "" ? instruction : line;
+    
   ostringstream out; // osstream to format string
 
   out << color << setw(40) << setfill('-') << left;
   out << string{result};
-  out << "> " << setw(35) << setfill(' ') << left << string{line+"[0m"};
+  out << "> " << setw(35) << setfill(' ') << left;
+  out << (line == "" ? string{instruction+"[0m"} : string{line + "[0m"});
   return out.str();
 }
 
+
+
+// ========================================================================
+// function adds subject to the reference monitor subjectSecurityMap with 
+// name and security level as well as the subject map with just the name
+// ========================================================================
 string Instruction::constructMsg(string error) {
-  return constructMsg("!!BAD INSTRUCTION-->"+error,instruction, B_RED+WHITE);
+  
+  return constructMsg("!!BAD INSTRUCTION-->"+error, B_RED+WHITE, instruction);
 }

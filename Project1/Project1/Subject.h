@@ -30,7 +30,7 @@ class Subject {
   void setValue (const int _value)   {temp=_value;}
   //GETTERS
   const string getName() const {return name;}
-  const int    getTemp() const {return temp;}    
+  const int    getTemp() const {return temp;}
     
   //FUNCTIONS
   void readObject(const Object& obj) {setValue(obj.getValue());}
@@ -38,6 +38,6 @@ class Subject {
    
   private:
   string name{}; // subject name
-  int    temp{}; // current subject value    
+  int    temp{}; // current subject value, initiates at 0
 };
 
