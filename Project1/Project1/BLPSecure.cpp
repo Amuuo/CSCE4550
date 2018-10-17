@@ -18,16 +18,17 @@ Description : Program implements Bell-LaPadula security rules using a
 
 void printHeader(string filename) {
   cout << "\n\n\n\n"
-      "     [;1;42m +------------------------------------------------+ [0m\n"
-      "     [;1;42m |        Computer Sceince and Engineering        | [0m\n"
-      "     [;1;42m |          CSCE 4550 - Computer Security         | [0m\n"
-      "     [;1;42m | Adam Williams arw0174 adamwilliams2@my.unt.edu | [0m\n"
-      "     [;1;42m +------------------------------------------------+ [0m\n\n";
-  cout << "      [30;47m Input file : " << filename << " [0m\n\n\n\n";
+      "       [37;42m +------------------------------------------------+ [0m\n"
+      "       [37;42m |        Computer Sceince and Engineering        | [0m\n"
+      "       [37;42m |          CSCE 4550 - Computer Security         | [0m\n"
+      "       [37;42m | Adam Williams arw0174 adamwilliams2@my.unt.edu | [0m\n"
+      "       [37;42m +------------------------------------------------+ [0m\n\n";
+  cout << "        [30;47m Input file : " << filename << " [0m\n\n\n\n";
 }
 
 int main(int argc, char** argv)
 {  
+
   ReferenceMonitor  referenceMonitor{}; // reference monitor class
   string            inputLine;          // string holds each line of instruction file
 

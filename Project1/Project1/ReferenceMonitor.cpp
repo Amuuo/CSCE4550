@@ -158,7 +158,7 @@ verifyWriteAccess(Instruction& ins) {
 inline void ReferenceMonitor::
 printResult(string message) {
         
-  cout << string("",3) <<  message << endl;
+  cout << "   " <<  message << endl;
 }
 
 
@@ -174,7 +174,7 @@ printResult(string message) {
 void ReferenceMonitor::
 printState() {
     
-  const string LWS = string("",5);
+  const string LWS = "     ";
 
   ostringstream out{ios::ate};  
   out << LWS << "[;1;46m" << ' ' << string(STATE_BOX_WIDTH,' ') << ' ' << "[0m" << endl;
@@ -196,12 +196,12 @@ printState() {
   out.seekp(0);
   cout << "\n";
   
-  out << LWS << "[33;44m" << ' ' << string(STATE_BOX_WIDTH,'-') << ' ' << "[0m" << endl;
-  out << LWS << "[33;44m" << ' ' << string(STATE_BOX_WIDTH+(4*16),' ') << ' ' << "[0m" << endl;
-  out << LWS << "[33;44m" << ' ' << string(STATE_BOX_WIDTH,' ') << ' ' << "[0m";
+  out << LWS << "[30;47m" << ' ' << string(STATE_BOX_WIDTH,'-') << ' ' << "[0m" << endl;
+  out << LWS << "[30;47m" << ' ' << string(STATE_BOX_WIDTH+(4*16),' ') << ' ' << "[0m" << endl;
+  out << LWS << "[30;47m" << ' ' << string(STATE_BOX_WIDTH,' ') << ' ' << "[0m";
   for (int i = 0, row = 1; i < STATE_BOX_COLUMN_HEADERS.size(); ++i) {
     out.seekp((i*16)+headerPos(i,STATE_BOX_COLUMN_HEADERS[i],row));
-    out << "[37;44m" << STATE_BOX_COLUMN_HEADERS[i] << "[;1;44m";
+    out << "[30;47m" << STATE_BOX_COLUMN_HEADERS[i] << "[30;47m";
   }
     
   cout << "[0m";
@@ -210,11 +210,11 @@ printState() {
 
   for (auto i = (subjectMap.size() >= objectMap.size() ?
                  subjectMap.size() : objectMap.size()); i > 0; --i) {
-    out << LWS << "[33;44m" << ' ' << string(STATE_BOX_WIDTH,' ') << ' ' << "[0m" << endl;
+    out << LWS << "[30;47m" << ' ' << string(STATE_BOX_WIDTH,' ') << ' ' << "[0m" << endl;
     int pos = out.tellp();
     out.seekp(pos);
   }
-  out << LWS << "[33;44m" << ' ' << string(STATE_BOX_WIDTH,'-') << ' ' << "[0m" << endl;
+  out << LWS << "[30;47m" << ' ' << string(STATE_BOX_WIDTH,'-') << ' ' << "[0m" << endl;
   int i = 0,row = 0;
   for(auto sub = subjectMap.begin(); sub!=subjectMap.end(); ++sub,++i,++row){
     

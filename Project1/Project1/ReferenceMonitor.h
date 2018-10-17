@@ -32,7 +32,7 @@ using namespace placeholders;
 
 //const variables for print current state
 const vector<string> STATE_BOX_COLUMN_HEADERS = {"subject","temp","object","value"};
-const float          STATE_BOX_WIDTH{50};
+const float          STATE_BOX_WIDTH{54};
 
 
 
