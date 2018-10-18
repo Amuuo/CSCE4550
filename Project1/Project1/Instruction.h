@@ -41,6 +41,7 @@ const string B_RED    = "[41m";
 const string B_GREEN  = "[42m";
 const string B_WHITE  = "[47m";
 const string B_YELLOW = "[43m";
+const string B_MAGENTA= "[45m";
 const string BOLD     = "[1m";
 const string RESET    = "[0m";
 
@@ -60,11 +61,11 @@ class Instruction {
     {"read"  ,bind(&Instruction::verifyRead   ,this)},
     {"write" ,bind(&Instruction::verifyWrite  ,this)}};
   
-  void verifyMethod ();
-  void veriftyAddsub();
-  void verifyAddobj ();
-  void verifyRead   ();
-  void verifyWrite  ();
+  void   verifyMethod ();
+  void   veriftyAddsub();
+  void   verifyAddobj ();
+  void   verifyRead   ();
+  void   verifyWrite  ();
   string constructMsg(string);
   string constructMsg(string, string, string="");
 

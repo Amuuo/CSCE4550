@@ -157,8 +157,13 @@ verifyWriteAccess(Instruction& ins) {
 
 inline void ReferenceMonitor::
 printResult(string message) {
-        
-  cout << "   " <<  message << endl;
+  
+  ostringstream out{};
+  
+  out << "     " <<  message << endl;
+  //cout << out.str();
+  instructionResultHistory.push_back(out.str());
+  printState();
 }
 
 
@@ -230,27 +235,29 @@ printState() {
   bodyLines.push_back(out.str());
 
 
-  cout << "\n\n";
-  
+  ostringstream out2;
+  out2 << "\n\n";
+
   for (auto line : headerLines) {
-    cout << LWS << B_WHITE << "  ";
-    cout << BLACK << B_WHITE<< line;
-    cout << B_WHITE << "  " << RESET << endl;
+    out2 << LWS << B_WHITE << "  ";
+    out2 << BLACK << B_WHITE<< line;
+    out2 << B_WHITE << "  " << RESET << endl;
   }
   
   for (auto line : bodyLines) {
-    cout << LWS << B_WHITE << "  ";
-    cout << BOLD << WHITE << B_BLACK << line;
-    cout << B_WHITE << "  " << RESET << endl;
+    out2 << LWS << B_WHITE << "  ";
+    out2 << BOLD << WHITE << B_BLACK << line;
+    out2 << B_WHITE << "  " << RESET << endl;
   }
     
   
   out.seekp(0);
   out << LWS << BOLD << B_WHITE << string(STATE_BOX_WIDTH+4,' ') << RESET;
   bodyLines.push_back(out.str());
-  cout << out.str();
+  out2 << out.str();
 
-  cout << "\n\n\n";
+  out2 << "\n\n\n";
+  stateHistory.push_back(out2.str());
 }
 
 

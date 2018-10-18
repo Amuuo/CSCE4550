@@ -32,7 +32,7 @@ using namespace placeholders;
 
 //const variables for print current state
 const vector<string> STATE_BOX_COLUMN_HEADERS = {"subject","temp","object","value"};
-const float          STATE_BOX_WIDTH{56};
+const float          STATE_BOX_WIDTH{68};
 
 
 
@@ -46,15 +46,17 @@ class ReferenceMonitor {
   ReferenceMonitor(){}
   ~ReferenceMonitor(){}
 
-  void printResult(string);
   void printState();  
+  void printResult(string);
   void processRequest    (Instruction&);
   void addSubject        (Instruction&);
   void addObject         (Instruction&);
   void verifyReadAccess  (Instruction&);
   void verifyWriteAccess (Instruction&);
   
+  vector<string>  instructionResultHistory{};
   
+  vector<string>  stateHistory{};
   private:
 
   map<string,Subject>  subjectMap;             //map stores all objects
@@ -62,6 +64,7 @@ class ReferenceMonitor {
   map<string,int>      subjectSecurityLevel{}; //map stores subjects security clearance
   map<string,int>      objectSecurityLevel{};  //map stores objects security level
   
+
   //map stores the security level value with a string key
   map<string,int> securityMap{{"low",LOW},{"medium",MEDIUM},{"high",HIGH}};
 

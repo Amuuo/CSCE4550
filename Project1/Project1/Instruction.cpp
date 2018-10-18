@@ -88,7 +88,6 @@ void Instruction::verifyAddobj() {
     if (!iss.eof())
       throw runtime_error(constructMsg("TOO MANY PARAMETERS"));
   }
-
   if (object.empty())
     throw runtime_error(constructMsg("NO OBJECT"));
   
@@ -158,8 +157,7 @@ void Instruction::verifyWrite() {
 // name and security level as well as the subject map with just the name
 // ========================================================================
 string Instruction::constructMsg(string result, string color, string line) {
-    
-    
+
   ostringstream out; // osstream to format string
 
   out << color << setw(40) << setfill('-') << left;
@@ -176,6 +174,6 @@ string Instruction::constructMsg(string result, string color, string line) {
 // name and security level as well as the subject map with just the name
 // ========================================================================
 string Instruction::constructMsg(string error) {
-  
+
   return constructMsg("!!BAD INSTRUCTION-->"+error, B_RED+WHITE, instruction);
 }
