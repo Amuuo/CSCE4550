@@ -104,6 +104,10 @@ void printRow(string & text, int position, char endChar, FileStream<ofstream>& o
   outStream.stream << endChar;
 }
 
+
+//---------------------------------
+//      vigenereSubstitution
+//---------------------------------
 string vigenereSubstitution(string& plaintext, string& cipher) {
   string subString { plaintext };
   
