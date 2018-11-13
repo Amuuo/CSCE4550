@@ -1,4 +1,3 @@
-#include<cstdio>
 #include<iostream>
 #include<string>
 #include<fstream>
@@ -10,62 +9,45 @@
 using namespace std;
 
 template<class T> T userInput(const char*);
-
+string fileContentsToString(ifstream&);
 
 
 //=================================
 //              main
 //=================================
-int main()
-{
+int main() {
   
-  string plaintext;
-  string ciphertext;    
 
+  ifstream plaintextFile { "input1.txt" };  
+  ifstream cipherKeyFile { "key1.txt" };
+  //ifstream plaintextFile { userInput<string>("Enter plaintext filename:") };
+  //ifstream cipherKeyFile { userInput<string>("Enter cipherkey filename: ") };
+  
+  string plaintext = fileContentsToString(plaintextFile);
+  string ciphertext = fileContentsToString(cipherKeyFile);              
 
-  ifstream plaintextFile { userInput<string>("Enter plaintext filename:") };
-  ifstream cipherKeyFile { userInput<string>("Enter cipherkey filename: ") };
-        
-  char character;
-  string word;
-
-  while ( !plaintextFile.eof() ) {
-      
-    plaintextFile.get(character);
-      
-    if ( isalpha(character) ) {
-      plaintext += character;
-    }
-  }
-
-  while ( !cipherKeyFile.eof() ) {
-    
-    cipherKeyFile >> word;
-    ciphertext += word;
-  }
-
-
-  ofstream outputFile { userInput<string>("Enter output filename: ") };
+  ofstream outputFile { "output.txt" };
+  //ofstream outputFile { userInput<string>("Enter output filename: ") };
 
 
   for ( auto i = 0; i<plaintext.size()%16; ++i ) {
     plaintext.push_back('A');
   }
-  cout << "\nplaintextProcessed: " << plaintext << endl;
-  string plaintextShifted { plaintext };
-  cout << "plaintextShifted: " << plaintextShifted << endl;
+
+  cout << "ciphertext: " << ciphertext << endl;
+  cout << "plaintext before shift: " << plaintext << endl;
   outputFile << "Input:\t\t" << "Output:" << endl;
 
 
   int counter = 0;
-  for ( auto i = plaintextShifted.begin(); i < plaintextShifted.end(); i += 16 ) {            
+  for ( auto i = plaintext.begin(); i < plaintext.end(); i += 16 ) {            
 
     rotate(i + 4, i + 5, i + 8);
     rotate(i + 8, i + 9, i + 12);
     rotate(i + 12, i + 13, i + 16);  
   }
 
-  cout << "plaintextShifted: " << plaintextShifted << endl;
+  cout << "plaintextShifted: " << plaintext << endl;
 
 
 
@@ -87,3 +69,19 @@ T userInput(const char* inputRequestPrompt) {
   return userInput;
 }
 
+
+//---------------------------------
+//      fileContentsToString
+//---------------------------------
+string fileContentsToString(ifstream & stream) {
+  
+  char character;
+  string outputString;
+  
+  while ( stream.get(character) ) {
+    if ( isalpha(character) ) {
+      outputString.push_back(character);
+    }
+  }
+  return outputString;
+}
