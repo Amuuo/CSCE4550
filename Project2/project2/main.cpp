@@ -10,13 +10,14 @@ using namespace std;
 
 template<class T> T userInput(const char*);
 string fileContentsToString(ifstream&);
-
+void printRow(string&, int, char);
 
 //=================================
 //              main
 //=================================
 int main() {
   
+  system("pwd");
 
   ifstream plaintextFile { "input1.txt" };  
   ifstream cipherKeyFile { "key1.txt" };
@@ -39,18 +40,27 @@ int main() {
   outputFile << "Input:\t\t" << "Output:" << endl;
 
 
-  int counter = 0;
+  string plaintextOriginal{ plaintext };
+
   for ( auto i = plaintext.begin(); i < plaintext.end(); i += 16 ) {            
 
     rotate(i + 4, i + 5, i + 8);
-    rotate(i + 8, i + 9, i + 12);
-    rotate(i + 12, i + 13, i + 16);  
+    rotate(i + 8, i + 10, i + 12);
+    rotate(i + 12, i + 15, i + 16);  
+  }  
+  
+  for ( int i = 0; i < plaintext.size(); i+=4) {
+    
+    if ( i % 16 == 0 ) cout << endl;
+    
+    printRow(plaintextOriginal, i, '\t');    
+    printRow(plaintext, i, '\n');
+    
   }
-
-  cout << "plaintextShifted: " << plaintext << endl;
-
+  
 
 
+  system("pause");
 
   return 0;
 }
@@ -84,4 +94,11 @@ string fileContentsToString(ifstream & stream) {
     }
   }
   return outputString;
+}
+
+void printRow(string & text, int position, char endChar) {
+  for ( int j = position; j < ( position + 4 ); ++j ) {
+    cout << text[ j ];
+  }
+  cout << endChar;
 }
