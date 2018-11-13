@@ -9,10 +9,12 @@
 using namespace std;
 
 
-template<class T> T userInput(const char*);
+template<class T> 
+T userInput(const char*);
+
 string fileToString(string);
-void printRow(string&, int, char, FileStream<ofstream>&);
 string vigenereSubstitution(string&, string&);
+void   printRow(string&, int, char, FileStream<ofstream>&);
 
 
 
