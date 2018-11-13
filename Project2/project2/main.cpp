@@ -26,19 +26,19 @@ int main() {
   string plaintextString = fileToString(userInput<string>("Enter plaintext filename: "));
   string cipherString = fileToString(userInput<string>("Enter ciphertext filename: "));  
   string substitutedPlaintext = vigenereSubstitution(plaintextString, cipherString);
+  string substituedPlainTextUnshifted { substitutedPlaintext };
   FileStream<ofstream> outputFile { userInput<string>("Enter output filename: ") };  
 
-  
-  // add buffer to plaintext string
-  for ( auto i = 0; i<substitutedPlaintext.size()%16; ++i ) {
-    substitutedPlaintext.push_back('A');
-  }
   
   cout << "ciphertext: " << cipherString << endl;
   cout << "plaintext before vignere: " << plaintextString << endl;  
   cout << "plaintext after vignere: " << substitutedPlaintext << endl << endl;
-
-  string substituedPlainTextUnshifted { substitutedPlaintext };
+  
+  // add buffer to plaintext string
+  for ( auto i = 0; i<substitutedPlaintext.size()%16; ++i ) {
+    substitutedPlaintext.push_back('A');
+  }  
+  
   for ( auto i = substitutedPlaintext.begin(); i < substitutedPlaintext.end(); i += 16 ) {            
     rotate(i + 4, i + 5, i + 8);
     rotate(i + 8, i + 10, i + 12);
