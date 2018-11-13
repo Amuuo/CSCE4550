@@ -26,33 +26,30 @@ int main() {
   string plaintextString = fileToString(userInput<string>("Enter plaintext filename: "));
   string cipherString = fileToString(userInput<string>("Enter ciphertext filename: "));  
   string substitutedPlaintext = vigenereSubstitution(plaintextString, cipherString);
-  FileStream<ofstream> outputFile { userInput<string>("Enter output filename") };  
+  FileStream<ofstream> outputFile { userInput<string>("Enter output filename: ") };  
 
+  
   // add buffer to plaintext string
   for ( auto i = 0; i<substitutedPlaintext.size()%16; ++i ) {
     substitutedPlaintext.push_back('A');
   }
   
-
   cout << "ciphertext: " << cipherString << endl;
   cout << "plaintext before vignere: " << plaintextString << endl;  
   cout << "plaintext after vignere: " << substitutedPlaintext << endl << endl;
 
   string substituedPlainTextUnshifted { substitutedPlaintext };
   for ( auto i = substitutedPlaintext.begin(); i < substitutedPlaintext.end(); i += 16 ) {            
-
     rotate(i + 4, i + 5, i + 8);
     rotate(i + 8, i + 10, i + 12);
     rotate(i + 12, i + 15, i + 16);  
   }  
   
-  for ( int i = 0; i < substitutedPlaintext.size(); i+=4) {
-    
+  for ( int i = 0; i < substitutedPlaintext.size(); i+=4) {    
     if ( i % 16 == 0 ) {
       cout << endl;
       outputFile.stream << endl;
-    }
-    
+    }    
     printRow(substituedPlainTextUnshifted, i, '\t', outputFile);    
     printRow(substitutedPlaintext, i, '\n', outputFile);    
   }
