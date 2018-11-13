@@ -19,12 +19,12 @@ template<class T> T userInput(const char*);
 int main()
 {
   
-  string plaintextProcessed;
-  string ciphertextProcessed;    
+  string plaintext;
+  string ciphertext;    
 
 
-  ifstream plaintextFile { userInput<string>("Enter plaintext filename:").c_str() };
-  ifstream cipherKeyFile { userInput<string>("Enter cipherkey filename: ").c_str() };
+  ifstream plaintextFile { userInput<string>("Enter plaintext filename:") };
+  ifstream cipherKeyFile { userInput<string>("Enter cipherkey filename: ") };
         
   char character;
   string word;
@@ -34,32 +34,31 @@ int main()
     plaintextFile.get(character);
       
     if ( isalpha(character) ) {
-      plaintextProcessed += character;
+      plaintext += character;
     }
   }
 
   while ( !cipherKeyFile.eof() ) {
     
     cipherKeyFile >> word;
-    ciphertextProcessed += word;
+    ciphertext += word;
   }
 
 
   ofstream outputFile { userInput<string>("Enter output filename: ") };
 
 
-  for ( auto i = 0; i<plaintextProcessed.size()%16; ++i ) {
-    plaintextProcessed.push_back('A');
+  for ( auto i = 0; i<plaintext.size()%16; ++i ) {
+    plaintext.push_back('A');
   }
-  cout << "\nplaintextProcessed: " << plaintextProcessed << endl;
-  string plaintextShifted { plaintextProcessed };
+  cout << "\nplaintextProcessed: " << plaintext << endl;
+  string plaintextShifted { plaintext };
   cout << "plaintextShifted: " << plaintextShifted << endl;
   outputFile << "Input:\t\t" << "Output:" << endl;
 
 
   int counter = 0;
-  for ( auto i = plaintextShifted.begin(), j = plaintextProcessed.begin(); 
-       i < plaintextShifted.end(); i += 16, j+=16, counter+=16 ) {            
+  for ( auto i = plaintextShifted.begin(); i < plaintextShifted.end(); i += 16 ) {            
 
     rotate(i + 4, i + 5, i + 8);
     rotate(i + 8, i + 9, i + 12);
