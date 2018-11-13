@@ -9,17 +9,13 @@ using namespace std;
 
 
 
-
-
 template<class T>
-T userInput(string message) {  
-  T input;
-  cout << message;
-  cin >> input;
-  return input;
+T userInput(const char* inputRequestPrompt) {  
+  T userInput;
+  cout << inputRequestPrompt;
+  cin >> userInput;
+  return userInput;
 }
-
-
 
 
 
@@ -30,11 +26,12 @@ int main()
   ostringstream ciphertextProcessed;
   
   
+  // try block will throw any issues with input/output streams
   try {    
 
-    ifstream plaintextFile{userInput<string>("Enter input filename")};
-    ifstream cipherKeyFile{userInput<string>("Enter cipherkey filename")};
-    ofstream outputFile{userInput<string>("Enter output filename")};
+    ifstream plaintextFile { userInput<string>("Enter input filename") };
+    ifstream cipherKeyFile { userInput<string>("Enter cipherkey filename") };
+    ofstream outputFile { userInput<string>("Enter output filename") };
     
     string word;
 
@@ -46,10 +43,10 @@ int main()
       cipherKeyFile >> word;
       ciphertextProcessed << word;
     }
-  }
-  catch (exception& e) {
-    cout << e.what();
-  }
+  
+  } catch (exception& e) { cout << e.what(); }
+
+
 
   
   
