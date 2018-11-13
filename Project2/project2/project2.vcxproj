@@ -95,6 +95,9 @@
     <Text Include="input1.txt" />
     <Text Include="key1.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FileStream.h" />
+  </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <ClCompile>
       <CppLanguageStandard>c++14</CppLanguageStandard>

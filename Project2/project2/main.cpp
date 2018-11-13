@@ -5,65 +5,59 @@
 #include<exception>
 #include<algorithm>
 #include<vector>
-
+#include"FileStream.h"
 using namespace std;
 
+
 template<class T> T userInput(const char*);
-string fileContentsToString(ifstream&);
-void printRow(string&, int, char);
+string fileToString(string);
+void printRow(string&, int, char, FileStream<ofstream>&);
+string vigenereSubstitution(string&, string&);
+
+
 
 //=================================
 //              main
 //=================================
 int main() {
-  
-  system("pwd");
 
-  ifstream plaintextFile { "input1.txt" };  
-  ifstream cipherKeyFile { "key1.txt" };
-  //ifstream plaintextFile { userInput<string>("Enter plaintext filename:") };
-  //ifstream cipherKeyFile { userInput<string>("Enter cipherkey filename: ") };
-  
-  string plaintext = fileContentsToString(plaintextFile);
-  string ciphertext = fileContentsToString(cipherKeyFile);              
+  string plaintextString = fileToString(userInput<string>("Enter plaintext filename: "));
+  string cipherString = fileToString(userInput<string>("Enter ciphertext filename: "));  
+  string substitutedPlaintext = vigenereSubstitution(plaintextString, cipherString);
+  FileStream<ofstream> outputFile { userInput<string>("Enter output filename") };  
 
-  ofstream outputFile { "output.txt" };
-  //ofstream outputFile { userInput<string>("Enter output filename: ") };
-
-
-  for ( auto i = 0; i<plaintext.size()%16; ++i ) {
-    plaintext.push_back('A');
+  // add buffer to plaintext string
+  for ( auto i = 0; i<substitutedPlaintext.size()%16; ++i ) {
+    substitutedPlaintext.push_back('A');
   }
+  
 
-  cout << "ciphertext: " << ciphertext << endl;
-  cout << "plaintext before shift: " << plaintext << endl;
-  outputFile << "Input:\t\t" << "Output:" << endl;
+  cout << "ciphertext: " << cipherString << endl;
+  cout << "plaintext before vignere: " << plaintextString << endl;  
+  cout << "plaintext after vignere: " << substitutedPlaintext << endl << endl;
 
-
-  string plaintextOriginal{ plaintext };
-
-  for ( auto i = plaintext.begin(); i < plaintext.end(); i += 16 ) {            
+  string substituedPlainTextUnshifted { substitutedPlaintext };
+  for ( auto i = substitutedPlaintext.begin(); i < substitutedPlaintext.end(); i += 16 ) {            
 
     rotate(i + 4, i + 5, i + 8);
     rotate(i + 8, i + 10, i + 12);
     rotate(i + 12, i + 15, i + 16);  
   }  
   
-  for ( int i = 0; i < plaintext.size(); i+=4) {
+  for ( int i = 0; i < substitutedPlaintext.size(); i+=4) {
     
-    if ( i % 16 == 0 ) cout << endl;
+    if ( i % 16 == 0 ) {
+      cout << endl;
+      outputFile.stream << endl;
+    }
     
-    printRow(plaintextOriginal, i, '\t');    
-    printRow(plaintext, i, '\n');
-    
+    printRow(substituedPlainTextUnshifted, i, '\t', outputFile);    
+    printRow(substitutedPlaintext, i, '\n', outputFile);    
   }
-  
-
-
-  system("pause");
 
   return 0;
 }
+
 
 
 
@@ -83,12 +77,13 @@ T userInput(const char* inputRequestPrompt) {
 //---------------------------------
 //      fileContentsToString
 //---------------------------------
-string fileContentsToString(ifstream & stream) {
+string fileToString(string streamFilename) {
   
+  FileStream<ifstream> in_stream { streamFilename };
   char character;
   string outputString;
   
-  while ( stream.get(character) ) {
+  while ( in_stream.stream.get(character) ) {
     if ( isalpha(character) ) {
       outputString.push_back(character);
     }
@@ -96,9 +91,26 @@ string fileContentsToString(ifstream & stream) {
   return outputString;
 }
 
-void printRow(string & text, int position, char endChar) {
+
+//---------------------------------
+//            printRow
+//---------------------------------
+void printRow(string & text, int position, char endChar, FileStream<ofstream>& outStream) {
   for ( int j = position; j < ( position + 4 ); ++j ) {
     cout << text[ j ];
+    outStream.stream << text[ j ];
   }
   cout << endChar;
+  outStream.stream << endChar;
+}
+
+string vigenereSubstitution(string& plaintext, string& cipher) {
+  string subString { plaintext };
+  
+  for ( int i = 0; i < plaintext.size(); ++i ) {
+    int char1 = plaintext[ i ] - 'A';
+    int char2 = cipher[ i%cipher.size() ] - 'A';
+    subString[ i ] = ((char1+char2) % 26 ) + 'A';
+  }
+  return subString;
 }
