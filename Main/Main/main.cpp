@@ -8,7 +8,9 @@
 using namespace std;
 
 
-
+//---------------------------------
+//           userInput
+//---------------------------------
 template<class T>
 T userInput(const char* inputRequestPrompt) {  
   T userInput;
@@ -18,6 +20,9 @@ T userInput(const char* inputRequestPrompt) {
 }
 
 
+//=================================
+//              main
+//=================================
 
 int main()
 {
