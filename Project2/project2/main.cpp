@@ -19,9 +19,10 @@ Description : Program implements modified-AES style encryption
 #include<algorithm>
 #include<vector>
 #include<iomanip>
+#include<array>
 #include"FileStream.h"
 using namespace std;
-
+using matrixVector = vector<array<array<uint8_t, 4>, 4>>;
 
 template<class T> 
 T userInput(const char*);
@@ -29,14 +30,16 @@ T userInput(const char*);
 string fileToString(string);
 string vigenereSubstitution(string&, string&);
 void   printRow(string&, int, char, FileStream<ofstream>&);
-bool   binaryHasOddOnes(int8_t);
-
+bool   binaryHasOddOnes(uint8_t);
+matrixVector stringToMatrixVec(string&);
 
 
 //=================================
 //              main
 //=================================
 int main() {
+
+  system("pwd");
 
   string plaintextString = fileToString(userInput<string>("Enter plaintext filename: "));
   string cipherString = fileToString(userInput<string>("Enter ciphertext filename: "));  
@@ -48,17 +51,20 @@ int main() {
   cout << "plaintext before vignere: " << plaintextString << endl;  
   cout << "plaintext after vignere: " << substitutedPlaintext << endl << endl;
   
+  
+
   // add buffer to plaintext string
   for ( auto i = 0; i<substitutedPlaintext.size()%16; ++i ) {
     substitutedPlaintext.push_back('A');
-  }  
+  }      
   
   for ( auto i = substitutedPlaintext.begin(); i != substitutedPlaintext.end(); i += 16 ) {            
     rotate(i + 4, i + 5, i + 8);
     rotate(i + 8, i + 10, i + 12);
     rotate(i + 12, i + 15, i + 16);  
   }  
-  
+  matrixVector shiftedBlocksVec = stringToMatrixVec(substitutedPlaintext);
+
   string substituedPlainTextUnshifted { substitutedPlaintext };
 
   for ( int i = 0; i < substitutedPlaintext.size(); i+=4) {    
@@ -86,6 +92,7 @@ int main() {
     cout << " " << hex << static_cast<int>(i);
     ++counter;
   }
+
 
 
   return 0;
@@ -142,7 +149,7 @@ void printRow(string & text, int position, char endChar, FileStream<ofstream>& o
 //---------------------------------
 //        binaryHasEvenOnes
 //---------------------------------
-bool binaryHasOddOnes(int8_t shiftedTextChar) {
+bool binaryHasOddOnes(uint8_t shiftedTextChar) {
   
   int i;
   
@@ -150,6 +157,24 @@ bool binaryHasOddOnes(int8_t shiftedTextChar) {
     shiftedTextChar &= ( shiftedTextChar - 1 );
   }
   return i % 2 != 0;
+}
+
+matrixVector stringToMatrixVec(string & text) {
+
+  matrixVector tempMatrixVec;
+  
+  for ( auto i = 0, blockNum=0; i < text.size(); ++blockNum) {
+    array<array<uint8_t, 4>, 4> tempArray;
+    tempMatrixVec.push_back(tempArray);
+    
+    for ( auto j = 0; j < 4; ++j) {
+      
+      for ( auto k = 0; k < 4; ++k, ++i ) {
+        tempMatrixVec[blockNum][j][k] = static_cast<uint8_t>(text[i]);
+      }
+    }    
+  }
+  return tempMatrixVec;
 }
 
 
