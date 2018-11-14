@@ -49,40 +49,36 @@ int main() {
        
   sendToOutputs<string>("\nParity Bit:\n\n" + printBlocks(parityMatrix, true), outputFile);
 
-  matrixVector finalShiftedMatrix;
+  
+  matrixVector finalShiftedMatrix(parityMatrix.size());
 
+  // mix columns
   for ( int i = 0; i < parityMatrix.size(); ++i ) {
-    for ( int j = 0; j < parityMatrix[i].size(); j+=4 ) {      
-      switch ( j ) {
-          
-        case 0: finalShiftedMatrix[i][j][j] = 
-                                              mixRow(parityMatrix[i][j][j], 2) ^ 
-                                              mixRow(parityMatrix[i][j+1][j], 3) ^ 
-                                              parityMatrix[i][j+2][j] ^ 
-                                              parityMatrix[i][j+3][j];
-          break;
+    for ( int j = 0; j < parityMatrix[i].size(); j++ ) {      
 
-        case 1: finalShiftedMatrix[i][j+1][j] = 
-                                              parityMatrix[i][j][j] ^
-                                              mixRow(parityMatrix[i][j+1][j], 2) ^
-                                              mixRow(parityMatrix[i][j+2][j], 3) ^
-                                              parityMatrix[i][j+3][j];
-          break;
-          
-        case 2: finalShiftedMatrix[i][j+2][j] =
-                                              parityMatrix[i][j][j] ^
-                                              parityMatrix[i][j + 1][j] ^
-                                              mixRow(parityMatrix[i][j + 2][j], 2) ^
-                                              mixRow(parityMatrix[i][j + 3][j], 3);
-          break;
-          
-        case 3: finalShiftedMatrix[i][j+3][j] =
-                                              mixRow(parityMatrix[i][j][j], 3) ^
-                                              parityMatrix[i][j + 1][j] ^
-                                              parityMatrix[i][j + 2][j] ^
-                                              mixRow(parityMatrix[i][j + 3][j], 2);
-          break;
-      }
+      finalShiftedMatrix[i][0][j] = 
+          mixRow(parityMatrix[i][0][j], 2) ^ 
+          mixRow(parityMatrix[i][1][j], 3) ^ 
+          parityMatrix[i][2][j] ^ 
+          parityMatrix[i][3][j];
+
+      finalShiftedMatrix[i][1][j] =
+          parityMatrix[i][0][j] ^
+          mixRow(parityMatrix[i][1][j], 2) ^
+          mixRow(parityMatrix[i][2][j], 3) ^
+          parityMatrix[i][3][j];
+   
+      finalShiftedMatrix[i][2][j] =
+          parityMatrix[i][0][j] ^
+          parityMatrix[i][1][j] ^
+          mixRow(parityMatrix[i][2][j], 2) ^
+          mixRow(parityMatrix[i][3][j], 3);
+
+      finalShiftedMatrix[i][3][j] =
+          mixRow(parityMatrix[i][0][j], 3) ^
+          parityMatrix[i][1][j] ^
+          parityMatrix[i][2][j] ^
+          mixRow(parityMatrix[i][3][j], 2);
     }
   }
 
@@ -187,11 +183,21 @@ string printBlocks(matrixVector & matrix, bool _hex) {
   return oss.str();
 }
 
+
+//---------------------------------
+//             mixRow
+//---------------------------------
 uint8_t mixRow(uint8_t source, int shift) {
   
   uint8_t newByte;
   newByte = shift == 2 ? source << 1 : (source << 1) ^ source;
   
+  if ( source & 0x80 ) {
+    newByte ^= 0x1b;
+  }
+  else if ( binaryHasOddOnes(newByte)) {
+    newByte ^= 0x80;
+  }
   return newByte;
 }
 
