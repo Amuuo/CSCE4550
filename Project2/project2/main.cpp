@@ -10,88 +10,50 @@ Description : Program implements modified-AES style encryption
 ============================================================================
 */
 
-
-#include<iostream>
-#include<string>
-#include<fstream>
-#include<sstream>
-#include<exception>
-#include<algorithm>
-#include<vector>
-#include<iomanip>
-#include<array>
-#include"FileStream.h"
-using namespace std;
-using matrixVector = vector<array<array<uint8_t, 4>, 4>>;
-
-template<class T> 
-T userInput(const char*);
-
-string fileToString(string);
-string vigenereSubstitution(string&, string&);
-void   printRow(string&, int, char, FileStream<ofstream>&);
-bool   binaryHasOddOnes(uint8_t);
-matrixVector stringToMatrixVec(string&);
+#include "main.h"
 
 
-//=================================
-//              main
-//=================================
-int main() {
 
-  system("pwd");
 
-  string plaintextString = fileToString(userInput<string>("Enter plaintext filename: "));
-  string cipherString = fileToString(userInput<string>("Enter ciphertext filename: "));  
-  string substitutedPlaintext = vigenereSubstitution(plaintextString, cipherString);  
+int main() {  
+
+  string plaintext = fileToString(userInput<string>("Enter plaintext filename: "));
+  string cipher    = fileToString(userInput<string>("Enter ciphertext filename: "));  
+  string subText   = vigenereSubstitution(plaintext, cipher);  
+  
   FileStream<ofstream> outputFile { userInput<string>("Enter output filename: ") };  
 
   
-  cout << "ciphertext: " << cipherString << endl;
-  cout << "plaintext before vignere: " << plaintextString << endl;  
-  cout << "plaintext after vignere: " << substitutedPlaintext << endl << endl;
+  cout << "ciphertext: " << cipher    << endl;
+  cout << "plaintext: "  << plaintext << endl;  
+  cout << "subText: "    << subText   << endl << endl;
   
+
+  for ( auto i = 0; i<subText.size()%16; ++i )
+    subText.push_back('A');      
+    
+  matrixVector shiftedMatrix = stringToMatrixVec(subText);
   
+  printBlocks(shiftedMatrix, outputFile);
 
-  // add buffer to plaintext string
-  for ( auto i = 0; i<substitutedPlaintext.size()%16; ++i ) {
-    substitutedPlaintext.push_back('A');
-  }      
+  int shift=0;
+  for ( auto& block : shiftedMatrix ) {        
+    for ( auto& row : block ) 
+      rotate(row.begin(), row.begin() + shift++, row.end());
+    shift = 0;
+  }
   
-  for ( auto i = substitutedPlaintext.begin(); i != substitutedPlaintext.end(); i += 16 ) {            
-    rotate(i + 4, i + 5, i + 8);
-    rotate(i + 8, i + 10, i + 12);
-    rotate(i + 12, i + 15, i + 16);  
-  }  
-  matrixVector shiftedBlocksVec = stringToMatrixVec(substitutedPlaintext);
+  printBlocks(shiftedMatrix, outputFile);
 
-  string substituedPlainTextUnshifted { substitutedPlaintext };
+  matrixVector parityMatrix = shiftedMatrix;
 
-  for ( int i = 0; i < substitutedPlaintext.size(); i+=4) {    
-    if ( i % 16 == 0 ) {
-      cout << endl;
-      outputFile.stream << endl;
-    }    
-    printRow(substituedPlainTextUnshifted, i, '\t', outputFile);    
-    printRow(substitutedPlaintext, i, '\n', outputFile);    
-  }
+  for ( auto& block : parityMatrix ) 
+    for ( auto& row : block ) 
+      for ( auto& byte : row )         
+        byte = binaryHasOddOnes(byte) ? byte ^= 0x80 : byte;        
 
-  vector<uint8_t> parityBytes;
-
-  for ( int i = 0; i < substitutedPlaintext.size(); ++i ) {
-    parityBytes.push_back(substitutedPlaintext[i]);
-    if ( binaryHasOddOnes(parityBytes[i])) {
-      parityBytes[i] ^= 0x80;
-    }
-  }
-
-  int counter = 0;
-  for ( auto& i : parityBytes ) {    
-    if ( counter % 4 == 0 ) cout << endl;
-    //printf(" %2x", i);
-    cout << " " << hex << static_cast<int>(i);
-    ++counter;
-  }
+     
+  printBlocks(parityMatrix, outputFile, ' ');
 
 
 
@@ -123,11 +85,10 @@ string fileToString(string streamFilename) {
   char character;
   string outputString;
   
-  while ( in_stream.stream.get(character) ) {
-    if ( isalpha(character) ) {
-      outputString.push_back(character);
-    }
-  }
+  while ( in_stream.stream.get(character) ) 
+    if ( isalpha(character) ) 
+      outputString.push_back(character);    
+  
   return outputString;
 }
 
@@ -149,32 +110,49 @@ void printRow(string & text, int position, char endChar, FileStream<ofstream>& o
 //---------------------------------
 //        binaryHasEvenOnes
 //---------------------------------
-bool binaryHasOddOnes(uint8_t shiftedTextChar) {
-  
-  int i;
-  
-  for ( i = 0; shiftedTextChar != 0; ++i ) {
+bool binaryHasOddOnes(uint8_t shiftedTextChar, int i) {
+      
+  for ( i = 0; shiftedTextChar != 0; ++i ) 
     shiftedTextChar &= ( shiftedTextChar - 1 );
-  }
+  
   return i % 2 != 0;
 }
 
+
+//---------------------------------
+//        stringToMatrixVec
+//---------------------------------
 matrixVector stringToMatrixVec(string & text) {
 
   matrixVector tempMatrixVec;
   
   for ( auto i = 0, blockNum=0; i < text.size(); ++blockNum) {
     array<array<uint8_t, 4>, 4> tempArray;
-    tempMatrixVec.push_back(tempArray);
-    
-    for ( auto j = 0; j < 4; ++j) {
-      
-      for ( auto k = 0; k < 4; ++k, ++i ) {
+    tempMatrixVec.push_back(tempArray);    
+    for ( auto j = 0; j < 4; ++j)       
+      for ( auto k = 0; k < 4; ++k, ++i ) 
         tempMatrixVec[blockNum][j][k] = static_cast<uint8_t>(text[i]);
-      }
-    }    
   }
   return tempMatrixVec;
+}
+
+
+//---------------------------------
+//           printBlocks
+//---------------------------------
+void printBlocks(matrixVector & matrix, FileStream<ofstream>& outStream, char separator) {
+  
+  if ( separator == ' ' ) outStream.stream << hex;
+
+  for ( auto& block : matrix ) {
+    for ( auto& row : block ) {
+      for ( auto& byte : row ) {
+        outStream.stream << byte;
+      }outStream.stream << endl;
+    }outStream.stream << endl;
+  }
+
+  if ( separator == ' ' ) outStream.stream << dec;
 }
 
 

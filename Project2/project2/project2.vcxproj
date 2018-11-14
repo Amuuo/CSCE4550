@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileStream.h" />
+    <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
