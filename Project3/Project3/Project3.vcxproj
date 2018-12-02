@@ -35,14 +35,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{5536e480-a952-4c9a-95d8-f21731af3f39}</ProjectGuid>
+    <ProjectGuid>{51aac40c-a48b-4593-91e6-5af44d0f528e}</ProjectGuid>
     <Keyword>Linux</Keyword>
-    <RootNamespace>project2</RootNamespace>
+    <RootNamespace>Project3</RootNamespace>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <ApplicationType>Linux</ApplicationType>
     <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
     <TargetLinuxPlatform>Generic</TargetLinuxPlatform>
-    <LinuxProjectType>{D51BCBC9-82E9-4017-911E-C93873C4EA2B}</LinuxProjectType>
+    <LinuxProjectType>{2238F9CD-F817-4ECC-BD14-2524D2669B35}</LinuxProjectType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
@@ -53,7 +53,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
-    <RemoteRootDir>~/projects</RemoteRootDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -75,68 +74,13 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>$(ProjectDir)obj\$(Platform)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>$(ProjectDir)obj\$(Platform)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <IntDir>$(ProjectDir)obj\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
-    <AdditionalSourcesToCopyMapping>
-    </AdditionalSourcesToCopyMapping>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <OutDir>$(ProjectDir)</OutDir>
-  </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="FileStream.cpp" />
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="input1.txt" />
-    <Text Include="key1.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="FileStream.h" />
-    <ClInclude Include="main.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Makefile" />
+    <ClCompile Include="Source.c" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <ClCompile>
+      <CLanguageStandard>c11</CLanguageStandard>
       <CppLanguageStandard>c++14</CppLanguageStandard>
-    </ClCompile>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-      <AdditionalSourcesToCopyMapping>
-      </AdditionalSourcesToCopyMapping>
-    </PostBuildEvent>
-    <PreBuildEvent>
-      <AdditionalSourcesToCopyMapping>
-      </AdditionalSourcesToCopyMapping>
-    </PreBuildEvent>
-    <RemotePostBuildEvent>
-      <AdditionalSourcesToCopyMapping>
-      </AdditionalSourcesToCopyMapping>
-    </RemotePostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <CppLanguageStandard>c++14</CppLanguageStandard>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <CppLanguageStandard>c++14</CppLanguageStandard>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <ClCompile>
-      <CppLanguageStandard>c++17</CppLanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

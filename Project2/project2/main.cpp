@@ -17,72 +17,76 @@ int main() {
 
   string plaintext = fileToString(userInput<string>("Enter plaintext filename: "));
   string cipher    = fileToString(userInput<string>("Enter ciphertext filename: "));    
-  FileStream<ofstream> outputFile { userInput<string>("Enter output filename: ") };  
+  FileStream<ofstream> output { userInput<string>("Enter output filename: ") };  
 
-  sendToOutputs<string>("ciphertext: " + cipher    + '\n',   outputFile);
-  sendToOutputs<string>("plaintext: "  + plaintext + '\n',   outputFile);
+  sendToOutputs<string>("ciphertext: " + cipher    + '\n',   output);
+  sendToOutputs<string>("plaintext: "  + plaintext + '\n',   output);
   
   // substitution and padding  
-  matrixVector shiftedMatrix = 
-    stringToMatrixVec(vigenereSubstitution(plaintext, cipher, outputFile));
+  matrixVector shiftedDatablocks = 
+    stringToMatrixVec(vigenereSubstitution(plaintext, cipher, output));
   
 
-  sendToOutputs<string>("\nSubstitution Blocks:\n\n" + printBlocks(shiftedMatrix), outputFile);  
+  sendToOutputs<string>(
+    "\nSubstitution Blocks:\n\n" + printBlocks(shiftedDatablocks), output);  
 
   // shiftRows
   int shift=0;
-  for ( auto& block : shiftedMatrix ) {        
+  for ( auto& block : shiftedDatablocks ) {        
     for ( auto& row : block ) 
       rotate(row.begin(), row.begin() + shift++, row.end());
     shift = 0;
   }  
-  sendToOutputs<string>("\nShift Rows:\n\n" + printBlocks(shiftedMatrix), outputFile);
+  sendToOutputs<string>(
+    "\nShift Rows:\n\n" + printBlocks(shiftedDatablocks), output);
   
 
-  matrixVector parityMatrix = shiftedMatrix;
+  matrixVector parityDatablocks = shiftedDatablocks;
 
   // parity bit
-  for ( auto& block : parityMatrix ) 
+  for ( auto& block : parityDatablocks ) 
     for ( auto& row : block ) 
       for ( auto& byte : row )         
         byte = binaryHasOddOnes(byte) ? byte ^= 0x80 : byte;        
        
-  sendToOutputs<string>("\nParity Bit:\n\n" + printBlocks(parityMatrix, true), outputFile);
+  sendToOutputs<string>(
+    "\nParity Bit:\n\n" + printBlocks(parityDatablocks, true), output);
 
   
-  matrixVector finalShiftedMatrix(parityMatrix.size());
+  matrixVector finalShiftedMatrix(parityDatablocks.size());
 
   // mix columns
-  for ( int i = 0; i < parityMatrix.size(); ++i ) {
-    for ( int j = 0; j < parityMatrix[i].size(); j++ ) {      
+  for ( int i = 0; i < parityDatablocks.size(); ++i ) {
+    for ( int j = 0; j < parityDatablocks[i].size(); j++ ) {      
 
       finalShiftedMatrix[i][0][j] = 
-          mixRow(parityMatrix[i][0][j], 2) ^ 
-          mixRow(parityMatrix[i][1][j], 3) ^ 
-          parityMatrix[i][2][j] ^ 
-          parityMatrix[i][3][j];
+          mixRow(parityDatablocks[i][0][j], 2) ^ 
+          mixRow(parityDatablocks[i][1][j], 3) ^ 
+          parityDatablocks[i][2][j] ^ 
+          parityDatablocks[i][3][j];
 
       finalShiftedMatrix[i][1][j] =
-          parityMatrix[i][0][j] ^
-          mixRow(parityMatrix[i][1][j], 2) ^
-          mixRow(parityMatrix[i][2][j], 3) ^
-          parityMatrix[i][3][j];
+          parityDatablocks[i][0][j] ^
+          mixRow(parityDatablocks[i][1][j], 2) ^
+          mixRow(parityDatablocks[i][2][j], 3) ^
+          parityDatablocks[i][3][j];
    
       finalShiftedMatrix[i][2][j] =
-          parityMatrix[i][0][j] ^
-          parityMatrix[i][1][j] ^
-          mixRow(parityMatrix[i][2][j], 2) ^
-          mixRow(parityMatrix[i][3][j], 3);
+          parityDatablocks[i][0][j] ^
+          parityDatablocks[i][1][j] ^
+          mixRow(parityDatablocks[i][2][j], 2) ^
+          mixRow(parityDatablocks[i][3][j], 3);
 
       finalShiftedMatrix[i][3][j] =
-          mixRow(parityMatrix[i][0][j], 3) ^
-          parityMatrix[i][1][j] ^
-          parityMatrix[i][2][j] ^
-          mixRow(parityMatrix[i][3][j], 2);
+          mixRow(parityDatablocks[i][0][j], 3) ^
+          parityDatablocks[i][1][j] ^
+          parityDatablocks[i][2][j] ^
+          mixRow(parityDatablocks[i][3][j], 2);
     }
   }
 
-  sendToOutputs<string>("\nMixed Columns: \n\n" + printBlocks(finalShiftedMatrix, true), outputFile);
+  sendToOutputs<string>(
+    "\nMixed Columns: \n\n" + printBlocks(finalShiftedMatrix, true), output);
 
   return 0;
 }
@@ -95,7 +99,8 @@ int main() {
 //           userInput
 //---------------------------------
 template<class T>
-T userInput(const char* inputRequestPrompt) {
+T 
+userInput(const char* inputRequestPrompt) {
   
   T userInput;
   cout << inputRequestPrompt;
@@ -108,7 +113,8 @@ T userInput(const char* inputRequestPrompt) {
 //         sendToOutputs
 //---------------------------------
 template<class T>
-void sendToOutputs(T toPrint, FileStream<ofstream>& out) {
+void 
+sendToOutputs(T toPrint, FileStream<ofstream>& out) {
 
   out.stream << toPrint;
   cout << toPrint;
@@ -119,7 +125,8 @@ void sendToOutputs(T toPrint, FileStream<ofstream>& out) {
 //---------------------------------
 //      fileContentsToString
 //---------------------------------
-string fileToString(string streamFilename) {
+string 
+fileToString(string streamFilename) {
   
   FileStream<ifstream> in_stream { streamFilename };
   char character;
@@ -136,7 +143,8 @@ string fileToString(string streamFilename) {
 //---------------------------------
 //        binaryHasEvenOnes
 //---------------------------------
-bool binaryHasOddOnes(uint8_t rowByte, int i) {
+bool 
+binaryHasOddOnes(uint8_t rowByte, int i) {
       
   for ( i = 0; rowByte != 0; ++i ) 
     rowByte &= ( rowByte - 1 );
@@ -148,7 +156,8 @@ bool binaryHasOddOnes(uint8_t rowByte, int i) {
 //---------------------------------
 //        stringToMatrixVec
 //---------------------------------
-matrixVector stringToMatrixVec(string text) {
+matrixVector 
+stringToMatrixVec(string text) {
 
   matrixVector tempMatrixVec;
   
@@ -166,7 +175,8 @@ matrixVector stringToMatrixVec(string text) {
 //---------------------------------
 //           printBlocks
 //---------------------------------
-string printBlocks(matrixVector & matrix, bool _hex) {
+string 
+printBlocks(matrixVector & matrix, bool _hex) {
        
   ostringstream oss;
 
@@ -189,15 +199,14 @@ string printBlocks(matrixVector & matrix, bool _hex) {
 //---------------------------------
 uint8_t mixRow(uint8_t source, int shift) {
   
-  uint8_t newByte;
-  newByte = shift == 2 ? source << 1 : (source << 1) ^ source;
+  uint8_t newByte = shift == 2 ? source << 1 : (source << 1) ^ source;
   
-  if ( source & 0x80 ) {
+  if ( source & 0x80 )
     newByte ^= 0x1b;
-  }
-  else if ( binaryHasOddOnes(newByte)) {
+
+  else if ( binaryHasOddOnes(newByte))
     newByte ^= 0x80;
-  }
+  
   return newByte;
 }
 
@@ -205,7 +214,8 @@ uint8_t mixRow(uint8_t source, int shift) {
 //---------------------------------
 //      vigenereSubstitution
 //---------------------------------
-string vigenereSubstitution(string& plaintext, string& cipher, FileStream<ofstream>& out) {
+string
+vigenereSubstitution(string& plaintext, string& cipher, FileStream<ofstream>& out) {
   
   string subString { plaintext };
   
@@ -214,6 +224,8 @@ string vigenereSubstitution(string& plaintext, string& cipher, FileStream<ofstre
     int char2 = cipher[i%cipher.size()] - 'A';
     subString[i] = ( ( char1 + char2 ) % 26 ) + 'A';
   }
+
+  out << "subText: " + subString + "\n\n";
   sendToOutputs<string>("subText: " + subString + "\n\n", out);
 
   // padding
