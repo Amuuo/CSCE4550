@@ -110,8 +110,8 @@ void parse_cmd_options(int argc, char** argv) {
             iss >> tmp;
 
             int endRange = stoi(tmp);
-            printf("\nBegin Range: %d", beginRange);
-            printf("\nEnd Range: %d", endRange);
+            printf("\n\tBegin Range: %d", beginRange);
+            printf("\n\tEnd Range: %d", endRange);
 
             for (int i = beginRange; i < endRange; ++i)
               ports.insert(i);
@@ -129,7 +129,7 @@ void parse_cmd_options(int argc, char** argv) {
           }
           optind++;
         }
-        printf("\nPorts Vector: ");
+        printf("\n\tPorts set: ");
         for (auto& p : ports)
           printf("%d, ", p);
 
@@ -179,13 +179,20 @@ void parse_cmd_options(int argc, char** argv) {
       {
         printf("\n\nIP file:");
         printOptionVariables(optarg, optopt, optind, longindex);
-        ifstream ip_file{optarg};
+        
+        ifstream ip_file{optarg};        
+        
+        if (ip_file.fail()) {
+          fprintf(stderr, "\n\nERROR: IP file failed to open... exiting...");
+          return;
+        }
+
         string ip_string;
 
         while (getline(ip_file, ip_string))
           ip_addresses.push_back(ip_string);
 
-        printf("\n\nIP Vector: ");
+        printf("\n\nIP address set: ");
         
         for (auto& i : ip_addresses)
           printf("\n\t%s", i.c_str());
@@ -213,8 +220,10 @@ void parse_cmd_options(int argc, char** argv) {
                "\n\t--transport -t <TCP or UDP>");
         break;
 
-      case '?':
-        printf("\n?: %s", optarg);
+      case '?':        
+        printf("\n\n?: %s", optarg);
+        printf("\n\tUnidentified option: %s", argv[--optind]);
+        ++optind;
         break;
 
       case ':':
