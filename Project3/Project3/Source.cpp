@@ -86,15 +86,9 @@ int main(int argc, char** argv) {
     
     tmp_in.sin_addr.s_addr  = inet_addr(ip.c_str());    
     tmp_in2.sin_addr.s_addr = inet_addr(ip.c_str());
-
-    if(!udp_only)
+    
       
     
-    if(!tcp_only)
-      if (udp_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) == -1)
-        cerr << "Host down" << endl;
-
-
     for (auto& port : ports) {
 
       tmp_in.sin_port  = htons(port);              
@@ -104,6 +98,7 @@ int main(int argc, char** argv) {
         
         if (tcp_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) == -1)
           cerr << "Host down" << endl;
+        
         tmp_servent = getservbyport(htons(port), "tcp");
         cout << "\t" << setw(7) << left << port;
                 
@@ -120,16 +115,21 @@ int main(int argc, char** argv) {
       
       if (!tcp_only) { 
         
+        if (udp_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) == -1)
+          cerr << "Host down" << endl;
+        
         tmp_servent = getservbyport(htons(port), "udp");
         cout << "\t" << setw(7) << left << port;
                 
-        if (connect(udp_sock, (struct sockaddr*)&tmp_in, sizeof(tmp_in)) < 0)
+        if (connect(udp_sock, (struct sockaddr*)&tmp_in2, sizeof(tmp_in)) < 0)
           cout << setw(10) << left << "closed";        
         else                    
           cout << setw(10) << left << "open";        
                 
         cout << setw(15) << left << (tmp_servent ? tmp_servent->s_name : "unknown");
         cout << setw(7) << left << "udp" << endl;
+
+        close(udp_sock);
       }      
     }    
   }
