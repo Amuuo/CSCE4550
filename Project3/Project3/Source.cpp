@@ -1,5 +1,20 @@
+/*
+============================================================================
+Name        : Project 3
+Author      : Adam Williams
+Version     : 1.0
+Copyright   : 2018
+Description : Program scans specified ports of given ip addresses
+============================================================================
+*/
+
+
 #include<cstdio>
+#include<cstdlib>
 #include<netdb.h>
+#include<cerrno>
+#include<sys/socket.h>
+#include<arpa/inet.h>
 #include<getopt.h>
 #include<iostream>
 #include<string>   
@@ -9,17 +24,24 @@
 #include<algorithm>
 #include<fstream>
 #include<set>
+#include<iomanip>
+#include<unistd.h>
 
 using namespace std;
 
-void printOptionVariables(char*, int, int, int);
+void printOptionVariables(const char*, char*, int);
 void parse_cmd_options(int, char**);
 
 
-vector<string> ip_addresses;     // vector of ip addresses to scan
-set<int>       ports;            // vector of ports to scan
+vector<string> ip_addresses;     // set of ip addresses to scan
+set<int>       ports;            // set of ports to scan
 bool           tcp_only{false};  // bool indicating to scan tcp only
 bool           udp_only{false};  // bool indicating to scan udp only
+int            sock;
+
+struct sockaddr_in  tmp_sockaddr_in;
+struct servent*     tmp_servent;
+struct protoent*    tmp_protoent;
 
 
 
@@ -29,10 +51,70 @@ bool           udp_only{false};  // bool indicating to scan udp only
 int main(int argc, char** argv) {
   
   parse_cmd_options(argc, argv);
-      
-  int c;
+    
+  tmp_sockaddr_in.sin_family = AF_INET;
+  
+  
+  for (auto& ip : ip_addresses) {    
+    
+    cout << endl << "IP address: " << ip << endl;
+    cout << endl << setw(15) << left << "\tPort";
+    cout << setw(15) << left << "Status";
+    cout << setw(15) << left << "Protocol" << "\n" << endl;
+    tmp_sockaddr_in.sin_addr.s_addr = inet_addr(ip.c_str());
+    
+    for (auto& port : ports) {
 
-  scanf("%d", &c);
+      tmp_sockaddr_in.sin_port = port;
+      
+      
+
+      tmp_protoent = getprotobynumber(port);
+      
+      if (!udp_only) {
+        //tmp_servent = getservbyport(port, "TCP");        
+        cout << "\t" << setw(15) << left << port;
+        if (!(sock = socket(AF_INET, SOCK_STREAM, 0))) {
+          cerr << "Error with socket, error: " << errno << endl;
+        }
+        else if (!(connect(sock, (struct sockaddr*)&tmp_sockaddr_in, sizeof(sockaddr)))) {
+          cout << setw(15) << left << "closed";
+        }
+        else {
+          cout << setw(15) << left << "open";
+        }
+        if (!tmp_protoent) {
+          cout << setw(15) << left << "unknown" << endl;
+        }
+        else {
+          cout << setw(15) << left << tmp_protoent->p_name << endl;          
+        }
+        close(sock);
+      }
+      
+      if (!tcp_only) {        
+        //tmp_servent = getservbyport(port, "UDP");
+        cout << "\t" << setw(15) << left << port;
+        if (!(sock = socket(AF_INET, SOCK_DGRAM, 0))) {
+          cerr << "Error with socket, error: " << errno << endl;
+        }
+        else if (!(connect(sock, (struct sockaddr*)&tmp_sockaddr_in, sizeof(sockaddr)))) {
+          cout << setw(15) << left << "closed";
+        }
+        if (!tmp_protoent) {
+          cout << setw(15) << left << "unknown" << endl;
+        }
+        else {
+          cout << setw(15) << left << tmp_protoent->p_name << endl;          
+        }
+        close(sock);
+      }
+    }
+  }
+  
+
+  int c;
+  cin >> c;
 
   return 0;
 }
@@ -56,48 +138,44 @@ void parse_cmd_options(int argc, char** argv) {
     {NULL, 0, NULL, 0}
   };
 
-
   extern char *optarg;
-  extern int  optind;
-  extern int  optopt;
+  extern int  optind;  
   string      ip;
-  string      file;
-  
-  int c = 1;
+  string      file;  
+  int         c;
 
-  int longindex;
-  while (c != -1) {
-
-    c = getopt_long(argc, argv, "pifth", long_options, &longindex);
-
+  while ((c = getopt_long(argc, argv, "p:i:f:t:h", long_options, NULL)) != -1) {
+    
     switch (c) {
 
       /*
        * PORTS OPTION
        */
       case 'p':
-      {
-        printf("\n\nPort:");
-        printOptionVariables(optarg, optopt, optind, longindex);
+      {        
+        printOptionVariables("Ports:", optarg, optind);
+        int currentIndex = optind - 1;
         char* token;
-
-        printf("\n\tport args: ");
-        optind--;
+        
+        cout << "\tport args: ";
+        
 
         /*
          * check all subsequent options that don't begin with hyphen
          */
-        while (argv[optind][0] != '-') {
+        while (currentIndex < argc && argv[currentIndex][0] != '-') {
 
-          token = strtok(argv[optind], ",");
+          token = strtok(argv[currentIndex], ",");
+          
           string portArg{token};
           string tmp;
-
+          
           /*
            * check if ports options contains a hyphen
            */
           auto result = find(portArg.begin(), portArg.end(), '-');
 
+          
           /*
            * CONTAINS HYPHEN: add ports in range to ports vector
            */
@@ -106,33 +184,37 @@ void parse_cmd_options(int argc, char** argv) {
             istringstream iss{portArg};
 
             getline(iss, tmp, '-');
-            int beginRange = stoi(tmp);
+            int beginRange{stoi(tmp)};
             iss >> tmp;
-
-            int endRange = stoi(tmp);
-            printf("\n\tBegin Range: %d", beginRange);
-            printf("\n\tEnd Range: %d", endRange);
+            int endRange{stoi(tmp)};
+            
+            cout << endl;
+            cout << "\tBegin Range: " << beginRange << endl;
+            cout << "\tEnd Range: " << endRange << endl;
 
             for (int i = beginRange; i < endRange; ++i)
               ports.insert(i);
 
-            /*
-             * DOESN'T CONTAIN HYPEHN: add port to vector
-             */
           }
-          else {
+          /*
+           * DOESN'T CONTAIN HYPEHN: add port to vector
+           */
+          else {            
             while (token != NULL) {
-              printf("%s ", token);
+              cout << token << " ";
               ports.insert(atoi(token));
               token = strtok(NULL, ",");
             }
           }
-          optind++;
+          currentIndex++;
         }
-        printf("\n\tPorts set: ");
+        
+        cout << "\n\tPorts set: " << endl;
+        
         for (auto& p : ports)
-          printf("%d, ", p);
+          cout << p << ", ";
 
+        cout << endl;
         break;
       }
 
@@ -140,19 +222,18 @@ void parse_cmd_options(int argc, char** argv) {
        * IP OPTION
        */
       case 'i':
-      {
-        printf("\n\nIP:");
-        printOptionVariables(optarg, optopt, optind, longindex);
-        printf("\n");
+      {        
+        printOptionVariables("IP:", optarg, optind);
+        int currentIndex = optind-1;
+        cout << endl;
         char* token;
-
-        --optind;
+        
         /*
          * check all subsequent options that don't begin with hyphen
          */
-        while (argv[optind][0] != '-') {
+        while (currentIndex < argc && argv[currentIndex][0] != '-') {
 
-          token = strtok(argv[optind], ",");
+          token = strtok(argv[currentIndex], ",");
 
           /*
            * push all ip addresses to ip_addresses vector
@@ -161,13 +242,13 @@ void parse_cmd_options(int argc, char** argv) {
             ip_addresses.push_back(token);
             token = strtok(NULL, ",");
           }
-          optind++;
+          currentIndex++;
         }
 
-        printf("\n\nIP Vector: ");
+        cout << "\nIP Vector: " << endl;
 
         for (auto& i : ip_addresses)
-          printf("\n\t%s", i.c_str());
+          cout << "\t" << i << endl;
 
         break;
       }
@@ -176,14 +257,13 @@ void parse_cmd_options(int argc, char** argv) {
        * IP FILE OPTION
        */
       case 'f':
-      {
-        printf("\n\nIP file:");
-        printOptionVariables(optarg, optopt, optind, longindex);
+      {        
+        printOptionVariables("IP file:", optarg, optind);
         
         ifstream ip_file{optarg};        
         
         if (ip_file.fail()) {
-          fprintf(stderr, "\n\nERROR: IP file failed to open... exiting...");
+          cerr << "\nERROR: IP file failed to open... exiting..." << endl;
           return;
         }
 
@@ -192,10 +272,10 @@ void parse_cmd_options(int argc, char** argv) {
         while (getline(ip_file, ip_string))
           ip_addresses.push_back(ip_string);
 
-        printf("\n\nIP address set: ");
+        cout << "\nIP address set: " << endl;
         
         for (auto& i : ip_addresses)
-          printf("\n\t%s", i.c_str());
+          cout << "\t" << i << endl;
         
         break;
       }
@@ -203,43 +283,31 @@ void parse_cmd_options(int argc, char** argv) {
       /*
        * TRANSPORT OPTION
        */
-      case 't':
-        printf("\n\nTransport option: %s");
-        printOptionVariables(optarg, optopt, optind, longindex);
+      case 't':        
+        printOptionVariables("Transport option: ", optarg, optind);
         break;
 
-        /*
-         * HELP OPTION
-         */
+      /*
+       * HELP OPTION
+       */
       case 'h':
-        printf("\nUsage:"
-               "\n\t--help -h <display invocation options>"
-               "\n\t--port -p <ports to scan>"
-               "\n\t--ip -i <IP address to scan>"
-               "\n\t--file -f <file name containing IP addresses to scan>"
-               "\n\t--transport -t <TCP or UDP>");
+        cout << 
+          "\nUsage:"
+            "\n\t--help -h <display invocation options>"
+            "\n\t--port -p <ports to scan>"
+            "\n\t--ip -i <IP address to scan>"
+            "\n\t--file -f <file name containing IP addresses to scan>"
+            "\n\t--transport -t <TCP or UDP>" 
+          << endl;
         break;
 
+      /*
+       * INVALID OPTION
+       */
       case '?':        
-        printf("\n\n?: %s", optarg);
-        printf("\n\tUnidentified option: %s", argv[--optind]);
+        cout << "\n\n?: " << optarg;
+        cout << "\n\tUnidentified option: " << argv[--optind];
         ++optind;
-        break;
-
-      case ':':
-        printf("\n:: %s", optarg);
-        break;
-
-      case 1:
-        printf("\n1: %s", optarg);
-        break;
-
-      case 0:
-        printf("\n0: %s", optarg);
-        break;
-
-      default:
-        printf("\n\n%s: option '-%c' is invalid: ignored\n", argv[0], optarg);
         break;
     }
   }
@@ -251,10 +319,9 @@ void parse_cmd_options(int argc, char** argv) {
 /*=======================
   PRINT OPTION VARIABLES
  =======================*/
-void printOptionVariables(char* optarg, int optopt, int optind, int longindex) {
+void printOptionVariables(const char* option, char* optarg, int optind) {
   
-  printf("\n\toptions: %s", optarg);
-  printf("\n\toptopt: %s", optopt);
-  printf("\n\toptind: %d", optind);
-  printf("\n\tlongindex: %d", longindex);
+  cout << endl << option << endl;
+  cout << "\toptions: " << optarg << endl;
+  cout << "\toptind: " << optind << endl;
 }
