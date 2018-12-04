@@ -16,6 +16,10 @@ Description : Program scans specified ports of given ip addresses
 #include<sys/socket.h>
 #include<sys/types.h>
 #include<arpa/inet.h>
+#include<netinet/ip.h>
+#include<netinet/ip_icmp.h>
+#include<arpa/inet.h>
+#include<sys/select.h>
 #include<getopt.h>
 #include<iostream>
 #include<string>   
@@ -39,13 +43,18 @@ bool           tcp_only{false};  // bool indicating to scan tcp only
 bool           udp_only{false};  // bool indicating to scan udp only
 int            tcp_sock;
 int            udp_sock;
+int            icmp_sock;
 
 struct sockaddr_in  tmp_in { 0 };
-struct sockaddr_in  tmp_in2 { 0 };
 struct servent*     tmp_servent;
 struct protoent*    tmp_protoent;
 struct netent*      tmp_netent;
 struct hostent*     tmp_hostent;
+struct ip*          ip_struct;
+struct icmp*        tmp_icmp;
+struct timeval      tmp_time = {2, 0};
+
+fd_set fds;
 
 
 /*======================
@@ -56,13 +65,10 @@ int main(int argc, char** argv) {
   char bytes[16];
   struct addrinfo hints;
   struct addrinfo* serv_addr;
-  char host[128];
-  char service[128];
 
 
   parse_cmd_options(argc, argv);
   tmp_in.sin_family = AF_INET;
-  tmp_in2.sin_family = AF_INET;
       
   //setservent(1);
 
@@ -84,25 +90,28 @@ int main(int argc, char** argv) {
     cout << setw(15) << left << "Service";
     cout << setw(10) << left << "Protocol" << "\n" << endl;
     
-    tmp_in.sin_addr.s_addr  = inet_addr(ip.c_str());    
-    tmp_in2.sin_addr.s_addr = inet_addr(ip.c_str());
-    
+    tmp_in.sin_addr.s_addr  = inet_addr(ip.c_str());        
       
     
     for (auto& port : ports) {
 
       tmp_in.sin_port  = htons(port);              
-      tmp_in2.sin_port = htons(port);
       
       if (!udp_only) {    
         
-        if (tcp_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) == -1)
-          cerr << "Host down" << endl;
+        if ((tcp_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
+          cerr << "tcp socket failed: " << errno << endl;
+        
         
         tmp_servent = getservbyport(htons(port), "tcp");
+        if (tmp_servent == NULL) {
+          shutdown(tcp_sock, SHUT_RDWR);
+          goto udp_scan;
+        }
+
         cout << "\t" << setw(7) << left << port;
-                
-        if (connect(udp_sock, (struct sockaddr*)&tmp_in, sizeof(tmp_in)) < 0)
+        
+        if ((connect(tcp_sock, (struct sockaddr*)&tmp_in, sizeof(tmp_in))) < 0)
           cout << setw(10) << left << "closed";                  
         else 
           cout << setw(10) << left << "open";
@@ -110,26 +119,68 @@ int main(int argc, char** argv) {
         cout << setw(15) << left << (tmp_servent ? tmp_servent->s_name : "unknown");         
         cout << setw(7) << left << "tcp" << endl;
 
-        close(tcp_sock);
+        shutdown(tcp_sock, SHUT_RDWR);
+        //close(tcp_sock);
       }
       
+    udp_scan:
+
       if (!tcp_only) { 
         
-        if (udp_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) == -1)
-          cerr << "Host down" << endl;
+        if ((udp_sock = socket(AF_INET, SOCK_DGRAM, NULL)) == -1)
+          cerr << "udp socket failed: " << errno << endl;
+        if ((icmp_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP)) == -1)
+          cerr << "icmp socket failed: " << errno << endl;
+                
         
-        tmp_servent = getservbyport(htons(port), "udp");
+        /*if (tmp_servent == NULL) {
+          shutdown(udp_sock, SHUT_RDWR);
+          continue;
+        }*/
+
         cout << "\t" << setw(7) << left << port;
                 
-        if (connect(udp_sock, (struct sockaddr*)&tmp_in2, sizeof(tmp_in)) < 0)
-          cout << setw(10) << left << "closed";        
-        else                    
-          cout << setw(10) << left << "open";        
-                
-        cout << setw(15) << left << (tmp_servent ? tmp_servent->s_name : "unknown");
-        cout << setw(7) << left << "udp" << endl;
+        if ((sendto(udp_sock, (void*)bytes, sizeof(bytes), 0, (struct sockaddr*)&tmp_in, sizeof(sockaddr))) < 0) {
+          cout << "sendto failed" << endl;
+        }
 
-        close(udp_sock);
+        
+        while (1) {
+          FD_ZERO(&fds);
+          FD_SET(icmp_sock, &fds);
+
+          if (select(icmp_sock + 1, &fds, NULL, NULL, NULL) > 0) {
+            if ((recvfrom(icmp_sock, &bytes, sizeof(bytes), 0x0, NULL, NULL)) < 0) {
+              cout << "recvfrom failed" << endl;
+            }
+          }
+          if (!FD_ISSET(icmp_sock, &fds)) {
+
+            if ((select(udp_sock + 1, &fds, NULL, &tmp_in, &tmp_time)) == 0) {
+              cout << "no reply" << endl;
+              continue;
+            }
+            else if ((recvfrom(icmp_sock, &bytes, sizeof(bytes), 0x0, NULL, NULL)) > 0) {
+              cout << setw(10) << left << "open";
+              tmp_servent = getservbyport(htons(port), "udp");
+              cout << setw(15) << left << (tmp_servent ? tmp_servent->s_name : "unknown");
+              cout << setw(7) << left << "udp" << endl;
+            }
+          }
+        /*
+        ip_struct = (struct ip*)bytes;
+        int ip_length = ip_struct->ip_hl << 2;
+        tmp_icmp = (struct icmp*)(bytes + ip_length);
+
+        if ((tmp_icmp->icmp_type == ICMP_UNREACH) && (tmp_icmp->icmp_code == ICMP_UNREACH_PORT))
+          cout << setw(10) << left << "closed";        
+        */
+
+                
+        
+
+        shutdown(udp_sock, SHUT_RDWR);
+        //close(udp_sock);
       }      
     }    
   }
