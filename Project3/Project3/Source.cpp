@@ -30,7 +30,6 @@ Description : Program scans specified ports of given ip addresses
 
 using namespace std;
 
-void printOptionVariables(const char*, char*, int);
 void parse_cmd_options(int, char**);
 
 
@@ -42,7 +41,7 @@ int            tcp_sock;
 int            udp_sock;
 
 struct sockaddr_in  tmp_in { 0 };
-struct sockaddr_in  tmp_in2{0};
+struct sockaddr_in  tmp_in2 { 0 };
 struct servent*     tmp_servent;
 struct protoent*    tmp_protoent;
 struct netent*      tmp_netent;
@@ -84,75 +83,59 @@ int main(int argc, char** argv) {
     cout << setw(10) << left << "Status";
     cout << setw(15) << left << "Service";
     cout << setw(10) << left << "Protocol" << "\n" << endl;
-    tmp_in.sin_addr.s_addr = inet_addr(ip.c_str());    
+    
+    tmp_in.sin_addr.s_addr  = inet_addr(ip.c_str());    
     tmp_in2.sin_addr.s_addr = inet_addr(ip.c_str());
+
+    if(!udp_only)
+      
+    
+    if(!tcp_only)
+      if (udp_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) == -1)
+        cerr << "Host down" << endl;
+
 
     for (auto& port : ports) {
 
-      tmp_in.sin_port = htons(port);              
+      tmp_in.sin_port  = htons(port);              
       tmp_in2.sin_port = htons(port);
       
-      if (!udp_only) {
+      if (!udp_only) {    
         
-        if ((tcp_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
+        if (tcp_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) == -1)
           cerr << "Host down" << endl;
         tmp_servent = getservbyport(htons(port), "tcp");
         cout << "\t" << setw(7) << left << port;
-        
-        int result = connect(tcp_sock, (struct sockaddr*)&tmp_in, sizeof(tmp_in));
-        if (result == -1)
-          cout << setw(10) << left << "closed";          
-        
-        else {
-          getnameinfo((sockaddr*) &tmp_in, sizeof(tmp_in), 
-                      host, sizeof(host), service, sizeof(service), 0);
+                
+        if (connect(udp_sock, (struct sockaddr*)&tmp_in, sizeof(tmp_in)) < 0)
+          cout << setw(10) << left << "closed";                  
+        else 
           cout << setw(10) << left << "open";
-          //cout << setw(15) << left << service;
-          //cout << setw(10) << left << "TCP" << endl;
-        }
-        
+                
         cout << setw(15) << left << (tmp_servent ? tmp_servent->s_name : "unknown");         
-        cout << setw(7) << left << (tmp_servent ? tmp_servent->s_proto : "") << endl;
+        cout << setw(7) << left << "tcp" << endl;
 
         close(tcp_sock);
       }
       
       if (!tcp_only) { 
-        if ((udp_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
-          cerr << "Host down" << endl;
-        //tmp_servent = getservbyport(htons(port), "udp");
-        cout << "\t" << setw(7) << left << port;
         
-        int result = connect(udp_sock, (struct sockaddr*)&tmp_in, sizeof(tmp_in));
-        if (result == -1)
+        tmp_servent = getservbyport(htons(port), "udp");
+        cout << "\t" << setw(7) << left << port;
+                
+        if (connect(udp_sock, (struct sockaddr*)&tmp_in, sizeof(tmp_in)) < 0)
           cout << setw(10) << left << "closed";        
-        else {
-          
-          getnameinfo((sockaddr*)&tmp_in, 
-                      sizeof(tmp_in), 
-                      host, 
-                      sizeof(host), 
-                      service, 
-                      sizeof(service), 
-                      0);
-
-          cout << setw(10) << left << "open";
-          //cout << setw(15) << left << service;
-          //cout << setw(10) << left << "UDP" << endl;
-        }
+        else                    
+          cout << setw(10) << left << "open";        
                 
         cout << setw(15) << left << (tmp_servent ? tmp_servent->s_name : "unknown");
-        cout << setw(7) << left << (tmp_servent ? tmp_servent->s_proto : "") << endl;
-
-        //shutdown(udp_sock, SHUT_RDWR);
-        close(udp_sock);
+        cout << setw(7) << left << "udp" << endl;
       }      
     }    
   }
 
   close(tcp_sock);
   close(udp_sock);
-  //endservent();
   cout << endl << endl;
 
   return 0;
@@ -192,13 +175,11 @@ void parse_cmd_options(int argc, char** argv) {
        */
       case 'p':
       {        
-        printOptionVariables("\tPorts:", optarg, optind);
         int currentIndex = optind - 1;
         char* token;
         
-        cout << "\tport args: ";
+        cout << "\n\tPort args: " << endl;
         
-
         /*
          * check all subsequent options that don't begin with hyphen
          */
@@ -208,6 +189,7 @@ void parse_cmd_options(int argc, char** argv) {
           
           string portArg{token};
           string tmp;
+          cout << "\t  " << token << endl;
           
           /*
            * check if ports options contains a hyphen
@@ -227,20 +209,16 @@ void parse_cmd_options(int argc, char** argv) {
             iss >> tmp;
             int endRange{stoi(tmp)};
             
-            cout << endl;
-            cout << "\tBegin Range: " << beginRange << endl;
-            cout << "\tEnd Range: " << endRange << endl;
+            cout << endl;            
 
             for (int i = beginRange; i < endRange+1; ++i)
               ports.insert(i);
-
           }
           /*
            * DOESN'T CONTAIN HYPEHN: add port to vector
            */
           else {            
-            while (token != NULL) {
-              cout << token << " ";
+            while (token != NULL) {              
               ports.insert(atoi(token));
               token = strtok(NULL, ",");
             }
@@ -257,9 +235,7 @@ void parse_cmd_options(int argc, char** argv) {
        */
       case 'i':
       {        
-        printOptionVariables("\tIP:", optarg, optind);
         int currentIndex = optind-1;
-        cout << endl;
         char* token;
         
         /*
@@ -282,7 +258,7 @@ void parse_cmd_options(int argc, char** argv) {
         cout << "\n\tIP Set: " << endl;
 
         for (auto& i : ip_addresses)
-          cout << "\t" << i << endl;
+          cout << "\t  " << i << endl;
 
         break;
       }
@@ -292,7 +268,7 @@ void parse_cmd_options(int argc, char** argv) {
        */
       case 'f':
       {        
-        printOptionVariables("\tIP file:", optarg, optind);
+        cout << "\tIP file:" << endl;
         
         ifstream ip_file{optarg};        
         
@@ -317,10 +293,27 @@ void parse_cmd_options(int argc, char** argv) {
       /*
        * TRANSPORT OPTION
        */
-      case 't':        
-        printOptionVariables("Transport option: ", optarg, optind);
-        break;
+      case 't':
+      {
+        cout << "\tTransport options: " << optarg;
+        string transport_arg = optarg;
 
+        transform(transport_arg.begin(),
+                  transport_arg.end(),
+                  transport_arg.begin(),
+                  ::tolower);
+
+        if (transport_arg == "tcp")
+          tcp_only = true;
+
+        else if (transport_arg == "udp")
+          udp_only = true;
+
+        else
+          cerr << "Unknown transport option" << endl;
+        
+        break;
+      }
       /*
        * HELP OPTION
        */
@@ -345,17 +338,4 @@ void parse_cmd_options(int argc, char** argv) {
         break;
     }
   }
-}
-
-
-
-
-/*=======================
-  PRINT OPTION VARIABLES
- =======================*/
-void printOptionVariables(const char* option, char* optarg, int optind) {
-  
-  cout << endl << option << endl;
-  cout << "\toptions: " << optarg << endl;
-  cout << "\toptind: " << optind << endl;
 }
