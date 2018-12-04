@@ -6,152 +6,246 @@
 #include<cstring>
 #include<sstream>
 #include<vector>
+#include<algorithm>
+#include<fstream>
+#include<set>
 
 using namespace std;
 
-vector<string> ip_addresses;
-vector<int> ports;
+void printOptionVariables(char*, int, int, int);
+void parse_cmd_options(int, char**);
 
 
-/*
-static struct argp_option options[] = {
-  { "port",      'p', 0, 0, "List of ports to scan" },
-  { "ip",        'i', 0, 0, "IP address to scan" },
-  { "file",      'f', 0, 0, "Filename for list of ip addresses" },
-  { "transport", 't', 0, 0, "TCP or UDP" }
-}
-static error_t parse_opt(int key, char *arg, struct argp_state* state) {
+vector<string> ip_addresses;     // vector of ip addresses to scan
+set<int>       ports;            // vector of ports to scan
+bool           tcp_only{false};  // bool indicating to scan tcp only
+bool           udp_only{false};  // bool indicating to scan udp only
+
+
+
+/*======================
+           MAIN
+ ======================*/
+int main(int argc, char** argv) {
   
-  struct arguments *args = state->input;
-  
-  switch ( key ) {
-    case 'p': printf("\nport"); break;
-    case 'i': printf("\nip"); break;
-    case 'f': printf("\nfile"); break;
-    case 't': printf("\ntransport"); break;
-  }
+  parse_cmd_options(argc, argv);
+      
+  int c;
+
+  scanf("%d", &c);
+
   return 0;
 }
-*/
-
-
-void printOptionVariables(char* optarg, int optopt, int optind, int longindex) {
-  printf("\n\toptions: %s", optarg);
-  printf("\n\toptopt: %s", optopt);
-  printf("\n\toptind: %d", optind);
-  printf("\n\tlongindex: %d", longindex);
-}
-
-
-static struct option long_options[] = 
-{
-  {"ports",     required_argument, NULL, 'p'},
-  {"ip",        required_argument, NULL, 'i'},
-  {"file",      required_argument, NULL, 'f'},
-  {"transport", required_argument, NULL, 't'},
-  {"help",      no_argument,       NULL, 'h'},
-  {NULL, 0, NULL, 0}
-};
 
 
 
-int main(int argc, char** argv) {
-    
+
+
+/*======================
+    PARSE CMD OPTIONS
+ ======================*/
+void parse_cmd_options(int argc, char** argv) {
+
+  static struct option long_options[] =
+  {
+    {"ports",     required_argument, NULL, 'p'},
+    {"ip",        required_argument, NULL, 'i'},
+    {"file",      required_argument, NULL, 'f'},
+    {"transport", required_argument, NULL, 't'},
+    {"help",      no_argument,       NULL, 'h'},
+    {NULL, 0, NULL, 0}
+  };
+
+
   extern char *optarg;
-  extern int optind, optopt;
-  bool scanUDP = true;
-  bool scanTCP = true;
-  string options;
-  string ip;
-  string ports;
-  string file;
-  char* token;
+  extern int  optind;
+  extern int  optopt;
+  string      ip;
+  string      file;
+  
   int c = 1;
 
   int longindex;
   while (c != -1) {
-    
+
     c = getopt_long(argc, argv, "pifth", long_options, &longindex);
 
     switch (c) {
-      case 'p':      
+
+      /*
+       * PORTS OPTION
+       */
+      case 'p':
+      {
         printf("\n\nPort:");
-        printOptionVariables(optarg, optopt, optind, longindex);      
+        printOptionVariables(optarg, optopt, optind, longindex);
+        char* token;
+
         printf("\n\tport args: ");
         optind--;
+
+        /*
+         * check all subsequent options that don't begin with hyphen
+         */
+        while (argv[optind][0] != '-') {
+
+          token = strtok(argv[optind], ",");
+          string portArg{token};
+          string tmp;
+
+          /*
+           * check if ports options contains a hyphen
+           */
+          auto result = find(portArg.begin(), portArg.end(), '-');
+
+          /*
+           * CONTAINS HYPHEN: add ports in range to ports vector
+           */
+          if (result != portArg.end()) {
+
+            istringstream iss{portArg};
+
+            getline(iss, tmp, '-');
+            int beginRange = stoi(tmp);
+            iss >> tmp;
+
+            int endRange = stoi(tmp);
+            printf("\nBegin Range: %d", beginRange);
+            printf("\nEnd Range: %d", endRange);
+
+            for (int i = beginRange; i < endRange; ++i)
+              ports.insert(i);
+
+            /*
+             * DOESN'T CONTAIN HYPEHN: add port to vector
+             */
+          }
+          else {
+            while (token != NULL) {
+              printf("%s ", token);
+              ports.insert(atoi(token));
+              token = strtok(NULL, ",");
+            }
+          }
+          optind++;
+        }
+        printf("\nPorts Vector: ");
+        for (auto& p : ports)
+          printf("%d, ", p);
+
+        break;
+      }
+
+      /*
+       * IP OPTION
+       */
+      case 'i':
+      {
+        printf("\n\nIP:");
+        printOptionVariables(optarg, optopt, optind, longindex);
+        printf("\n");
+        char* token;
+
+        --optind;
+        /*
+         * check all subsequent options that don't begin with hyphen
+         */
         while (argv[optind][0] != '-') {
 
           token = strtok(argv[optind], ",");
 
+          /*
+           * push all ip addresses to ip_addresses vector
+           */
           while (token != NULL) {
-            printf("%s ", token);
+            ip_addresses.push_back(token);
             token = strtok(NULL, ",");
-          }          
+          }
           optind++;
         }
-        break;      
-      case 'i':
-        printf("\n\nIP:");
-        printOptionVariables(optarg, optopt, optind, longindex);        
+
+        printf("\n\nIP Vector: ");
+
+        for (auto& i : ip_addresses)
+          printf("\n\t%s", i.c_str());
+
         break;
+      }
+
+      /*
+       * IP FILE OPTION
+       */
       case 'f':
+      {
         printf("\n\nIP file:");
         printOptionVariables(optarg, optopt, optind, longindex);
+        ifstream ip_file{optarg};
+        string ip_string;
+
+        while (getline(ip_file, ip_string))
+          ip_addresses.push_back(ip_string);
+
+        printf("\n\nIP Vector: ");
+        
+        for (auto& i : ip_addresses)
+          printf("\n\t%s", i.c_str());
+        
         break;
+      }
+
+      /*
+       * TRANSPORT OPTION
+       */
       case 't':
         printf("\n\nTransport option: %s");
         printOptionVariables(optarg, optopt, optind, longindex);
         break;
+
+        /*
+         * HELP OPTION
+         */
       case 'h':
         printf("\nUsage:"
-                "\n\t--help -h <display invocation options>"
-                "\n\t--port -p <ports to scan>"
-                "\n\t--ip -i <IP address to scan>"
-                "\n\t--file -f <file name containing IP addresses to scan>"
-                "\n\t--transport -t <TCP or UDP>");
+               "\n\t--help -h <display invocation options>"
+               "\n\t--port -p <ports to scan>"
+               "\n\t--ip -i <IP address to scan>"
+               "\n\t--file -f <file name containing IP addresses to scan>"
+               "\n\t--transport -t <TCP or UDP>");
         break;
+
       case '?':
         printf("\n?: %s", optarg);
         break;
+
       case ':':
         printf("\n:: %s", optarg);
         break;
+
       case 1:
         printf("\n1: %s", optarg);
         break;
+
       case 0:
         printf("\n0: %s", optarg);
         break;
+
       default:
         printf("\n\n%s: option '-%c' is invalid: ignored\n", argv[0], optarg);
-        break;      
+        break;
     }
   }
+}
 
-  scanf("%d", &c);
-  /*
-  for (int i = 1; i < argc; ++i){
-    printf("\ncmd options %d: %s", i, argv[i]);
-    options += string(argv[i]) + " ";
-  }
 
-  printf("\n\nOptions variable: %s", options.c_str());
 
-  vector<string> tokens;
-  string tmp{};
 
-  istringstream iss(options);
-
-  printf("\n");
-  while (getline(iss, tmp, '-')) {
-
-    printf("\nPushing %s to tokens vector...", tmp.c_str());
-      tokens.push_back(tmp);
-  }
-  printf("\n");
-  for (auto& token : tokens) {
-      printf("%s\n", token.c_str());
-  }
-  */
-  return 0;
+/*=======================
+  PRINT OPTION VARIABLES
+ =======================*/
+void printOptionVariables(char* optarg, int optopt, int optind, int longindex) {
+  
+  printf("\n\toptions: %s", optarg);
+  printf("\n\toptopt: %s", optopt);
+  printf("\n\toptind: %d", optind);
+  printf("\n\tlongindex: %d", longindex);
 }
