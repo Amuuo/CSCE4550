@@ -14,6 +14,7 @@ Description : Program scans specified ports of given ip addresses
 #include<netdb.h>
 #include<cerrno>
 #include<sys/socket.h>
+#include<sys/types.h>
 #include<arpa/inet.h>
 #include<getopt.h>
 #include<iostream>
@@ -34,15 +35,17 @@ void parse_cmd_options(int, char**);
 
 
 vector<string> ip_addresses;     // set of ip addresses to scan
-set<int>       ports;            // set of ports to scan
+set<uint16_t>  ports;            // set of ports to scan
 bool           tcp_only{false};  // bool indicating to scan tcp only
 bool           udp_only{false};  // bool indicating to scan udp only
-int            sock;
+int            tcp_sock;
+int            udp_sock;
 
 struct sockaddr_in  tmp_sockaddr_in;
 struct servent*     tmp_servent;
 struct protoent*    tmp_protoent;
-
+struct netent*      tmp_netent;
+struct hostent*     tmp_hostent;
 
 
 /*======================
@@ -54,67 +57,70 @@ int main(int argc, char** argv) {
     
   tmp_sockaddr_in.sin_family = AF_INET;
   
+  setservent(1);
+
   
+  if (!udp_only)
+    if ((tcp_sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+      cerr << "Host down" << endl;          
+  else if (!tcp_only)
+    if ((udp_sock = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
+      cerr << "Host down" << endl;          
+  else {
+    if ((tcp_sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) 
+      cerr << "Host down" << endl;      
+    if ((udp_sock = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
+      cerr << "Host down" << endl;      
+  }
+
+
   for (auto& ip : ip_addresses) {    
     
     cout << endl << "IP address: " << ip << endl;
     cout << endl << setw(15) << left << "\tPort";
     cout << setw(15) << left << "Status";
+    cout << setw(15) << left << "Name";
     cout << setw(15) << left << "Protocol" << "\n" << endl;
     tmp_sockaddr_in.sin_addr.s_addr = inet_addr(ip.c_str());
     
+
     for (auto& port : ports) {
 
-      tmp_sockaddr_in.sin_port = port;
-      
-      
+      tmp_sockaddr_in.sin_port = htons(port);              
 
-      tmp_protoent = getprotobynumber(port);
-      
-      if (!udp_only) {
-        //tmp_servent = getservbyport(port, "TCP");        
+      if (!udp_only) {                
+        tmp_servent = getservbyport(tmp_sockaddr_in.sin_port, "tcp");
         cout << "\t" << setw(15) << left << port;
-        if (!(sock = socket(AF_INET, SOCK_STREAM, 0))) {
-          cerr << "Error with socket, error: " << errno << endl;
-        }
-        else if (!(connect(sock, (struct sockaddr*)&tmp_sockaddr_in, sizeof(sockaddr)))) {
+        
+        if (!(connect(tcp_sock, (struct sockaddr*)&tmp_sockaddr_in, sizeof(tmp_sockaddr_in))))
           cout << setw(15) << left << "closed";
-        }
-        else {
+        
+        else
           cout << setw(15) << left << "open";
-        }
-        if (!tmp_protoent) {
-          cout << setw(15) << left << "unknown" << endl;
-        }
-        else {
-          cout << setw(15) << left << tmp_protoent->p_name << endl;          
-        }
-        close(sock);
+        
+        cout << setw(15) << left << (tmp_servent ? tmp_servent->s_name : "unknown");         
+        cout << setw(15) << left << (tmp_servent ? tmp_servent->s_proto : "") << endl;                
       }
       
-      if (!tcp_only) {        
-        //tmp_servent = getservbyport(port, "UDP");
+      if (!tcp_only) {                        
+        tmp_servent = getservbyport(tmp_sockaddr_in.sin_port, "udp");
         cout << "\t" << setw(15) << left << port;
-        if (!(sock = socket(AF_INET, SOCK_DGRAM, 0))) {
-          cerr << "Error with socket, error: " << errno << endl;
-        }
-        else if (!(connect(sock, (struct sockaddr*)&tmp_sockaddr_in, sizeof(sockaddr)))) {
+        
+        if (!(connect(udp_sock, (struct sockaddr*)&tmp_sockaddr_in, sizeof(tmp_sockaddr_in))))
           cout << setw(15) << left << "closed";
-        }
-        if (!tmp_protoent) {
-          cout << setw(15) << left << "unknown" << endl;
-        }
-        else {
-          cout << setw(15) << left << tmp_protoent->p_name << endl;          
-        }
-        close(sock);
-      }
-    }
+        
+        else 
+          cout << setw(15) << left << "open";
+                
+        cout << setw(15) << left << (tmp_servent ? tmp_servent->s_name : "unknown");
+        cout << setw(15) << left << (tmp_servent ? tmp_servent->s_proto : "") << endl;
+      }      
+    }    
   }
-  
 
-  int c;
-  cin >> c;
+  close(tcp_sock);
+  close(udp_sock);
+  endservent();
 
   return 0;
 }
@@ -192,7 +198,7 @@ void parse_cmd_options(int argc, char** argv) {
             cout << "\tBegin Range: " << beginRange << endl;
             cout << "\tEnd Range: " << endRange << endl;
 
-            for (int i = beginRange; i < endRange; ++i)
+            for (int i = beginRange; i < endRange+1; ++i)
               ports.insert(i);
 
           }
