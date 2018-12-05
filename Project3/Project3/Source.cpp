@@ -52,7 +52,7 @@ struct netent*      tmp_netent;
 struct hostent*     tmp_hostent;
 struct ip*          ip_struct;
 struct icmp*        tmp_icmp;
-struct timeval      tmp_time = {3, 0};
+
 
 fd_set fds;
 
@@ -62,10 +62,11 @@ fd_set fds;
  ======================*/
 int main(int argc, char** argv) {
   
-  char bytes[128];
+  char bytes[1024];
   struct addrinfo hints;
   struct addrinfo* serv_addr;
   int return_time;
+  int send_size;
   int return_size;
 
   parse_cmd_options(argc, argv);
@@ -108,94 +109,117 @@ int main(int argc, char** argv) {
           cerr << "tcp socket failed: " << errno << endl;
         
         
-        tmp_servent = getservbyport(htons(port), "tcp");
+        
         if (tmp_servent == NULL) {
           shutdown(tcp_sock, SHUT_RDWR);
+          close(tcp_sock);
           goto udp_scan;
         }
 
-        cout << "\t" << setw(7) << left << port;
+        //cout << "\t" << setw(7) << left << port;
         
-        if ((connect(tcp_sock, (struct sockaddr*)&tmp_in, sizeof(tmp_in))) < 0)
-          cout << setw(10) << left << "closed";                  
-        else 
-          cout << setw(10) << left << "open";
+        if ((connect(tcp_sock, (struct sockaddr*)&tmp_in, sizeof(struct sockaddr_in))) < 0) {
+          //cout << setw(10) << left << "closed";                  
+        }
+        else {
+          tmp_servent = getservbyport(htons(port), "tcp");
+          if (tmp_servent) {
+            cout << "\t" << setw(7) << left << port;
+            cout << setw(10) << left << "open";
+            cout << setw(15) << left << tmp_servent->s_name;
+            cout << setw(7) << left << "TCP" << endl;
+          }
+        }
                 
-        cout << setw(15) << left << (tmp_servent ? tmp_servent->s_name : "unknown");         
-        cout << setw(7) << left << "tcp" << endl;
+        
 
-        shutdown(tcp_sock, SHUT_RDWR);
+        shutdown(tcp_sock, SHUT_RDWR); 
         close(tcp_sock);
       }
+
       udp_scan:
 
       if (!tcp_only) {
 
-        if ((udp_sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+        
+
+        if ((udp_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+          cerr << "\tudp socket failed: " << errno << ", exiting..." << endl;
+          exit(1);
+        }
+        if ((icmp_sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
           cerr << "\tudp socket failed: " << errno << ", exiting..." << endl;
           exit(1);
         }
         
-        /*if ((icmp_sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
-          cerr << "\ticmp socket failed: " << errno << ", exiting..." << endl;
-          exit(1);
-        }*/
-        
-        cout << "\t" << setw(7) << left << port;
         memset(bytes, 0, sizeof(bytes));
 
         int send_size;
-        if((send_size = connect(udp_sock, (struct sockaddr*)&tmp_in, 
-           sizeof(struct sockaddr_in))) < 0){
-        //if ((send_size = sendto(udp_sock, bytes, sizeof(bytes), 0x0, 
-        //    (sockaddr*)&tmp_in, sizeof(sockaddr))) < 0) {
-          cout << ", send size: " << send_size;
+        /*if((connect(udp_sock, (struct sockaddr*)&tmp_in, sizeof(tmp_in))) < 0){
           cout << ", connect failed, errno: " << errno << ", exiting..." << endl;
           exit(1);
-        }
-        else if (send_size == 0) {
-          FD_ZERO(&fds);
-          FD_SET(udp_sock, &fds);
+        }*/
+        //else {
+          
+        bzero(&tmp_in, sizeof(tmp_in));
+        tmp_in.sin_family = AF_INET;
+        tmp_in.sin_port = htons(port);
+        tmp_in.sin_addr.s_addr = inet_addr(ip.c_str());
 
-          if ((sendto(udp_sock, bytes, strlen(bytes), NULL, (sockaddr*) &tmp_in, sizeof(tmp_in))) < 0) {
-            cout << ", sendto failed, errno: " << errno << ", exiting..." << endl;
-            exit(1);
+        if (sendto(udp_sock, bytes, sizeof(bytes), 0, (struct sockaddr*)&tmp_in, sizeof(tmp_in)) < 0) {
+          cerr << ", sendto failed, errno: " << errno << ", exiting..." << endl;
+          exit(1);
+        }
+
+        struct timeval tmp_time = {5, 0};
+          
+        while (1) {
+          FD_ZERO(&fds);
+          FD_SET(icmp_sock, &fds);
+
+          socklen_t d = sizeof(tmp_in);
+
+          if (select(icmp_sock + 1, &fds, NULL, NULL, &tmp_time) > 0) {
+            recvfrom(icmp_sock, bytes, sizeof(bytes), 0x0, NULL, NULL);          
           }
-          if ((return_time = select(udp_sock + 1, &fds, NULL, NULL, &tmp_time)) > 0) {
-            /*if ((return_size = recvfrom(icmp_sock, &bytes, strlen(bytes), 0x0, 
-            //    (struct sockaddr*)&tmp_in, &d)) < 0) {
-              cout << "\trecvfrom failed, errno: " << errno << ", exiting..." << endl;
-              exit(1);
-              */
-            cout << "\tport open...";
-            cout << ", return size: " << return_size << endl;
+          else if (!FD_ISSET(icmp_sock, &fds)) {
+            tmp_servent = getservbyport(htons(port), "udp");
+            if (tmp_servent) {
+              cout << "\t" << setw(7) << left << port;
+              cout << setw(10) << left << "open";
+              cout << setw(15) << left << tmp_servent->s_name;
+              cout << setw(7) << left << "UDP" << endl;                
+            }
             break;
           }
-          else if (return_time == 0) {
-            cout << ", timeout..." << endl;
-          }
-          else if (return_time < 0) {
-            cout << "\tselect failed, errno: " << errno << ", exiting..." << endl;
+          else {
+            cerr << "\tselect failed, errno: " << errno << ", exiting..." << endl;
             exit(1);
           }
           /*
-          ip_struct = (struct ip*)bytes;
-          int ip_length = ip_struct->ip_hl << 2;
-          tmp_icmp = (struct icmp*)(bytes + ip_length);
+          else if (return_time == 0) {
+            cout << ", timeout..." << endl;
+            //shutdown(tcp_sock, SHUT_RDWR);
+            //close(udp_sock);
+            //continue;
+          }*/
+          struct ip* ip_header = (struct ip*)bytes;
+          int ip_length = ip_header->ip_hl << 2;
+          struct icmp* tmp_icmp = (struct icmp*)(bytes + ip_length);
 
-          if ((tmp_icmp->icmp_type == ICMP_UNREACH) && 
-              (tmp_icmp->icmp_code == ICMP_UNREACH_PORT))
-            cout << setw(10) << left << "closed";
-          */
-        }        
-      close(udp_sock);
-      shutdown(udp_sock, SHUT_RDWR);
+          if ((tmp_icmp->icmp_type == ICMP_UNREACH) && (tmp_icmp->icmp_code == ICMP_UNREACH_PORT)) {
+            cout << "udp port unreachable";
+            break;
+          }          
+        }
+        shutdown(udp_sock, SHUT_RDWR);
+        close(udp_sock);
       }
     }    
   }
 
-  close(tcp_sock);
-  close(udp_sock);
+  //close(tcp_sock);
+  //close(udp_sock);
   cout << endl << endl;
 
   return 0;
