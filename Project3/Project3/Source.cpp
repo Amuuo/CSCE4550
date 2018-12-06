@@ -147,10 +147,10 @@ int main(int argc, char** argv) {
           cerr << "\tudp socket failed: " << errno << ", exiting..." << endl;
           exit(1);
         }
-        if ((icmp_sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+        /*if ((icmp_sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
           cerr << "\tudp socket failed: " << errno << ", exiting..." << endl;
           exit(1);
-        }
+        }*/
         
         memset(bytes, 0, sizeof(bytes));
 
@@ -171,18 +171,21 @@ int main(int argc, char** argv) {
           exit(1);
         }
 
-        struct timeval tmp_time = {5, 0};
+        struct timeval tmp_time;
+        tmp_time.tv_sec = 1;
+        tmp_time.tv_usec = 0;
           
         while (1) {
           FD_ZERO(&fds);
-          FD_SET(icmp_sock, &fds);
+          FD_SET(udp_sock, &fds);
+          FD_SET(udp_sock+1, &fds);
 
           socklen_t d = sizeof(tmp_in);
 
-          if (select(icmp_sock + 1, &fds, NULL, NULL, &tmp_time) > 0) {
-            recvfrom(icmp_sock, bytes, sizeof(bytes), 0x0, NULL, NULL);          
+          if (select(udp_sock+1, &fds, NULL, NULL, &tmp_time) > 0) {
+            recvfrom(udp_sock, bytes, sizeof(bytes), 0x0, NULL, NULL);          
           }
-          else if (!FD_ISSET(icmp_sock, &fds)) {
+          else if (!FD_ISSET(udp_sock, &fds)) {
             tmp_servent = getservbyport(htons(port), "udp");
             if (tmp_servent) {
               cout << "\t" << setw(7) << left << port;
